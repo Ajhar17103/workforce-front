@@ -199,7 +199,7 @@ a {
 
 /* === Content Area === */
 .content-area {
-  padding: 80px 20px 20px; /* Top space for fixed navbar */
+  /* padding: 80px 20px 20px; */
   flex: 1;
   overflow-y: auto;
 }

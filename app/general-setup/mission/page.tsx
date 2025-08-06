@@ -1,14 +1,14 @@
 'use client';
 
 import MissionCreate from "./MissionCreate";
-import MissonTable from "./MissonTable";
+import MissionTablePage from "./MissonTable";
 
 export default function Mission() {
   
   return (
     <div className="g-5">
       <MissionCreate />
-      <MissonTable />
+      <MissionTablePage />
     </div>
   );
 }

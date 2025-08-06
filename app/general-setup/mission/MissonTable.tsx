@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import MissionUpdate from "./MissionUpdate";
 
-export default function MissionPage() {
+export default function MissionTablePage() {
   const missionUrl = getUtilityApiUrl("/missions");
 
   const dispatch = useAppDispatch();

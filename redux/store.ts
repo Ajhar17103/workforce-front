@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import countryReducer from "./slices/countrySlice";
 import misssionReducer from "./slices/missionSlice"
+import allowanceReducer from "./slices/allowanceSlice"
 
 export const store = configureStore({
   reducer: {
     country: countryReducer,
-    mission:misssionReducer
+    mission:misssionReducer,
+    allowance:allowanceReducer
   },
 });
 

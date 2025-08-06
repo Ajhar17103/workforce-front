@@ -2,7 +2,7 @@ import { FormField } from "@/types/common/FormField";
 
 export const missionSchema : FormField[] = [
   {
-    column: 6,
+    column: 4,
     align: "default",
     label: "Name",
     labelVisibility:"visible",
@@ -15,7 +15,7 @@ export const missionSchema : FormField[] = [
     isRequired: true,
   },
     {
-    column: 6,
+    column: 4,
     align: "default",
     label: "Mission Description",
     labelVisibility:"visible",
@@ -29,7 +29,7 @@ export const missionSchema : FormField[] = [
   },
   
   {
-    column: 6,
+    column: 4,
     align: "default",
     label: "Raising Date",
     labelVisibility:"visible",
@@ -42,7 +42,7 @@ export const missionSchema : FormField[] = [
     isRequired: true,
   },
   {
-    column: 6,
+    column: 4,
     align: "default",
     label: "Mission Country",
     labelVisibility:"visible",
@@ -55,7 +55,7 @@ export const missionSchema : FormField[] = [
     isRequired: true,
   },
   {
-    column: 6,
+    column: 4,
     align: "default",
     label: "Start Date",
     labelVisibility:"visible",
@@ -68,7 +68,7 @@ export const missionSchema : FormField[] = [
     isRequired: true,
   },
   {
-    column: 6,
+    column: 4,
     align: "default",
     label: "End Date",
     labelVisibility:"visible",

@@ -3,7 +3,6 @@
 import Form from "@/components/form/Form";
 import axiosInstance from "@/lib/axiosInstance";
 import { FormField } from "@/types/common/FormField";
-import { MissionParam } from "@/types/general-setup/mission.type";
 import { getUtilityApiUrl } from "@/utils/api";
 import { setSchemaEnum } from "@/utils/setSchemaEnum";
 import { useEffect, useState } from "react";
@@ -11,11 +10,16 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { allowanceSchema as baseSchema } from "./AllowanceSchema";
 import { actionStatus, allowFor, calculationMode, duration, payBasedOn, payStatus, processType } from "@/utils/enums";
+import { AllowanceParam } from "@/types/sailor-basic/allowance.type";
+import { fetchAllowances } from "@/redux/slices/allowanceSlice";
+import { useAppDispatch } from "@/redux/hooks";
 
 export default function AllowanceCreate() {
-  const {register,handleSubmit,formState: { errors },reset} = useForm<MissionParam>();
+  const {register,handleSubmit,formState: { errors },reset} = useForm<AllowanceParam>();
 
-  const allowanceUrl = getUtilityApiUrl("/allowance");
+  const dispatch = useAppDispatch();
+
+  const apiUrl = getUtilityApiUrl("/allowances");
 
   const [schema, setSchema] = useState<FormField[]>(baseSchema);
 
@@ -39,11 +43,12 @@ export default function AllowanceCreate() {
 }, []);
 
 
-  const handleFormSubmit = (data: MissionParam) => {
+  const handleFormSubmit = (data: AllowanceParam) => {
     axiosInstance
-      .post(allowanceUrl, data)
+      .post(apiUrl, data)
       .then((response) => {
-        toast.success("Mission created successfully", { theme: "dark" });
+        toast.success("Allowance created successfully", { theme: "dark" });
+        dispatch(fetchAllowances());
         reset()
         console.log(response);
       })

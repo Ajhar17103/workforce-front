@@ -95,6 +95,20 @@ export const allowanceSchema : FormField[] = [
   {
     column: 4,
     align: "default",
+    label: "processType",
+    labelVisibility:"visible",
+    fieldName: "processType",
+    dataType: "dropdown",
+    action: null,
+    defaultValue: "",
+    isEnum: true,
+    enum: [],
+    isRequired: true,
+  },
+  
+  {
+    column: 4,
+    align: "default",
     label: "Pay Based On",
     labelVisibility:"visible",
     fieldName: "payBasedOn",
@@ -169,7 +183,5 @@ export const allowanceSchema : FormField[] = [
     isEnum: false,
     enum: [],
     isRequired: true,
-  },
-
-  
+  }
 ];
