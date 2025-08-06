@@ -1,0 +1,256 @@
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}
+
+/* === Layout === */
+.d-flex {
+  display: flex;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 260px; /* Width of sidebar */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content-area {
+  flex: 1;
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+  min-height: calc(100vh - 60px);
+  overflow-y: auto;
+}
+
+/* === Sidebar Toggle Button === */
+.sidebar-toggle-btn {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1100;
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  background-color: #0d6efd;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-toggle-btn:hover {
+  background-color: #0b5ed7;
+}
+
+/* === Sidebar === */
+.sidebar {
+  width: 260px;
+  min-height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #fff;
+  border-right: 1px solid #e3e3e3;
+  font-family: 'Segoe UI', sans-serif;
+  z-index: 1030;
+  transition: width 0.3s ease;
+  overflow-x: hidden;
+}
+
+.sidebar.closed {
+  width: 60px;
+}
+
+/* Hide sidebar text and submenu when collapsed */
+.sidebar.closed .sidebar-header h6,
+.sidebar.closed .sidebar-group-toggle span,
+.sidebar.closed .sidebar-submenu,
+.sidebar.closed .submenu-item {
+  display: none;
+}
+
+.sidebar.closed .sidebar-link,
+.sidebar.closed .sidebar-group-toggle {
+  justify-content: center;
+}
+
+.sidebar.closed .sidebar-link i,
+.sidebar.closed .sidebar-group-toggle i {
+  margin-right: 0;
+}
+
+/* === Sidebar Layout === */
+.sidebar-header {
+  border-bottom: 1px solid #e3e3e3;
+}
+
+.sidebar-menu {
+  padding-top: 10px;
+}
+
+.sidebar-link,
+.sidebar-group-toggle {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #333;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s, color 0.2s;
+}
+
+.sidebar-link:hover,
+.sidebar-group-toggle:hover {
+  background-color: #f0f4ff;
+  color: #0d6efd;
+}
+
+.sidebar-submenu {
+  list-style: none;
+  margin: 0;
+  padding: 5px 0 5px 15px;
+}
+
+.submenu-item {
+  display: block;
+  padding: 8px 25px;
+  font-size: 0.9rem;
+  color: #555;
+  border-left: 3px solid transparent;
+  transition: 0.2s;
+}
+
+.submenu-item:hover {
+  background-color: #f8f9fa;
+  color: #0d6efd;
+}
+
+.sidebar .active {
+  background-color: #e9f3ff;
+  color: #0d6efd;
+  font-weight: 600;
+  border-left: 4px solid #0d6efd;
+}
+
+/* === Main Content Layout === */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.3s ease;
+}
+
+.main-content.sidebar-open {
+  margin-left: 260px;
+}
+
+.main-content.sidebar-closed {
+  margin-left: 60px;
+}
+
+/* === Content Area === */
+.content-area {
+  padding: 80px 20px 20px; /* Top space for fixed navbar */
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* === Fixed Navbar === */
+.custom-navbar {
+  height: 60px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 0.95rem;
+  width: 100%;
+  z-index: 50; /* Ensure it stays above the sidebar */
+  background-color: white;
+}
+
+/* === Navbar Content === */
+.navbar-breadcrumb {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.breadcrumb-parent {
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.breadcrumb-child {
+  color: #1c1f23;
+  font-weight: 600;
+}
+
+.breadcrumb-separator {
+  color: #999;
+}
+
+.notification-icon:hover {
+  color: #0d6efd;
+  cursor: pointer;
+}
+
+.user-role {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #212529;
+}
+
+.user-name {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+
