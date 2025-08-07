@@ -7,7 +7,6 @@ export const metadata: Metadata = {
 
 export default function Assets() {
   return <div>
-    <PageBreadcrumb root="Master Data" pageTitle="Assets" />
-
-  </div>;
+            <PageBreadcrumb root="Master Data" pageTitle="Assets" />
+         </div>;
 }

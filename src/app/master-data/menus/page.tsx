@@ -7,6 +7,6 @@ export const metadata: Metadata = {
 
 export default function Menus() {
   return <div>
-    <PageBreadcrumb root="Master Data" pageTitle="Menus" />
-  </div>;
+              <PageBreadcrumb root="Master Data" pageTitle="Menus" />
+         </div>;
 }
