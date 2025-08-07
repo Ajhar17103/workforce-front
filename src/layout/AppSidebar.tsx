@@ -29,9 +29,9 @@ const navItems: NavItem[] = [
   { id: 1, name: "Dashboard", icon: <GridIcon />, path: "/" },
 
   { id: 4, name: "Master Data", icon: <ListIcon /> },
-  { id: 5, parentId: 4, name: "Menus", path: "/menus" },
+  { id: 5, parentId: 4, name: "Menus", path: "/master-data/menus" },
   { id: 30, parentId: 4, name: "Role & Permissons", path: "/form-elements" },
-  { id: 31, parentId: 4, name: "Assets", path: "/assests" },
+  { id: 31, parentId: 4, name: "Assets", path: "/master-data/assests" },
   { id: 32, parentId: 4, name: "Calendar", icon: <CalenderIcon />, path: "/calendar" },
   
   { id: 25, name: "Users", icon: <GroupIcon/>, path: "/users" },

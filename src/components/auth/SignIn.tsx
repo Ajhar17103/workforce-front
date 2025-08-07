@@ -32,7 +32,7 @@ export default function SignIn() {
       {/* Left Side - Image */}
       <div className="hidden lg:block lg:w-2/3 h-full relative">
         <Image
-          src="/images/auth.jpg"
+          src="/images/auth-1.jpg"
           alt="Login illustration"
           fill
           className="object-cover"
