@@ -1,9 +1,9 @@
 "use client";
-import { useForm } from "react-hook-form";
 import { EyeCloseIcon, EyeIcon } from "@/icons";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 type SignInFormData = {
   email: string;
@@ -111,7 +111,7 @@ export default function SignIn() {
       {/* Remember + Forgot */}
       <div className="flex items-center justify-end">
         <Link
-          href="/reset-password"
+          href="#"
           className="text-sm text-brand-500 hover:underline"
         >
           Forgot password?

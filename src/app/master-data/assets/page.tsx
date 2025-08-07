@@ -2,11 +2,12 @@ import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Menus | Workforce Management",
+  title: "Assets | Workforce Management",
 };
 
-export default function Menus() {
+export default function Assets() {
   return <div>
-    <PageBreadcrumb root="Master Data" pageTitle="Menus" />
+    <PageBreadcrumb root="Master Data" pageTitle="Assets" />
+
   </div>;
 }
