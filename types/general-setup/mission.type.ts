@@ -39,6 +39,6 @@ export interface MissionParam {
 }
 
 export interface MissionUpdateProps {
-  itemUpdate: MissionTable;
+  itemUpdate?: MissionTable;
   closeModal: () => void;
 };
