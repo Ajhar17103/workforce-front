@@ -53,7 +53,7 @@ export const menuFormSchema: FormField[] = [
     align: "default",
     label: "Sub-Menu Name",
     labelVisibility: "visible",
-    fieldName: "SubMenuName",
+    fieldName: "subMenuName",
     dataType: "text",
     action: null,
     defaultValue: "",

@@ -25,5 +25,13 @@ export const sidebarSchema: Sidebar[] = [
     path:"/master-data/users",
     menuType:"SUBMENU",
     parentId:1
-  }
+  },
+  {
+    id:55,
+    name: "Task",
+    icon:"bi bi-gear-fill me-2",
+    path:"/task",
+    menuType:"MAINMENU",
+    parentId:null,
+    }
 ];
