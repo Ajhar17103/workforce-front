@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { fetchCountries } from "@/redux/slices/countrySlice";
 import { fetchMissions } from "@/redux/slices/missionSlice";
 import { FormField } from "@/types/common/FormField";
-import { MissionParam, MissionUpdateProps } from "@/types/general-setup/mission.type";
+import { MenuParam, MenuUpdateProps } from "@/types/master-data/menu.type";
 import { getUtilityApiUrl } from "@/utils/api";
 import { getDefaultValues } from "@/utils/getDefaultValues";
 import { setSchemaDefaultValue } from "@/utils/setSchemaDefaultValue";
@@ -14,12 +14,11 @@ import { setSchemaEnum } from "@/utils/setSchemaEnum";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { missionSchema as baseSchema } from "./MenuFormSchema";
+import { menuFormSchema as baseSchema } from "./MenuFormSchema";
 
 
-export default function UserUpdate({itemUpdate,closeModal}:MissionUpdateProps) {
-  const {register,handleSubmit,formState: { errors },reset} = useForm<MissionParam>({defaultValues: getDefaultValues<MissionParam>(itemUpdate)});
-console.log("test",getDefaultValues<MissionParam>(itemUpdate))
+export default function MenuUpdate({itemUpdate,closeModal}:MenuUpdateProps) {
+  const {register,handleSubmit,formState: { errors },reset} = useForm<MenuParam>({defaultValues: getDefaultValues<MenuParam>(itemUpdate)});
   const missionUrl = getUtilityApiUrl("/missions");
 
   const dispatch = useAppDispatch();
@@ -46,7 +45,7 @@ useEffect(() => {
 }, [countries, itemUpdate]);
 
 
-  const handleFormSubmit = (data: MissionParam) => {
+  const handleFormSubmit = (data: MenuParam) => {
     if(itemUpdate?.id){
     axiosInstance
       .put(`${missionUrl}/${itemUpdate?.id}`, data)

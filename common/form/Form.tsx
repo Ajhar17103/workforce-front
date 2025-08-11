@@ -1,22 +1,45 @@
 "use client";
 
+import { showWhen } from "@/types/common/CommonOption";
 import { FormField } from "@/types/common/FormField";
 import { formatDate } from "@/utils/formatDate";
-
+import { useWatch } from "react-hook-form";
 
 type Props = {
   schema: FormField[];
   register: any;
+  control: any; // ✅ Needed for useWatch
   errors: Record<string, any>;
 };
 
-export default function Form({ schema, register, errors }: Props) {
+export default function Form({ schema, register, control, errors }: Props) {
+  // Watch all form values
+  const values = useWatch({ control });
+
+  // Filter fields based on showWhen condition
+const visibleFields = schema.filter(field => {
+  if (!field.showWhen) return true;
+
+  const checkCondition = (cond: showWhen) => {
+    return values[cond.field] === cond.value;
+  };
+
+  if (Array.isArray(field.showWhen)) {
+    return field.showWhen.some(checkCondition);
+  }
+  return checkCondition(field.showWhen);
+});
+
+
   return (
     <>
-      {schema.map((field, idx) => (
+      {visibleFields.map((field, idx) => (
         <div key={idx} className={`col-md-${field.column}`}>
           <div className="mb-2">
-            <label className="form-label fw-medium" style={{ visibility: `${field.labelVisibility}`}}>
+            <label
+              className="form-label fw-medium"
+              style={{ visibility: field.labelVisibility }}
+            >
               {field.label}
               {field.isRequired && <span className="text-danger ms-1">*</span>}
             </label>
@@ -32,12 +55,12 @@ export default function Form({ schema, register, errors }: Props) {
 
             {field.dataType === "textarea" && (
               <textarea
-                type="textarea"
                 defaultValue={field.defaultValue}
                 {...register(field.fieldName, { required: field.isRequired })}
                 className="form-control"
               />
             )}
+
             {field.dataType === "number" && (
               <input
                 type="number"
@@ -50,7 +73,7 @@ export default function Form({ schema, register, errors }: Props) {
             {field.dataType === "date" && (
               <input
                 type="date"
-                defaultValue={formatDate(field.defaultValue,'yyyy-MM-dd') }
+                defaultValue={formatDate(field.defaultValue, "yyyy-MM-dd")}
                 {...register(field.fieldName, { required: field.isRequired })}
                 className="form-control"
               />
@@ -58,20 +81,13 @@ export default function Form({ schema, register, errors }: Props) {
 
             {field.dataType === "dropdown" && (
               <select
-              defaultValue={field.defaultValue}
+                defaultValue={field.defaultValue}
                 {...register(field.fieldName, { required: field.isRequired })}
                 className="form-select"
               >
                 <option value="">--</option>
-                
-                {field.enum.map((option) => (
-               field.defaultValue && option.id===field.defaultValue?
-
-                  <option selected={true} key={option.id} value={String(option.id)}>
-                    {option.name}
-                  </option>
-                  :
-                  <option  key={option.id} value={String(option.id)}>
+                {field.enum.map(option => (
+                  <option key={option.id} value={String(option.id)}>
                     {option.name}
                   </option>
                 ))}
@@ -98,7 +114,8 @@ export default function Form({ schema, register, errors }: Props) {
 
             {errors[field.fieldName] && (
               <div className="text-danger small mt-1">
-                {errors[field.fieldName].message || `${field.label} is required`}
+                {errors[field.fieldName].message ||
+                  `${field.label} is required`}
               </div>
             )}
           </div>

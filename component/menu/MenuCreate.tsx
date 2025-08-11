@@ -6,18 +6,18 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { fetchCountries } from "@/redux/slices/countrySlice";
 import { fetchMissions } from "@/redux/slices/missionSlice";
 import { FormField } from "@/types/common/FormField";
-import { MissionParam } from "@/types/general-setup/mission.type";
 import { getUtilityApiUrl } from "@/utils/api";
 import { setSchemaEnum } from "@/utils/setSchemaEnum";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { missionSchema as baseSchema } from "./MenuFormSchema";
+import { menuFormSchema as baseSchema } from "./MenuFormSchema";
+import { MenuParam, MenuUpdateProps } from "@/types/master-data/menu.type";
 
-export default function MenuCreate() {
-  const {register,handleSubmit,formState: { errors },reset} = useForm<MissionParam>();
+export default function MenuCreate({closeModal}:MenuUpdateProps) {
+  const {register,handleSubmit,control,formState: { errors },reset} = useForm<MenuParam>();
 
-  const missionUrl = getUtilityApiUrl("/missions");
+  const missionUrl = getUtilityApiUrl("/menus");
 
   const dispatch = useAppDispatch();
   const { countries, loading, error } = useAppSelector((state) => state.country);
@@ -40,7 +40,16 @@ export default function MenuCreate() {
 }, [countries]);
 
 
-  const handleFormSubmit = (data: MissionParam) => {
+  const handleFormSubmit = (data: MenuParam) => {
+
+    let menuPostData={
+    name: data.menuType==='MAINMENU'? data?.menuName:data?.subMenuName,
+    icon: data.menuType==='MAINMENU'? data?.icon:"",
+    path:data?.path,
+    menuType: data.menuType,
+    parentId:data?.parentId? data?.parentId:null
+    }
+console.log('menuPostData:', menuPostData)
     axiosInstance
       .post(missionUrl, data)
       .then((response) => {
@@ -61,17 +70,12 @@ export default function MenuCreate() {
   const handleClear = () => reset();
 
   return (
-    <div className="mb-5">
-      <div className="bg-light p-3 rounded-top border">
-        <h2 className="h5 text-primary m-0">Mission</h2>
-      </div>
-
       <form
         onSubmit={handleSubmit(handleFormSubmit)}
-        className="bg-white p-4 rounded-bottom border border-top-0"
+        className="bg-white p-4 rounded-bottom border"
       >
         <div className="row g-3">
-            <Form schema={schema} register={register} errors={errors} />
+            <Form schema={schema} register={register} control={control} errors={errors} />
         </div>
 
         <div className="d-flex justify-content-end gap-2 mt-3 py-2 border-top">
@@ -87,6 +91,5 @@ export default function MenuCreate() {
           </button>
         </div>
       </form>
-    </div>
   );
 }

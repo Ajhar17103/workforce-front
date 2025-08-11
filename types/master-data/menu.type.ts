@@ -1,6 +1,6 @@
 // types/mission.ts
 
-export interface MissionDto {
+export interface MenuDto {
   id: string;
   version: number | null;
   deleted: boolean;
@@ -18,27 +18,26 @@ export interface MissionDto {
   endDate: string;
 }
 
-export interface MissionTable {
+export interface MenuTables {
   id: number;
   name: string;
-  missionDescription: string;
-  raisingDate: string;
-  missionCountryId:string,
-  startDate: string;
-  endDate: string;
+  menuType: string;
+  parentMenu: string;
+  icon:string,
+  path: string;
 }
 
 
-export interface MissionParam {
-  name: string;
-  missionDescription: string;
-  raisingDate: string;
-  missionCountryId: string;
-  startDate: string;
-  endDate: string;
+export interface MenuParam {
+  menuName?: string;
+  subMenuName?:string
+  menuType: "MENUTITLE"|"MAINMENU"|"SUBMENU";
+  icon: string;
+  path: string;
+  parentId: string;
 }
 
-export interface MissionUpdateProps {
-  itemUpdate?: MissionTable;
+export interface MenuUpdateProps {
+  itemUpdate?: MenuTables;
   closeModal: () => void;
 };

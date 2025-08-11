@@ -1,34 +1,29 @@
-import { MenuItem } from "@/types/common/MenuItem";
+import { Sidebar } from "../../types/common/Sidebar";
 
 
-
-export const sidebarSchema: MenuItem[] = [
+export const sidebarSchema: Sidebar[] = [
   {
     id:1,
     name: "Master Data",
     icon:"bi bi-gear-fill me-2",
-    path:"",
-    mainMenu:true,
-    subMenu:false,
-    ParentId:null
+    path:null,
+    menuType:"MAINMENU",
+    parentId:null
+  },
+   {
+    id:3,
+    name: "Menus",
+    icon:"",
+    path:"/master-data/menus",
+    menuType:"SUBMENU",
+    parentId:1
   },
   {
     id:2,
     name: "Users",
     icon:"",
     path:"/master-data/users",
-    mainMenu:false,
-    subMenu:true,
-    ParentId:1
-  },
-  {
-    id:3,
-    name: "Menus",
-    icon:"",
-    path:"/master-data/menus",
-    mainMenu:false,
-    subMenu:true,
-    ParentId:1
-  },
-
+    menuType:"SUBMENU",
+    parentId:1
+  }
 ];

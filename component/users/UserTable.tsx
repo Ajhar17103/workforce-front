@@ -2,7 +2,7 @@ import CommonModal from "@/common/modal/CommonModal";
 import DynamicTable from "@/common/table/DataTable";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { fetchMissions } from "@/redux/slices/missionSlice";
-import { MissionTable } from "@/types/general-setup/mission.type";
+import { MissionTable } from "@/types/master-data/menu.type";
 import { getUtilityApiUrl } from "@/utils/api";
 import { deleteApi } from "@/utils/deleteApi";
 import { useEffect, useState } from "react";

@@ -1,10 +1,10 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { sidebarSchema } from './sidebarSchema';
-import Image from 'next/image';
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -14,12 +14,12 @@ interface SidebarProps {
 export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
   const pathname = usePathname();
 
-  const mainMenus = sidebarSchema.filter(item => item.mainMenu);
-  const subMenus = sidebarSchema.filter(item => item.subMenu);
+  const mainMenus = sidebarSchema.filter(item => item.menuType === 'MAINMENU');
+  const subMenus = sidebarSchema.filter(item => item.menuType === 'SUBMENU');
 
   const [openMenuId, setOpenMenuId] = useState<number | null>(() => {
     const activeMenu = mainMenus.find(menu =>
-      subMenus.some(sub => sub.ParentId === menu.id && sub.path === pathname)
+      subMenus.some(sub => sub.parentId === menu.id && sub.path === pathname)
     );
     return activeMenu ? activeMenu.id : null;
   });
@@ -89,11 +89,11 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
             {sidebarOpen && openMenuId === main.id && (
               <ul className="sidebar-submenu">
                 {subMenus
-                  .filter(sub => sub.ParentId === main.id)
+                  .filter(sub => sub.parentId === main.id)
                   .map(sub => (
                     <li key={sub.id}>
                       <Link
-                        href={sub.path}
+                        href={sub.path!}
                         className={`submenu-item ${
                           pathname === sub.path ? 'active' : ''
                         }`}

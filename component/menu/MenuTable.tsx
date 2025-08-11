@@ -2,29 +2,28 @@ import CommonModal from "@/common/modal/CommonModal";
 import DynamicTable from "@/common/table/DataTable";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { fetchMissions } from "@/redux/slices/missionSlice";
-import { MissionTable } from "@/types/general-setup/mission.type";
 import { getUtilityApiUrl } from "@/utils/api";
 import { deleteApi } from "@/utils/deleteApi";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-import MissionUpdate from "./UserUpdate";
+import MenuUpdate from "./MenuUpdate";
+import { MenuTables } from "@/types/master-data/menu.type";
 
-export default function MenuPage() {
+export default function MenuTable() {
   const missionUrl = getUtilityApiUrl("/missions");
 
   const dispatch = useAppDispatch();
   const { missions, loading, error } = useAppSelector((state) => state.mission);
-  const [tableData, setTableData] = useState<MissionTable[]>([]);
+  const [tableData, setTableData] = useState<MenuTables[]>([]);
   const [modalShow, setModalShow] = useState<boolean>(false);
-  const [itemUpdate,setItemUpdate] = useState<MissionTable>({
+  const [itemUpdate,setItemUpdate] = useState<MenuTables>({
   id: 0,
   name: "",
-  missionDescription: "",
-  raisingDate: "",
-  missionCountryId:"",
-  startDate: "",
-  endDate: "",
+  menuType: "",
+  parentMenu: "",
+  icon:"",
+  path: "",
 })
 
   useEffect(() => {
@@ -33,20 +32,19 @@ export default function MenuPage() {
 
   useEffect(() => {
     if (missions && missions.length > 0) {
-      const transformed: MissionTable[] = missions.map((m, idx) => ({
+      const transformed: MenuTables[] = missions.map((m, idx) => ({
         id: m.id,
         name: m.name,
-        missionDescription: m.missionDescription,
-        raisingDate: m.raisingDate,
-        missionCountryId:m.missionCountryDto?.id,
-        startDate: m.startDate,
-        endDate: m.endDate,
+        menuType: m.missionDescription,
+        parentMenu: m.raisingDate,
+        icon:m.missionCountryDto?.id,
+        path: m.startDate,
       }));
       setTableData(transformed);
     }
   }, [missions]);
 
-  const deleteItem = async (item: MissionTable) => {
+  const deleteItem = async (item: MenuTables) => {
   if (!item?.id) return;
 
   const result = await Swal.fire({
@@ -73,7 +71,7 @@ export default function MenuPage() {
   }
   };
 
-  const updateItem= (item:MissionTable)=>{
+  const updateItem= (item:MenuTables)=>{
     setModalShow(true)
     setItemUpdate(item)
   }
@@ -82,16 +80,15 @@ export default function MenuPage() {
   }
 
   return (
-    <div className="card p-3">
-      <h5 className="">Menus List</h5>
+    <div className="">
       <DynamicTable
         data={tableData}
         columns={[
-          { label: "Mission Name", accessor: "name", sortable: true, searchable: true, align: "left" },
-          { label: "Mission Description", accessor: "missionDescription", sortable: true, searchable: true, align: "left" },
-          { label: "Raising Date", accessor: "raisingDate", sortable: true, searchable: true, align: "center" },
-          { label: "Start Date", accessor: "startDate", sortable: true, searchable: true, align: "center" },
-          { label: "End Date", accessor: "endDate", sortable: true, searchable: true, align: "center" },
+          { label: "Name", accessor: "name", sortable: true, searchable: true, align: "left" },
+          { label: "Menu Type", accessor: "menuType", sortable: true, searchable: true, align: "left" },
+          { label: "Parent Menu", accessor: "parentMenu", sortable: true, searchable: true, align: "left" },
+          { label: "Icon", accessor: "icon", sortable: true, searchable: true, align: "center" },
+          { label: "Path", accessor: "path", sortable: true, searchable: true, align: "center" },
         ]}
         onView={(row) => alert("viewd")}
         onEdit={(row) => updateItem(row)}
@@ -105,7 +102,7 @@ export default function MenuPage() {
         footer={false}
         fullscreen={"xl-down"}
       >
-        <MissionUpdate 
+        <MenuUpdate
         itemUpdate={itemUpdate}
         closeModal={()=>closeModal()}
         />

@@ -6,7 +6,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { fetchCountries } from "@/redux/slices/countrySlice";
 import { fetchMissions } from "@/redux/slices/missionSlice";
 import { FormField } from "@/types/common/FormField";
-import { MissionParam, MissionUpdateProps } from "@/types/general-setup/mission.type";
+import { MissionParam, MissionUpdateProps } from "@/types/master-data/menu.type";
 import { getUtilityApiUrl } from "@/utils/api";
 import { setSchemaEnum } from "@/utils/setSchemaEnum";
 import { useEffect, useState } from "react";

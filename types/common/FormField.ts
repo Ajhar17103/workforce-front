@@ -1,4 +1,4 @@
-import { commonOption } from "./CommonOption";
+import { commonOption, showWhen } from "./CommonOption";
 
 export type FormField = {
   column: number;
@@ -12,4 +12,5 @@ export type FormField = {
   isEnum: boolean;
   enum: commonOption[];
   isRequired: boolean;
+  showWhen?:showWhen[];
 };
