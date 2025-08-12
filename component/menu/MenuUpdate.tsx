@@ -12,6 +12,7 @@ import { getDefaultValues } from '@/utils/getDefaultValues';
 import { setSchemaDefaultValue } from '@/utils/setSchemaDefaultValue';
 import { setSchemaEnum } from '@/utils/setSchemaEnum';
 import { useEffect, useState } from 'react';
+import { Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { menuFormSchema as baseSchema } from './MenuFormSchema';
@@ -95,17 +96,13 @@ export default function MenuUpdate({
       </div>
 
       <div className="d-flex justify-content-end gap-2 mt-3 py-2 border-top">
-        <button
-          type="button"
-          onClick={() => closeModal()}
-          className="btn btn-outline-danger"
-        >
+        <Button variant="danger" onClick={() => closeModal()}>
           <i className="bi bi-x" /> Cancel
-        </button>
+        </Button>
 
-        <button type="submit" className="btn btn-primary">
+        <Button variant="primary" type="submit">
           <i className="bi bi-floppy2-fill" /> Save
-        </button>
+        </Button>
       </div>
     </form>
   );

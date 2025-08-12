@@ -1,6 +1,6 @@
-import { MenuTables } from '@/types/master-data/menu.type';
+import { MenuDto } from '@/types/master-data/menu.type';
 
-export const menus: MenuTables[] = [
+export const menus: MenuDto[] = [
   {
     id: 1,
     name: 'Dashboard',

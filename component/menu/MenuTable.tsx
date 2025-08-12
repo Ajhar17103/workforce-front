@@ -2,7 +2,7 @@ import CommonModal from '@/common/modal/CommonModal';
 import DynamicTable from '@/common/table/DataTable';
 import { useAppDispatch } from '@/redux/hooks';
 import { fetchMissions } from '@/redux/slices/missionSlice';
-import { MenuTables } from '@/types/master-data/menu.type';
+import { MenuDto, MenuParam } from '@/types/master-data/menu.type';
 import { getUtilityApiUrl } from '@/utils/api';
 import { deleteApi } from '@/utils/deleteApi';
 import { useEffect, useState } from 'react';
@@ -10,29 +10,29 @@ import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 import MenuUpdate from './MenuUpdate';
 import { menus } from './dummyData';
-import { Button } from 'react-bootstrap';
 
 export default function MenuTable() {
   const missionUrl = getUtilityApiUrl('/missions');
 
   const dispatch = useAppDispatch();
 
-  const [tableData, setTableData] = useState<MenuTables[]>([]);
+  const [tableData, setTableData] = useState<MenuDto[]>([]);
   const [modalShow, setModalShow] = useState<boolean>(false);
-  const [itemUpdate, setItemUpdate] = useState<MenuTables>({
-    id: 0,
-    name: '',
+  const [itemUpdate, setItemUpdate] = useState<MenuParam>({
+    id: 1,
+    menuName: '',
+    subName: '',
     menuType: 'MAIN',
-    parentMenu: '',
     icon: '',
-    path: '',
+    path: null,
+    parentId: null,
   });
 
   useEffect(() => {
     dispatch(fetchMissions());
   }, [dispatch]);
   useEffect(() => {
-    const transformed: MenuTables[] = menus?.map((m) => ({
+    const transformed: MenuDto[] = menus?.map((m) => ({
       id: m.id,
       name: m.name,
       menuType: m.menuType,
@@ -44,7 +44,7 @@ export default function MenuTable() {
     setTableData(transformed);
   }, [menus]);
 
-  const deleteItem = async (item: MenuTables) => {
+  const deleteItem = async (item: MenuDto) => {
     if (!item?.id) return;
 
     const result = await Swal.fire({
@@ -71,9 +71,18 @@ export default function MenuTable() {
     }
   };
 
-  const updateItem = (item: MenuTables) => {
+  const updateItem = (item: MenuDto) => {
     setModalShow(true);
-    setItemUpdate(item);
+    let menuUpdateData = {
+      id: item.id,
+      menuName: item.menuType === 'MAIN' ? item?.name : '',
+      subName: item.menuType === 'SUB' ? '' : item?.name,
+      menuType: item.menuType,
+      icon: item.menuType === 'MAIN' ? item?.icon : '',
+      path: item?.path,
+      parentId: item?.parentId ? item?.parentId : null,
+    };
+    setItemUpdate(menuUpdateData);
   };
   const closeModal = () => {
     setModalShow(false);
@@ -89,36 +98,36 @@ export default function MenuTable() {
             accessor: 'name',
             sortable: true,
             searchable: true,
-            align: 'start'
+            align: 'start',
           },
           {
             label: 'Menu Type',
             accessor: 'menuType',
             sortable: true,
             searchable: true,
-            align: 'center'
+            align: 'center',
           },
           {
             label: 'Parent Menu',
             accessor: 'parentMenu',
             sortable: true,
             searchable: true,
-            align: 'start'
+            align: 'start',
           },
           {
             label: 'Icon',
             accessor: 'icon',
             sortable: true,
             searchable: true,
-            align: 'start'
+            align: 'start',
           },
           {
             label: 'Path',
             accessor: 'path',
             sortable: true,
             searchable: true,
-            align: 'start'
-          }
+            align: 'start',
+          },
         ]}
         onEdit={(row) => updateItem(row)}
         onDelete={(row) => deleteItem(row)}

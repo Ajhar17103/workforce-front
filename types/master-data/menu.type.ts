@@ -1,24 +1,24 @@
-export interface MenuTables {
+export interface MenuDto {
   id: number;
-  name: string;
   menuType: 'MAIN' | 'SUB';
   parentId?: string | null;
   parentMenu?: string | null;
+  name: string;
   icon: string;
   path: string | null;
 }
 
 export interface MenuParam {
   id: number;
+  menuType: 'MAIN' | 'SUB';
+  parentId?: string | null;
   menuName?: string;
   subName?: string;
-  menuType: 'MAIN' | 'SUB';
   icon: string;
   path: string | null;
-  parentId?: string | null;
 }
 
 export interface MenuUpdateProps {
-  itemUpdate?: MenuTables;
+  itemUpdate?: MenuParam;
   closeModal: () => void;
 }

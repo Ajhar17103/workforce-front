@@ -9,5 +9,5 @@ export const getUserApiUrl = (endpoint: string): string => {
 };
 
 export const getUtilityApiUrl = (endpoint: string): string => {
-  return `${BASE_URL}/${API_VERSION}/utility/${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
+  return `${BASE_URL}/${API_VERSION}/master/${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
 };

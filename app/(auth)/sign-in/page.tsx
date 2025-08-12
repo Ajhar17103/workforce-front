@@ -1,7 +1,6 @@
 'use client';
 
 import { getAuthApiUrl } from '@/utils/api';
-import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -35,38 +34,33 @@ export default function SignIn({ onLogin }: SignInProps) {
 
   const onSubmit = (data: SignInFormData) => {
     console.log(data);
+    // axios
+    //   .post(authUrl, data)
+    //   .then((response) => {
+    toast.success('Login Successful, Redirect to dashboard', {
+      theme: 'dark',
+    });
+    //     reset();
+    //     localStorage.setItem('accessToken', response.data.accessToken);
+    //     localStorage.setItem('refreshToken', response.data.refreshToken);
     localStorage.setItem('isLogin', 'true');
-
-    axios
-      .post(authUrl, data)
-      .then((response) => {
-        toast.success('Login Successful, Redirect to dashboard', {
-          theme: 'dark',
-        });
-        reset();
-         localStorage.setItem('accessToken', response.data.accessToken);
-         localStorage.setItem('refreshToken', response.data.refreshToken);
-        localStorage.setItem('isLogin', 'true');
-        //  onLogin('true');
-         window.location.reload();
-      })
-      .catch((error) => {
-        toast.error('Something went wrong!', {
-          theme: 'dark',
-          closeOnClick: false,
-        });
-        console.error(error);
-      });
-    // if (onLogin) {
-    //   onLogin();
-    // }
+    //  onLogin('true');
+    window.location.reload();
+    // })
+    // .catch((error) => {
+    //   toast.error('Something went wrong!', {
+    //     theme: 'dark',
+    //     closeOnClick: false,
+    //   });
+    //   console.error(error);
+    // });
   };
 
   return (
     <div className="container-fluid min-vh-100 d-flex flex-column">
       <div className="row flex-grow-1">
         {/* Left Side Image - moves below form on small screens */}
-        <div className="col-12 col-lg-7 order-2 order-lg-1 p-0">
+        <div className="col-12 col-lg-7 d-none d-lg-block order-2 order-lg-1 p-0">
           <div
             className="w-100 h-100 position-relative"
             style={{ minHeight: '250px' }}
