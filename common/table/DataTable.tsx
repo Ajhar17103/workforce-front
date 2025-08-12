@@ -1,13 +1,14 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import { Button } from 'react-bootstrap';
 
 type Column<T> = {
   label: string;
   accessor: keyof T;
   sortable?: boolean;
   searchable?: boolean;
-  align?: "left" | "center" | "right";
+  align?: 'start' | 'center' | 'end'; // updated to your types
 };
 
 type Props<T> = {
@@ -22,14 +23,16 @@ type Props<T> = {
 export default function DataTable<T extends { id: number }>({
   data,
   columns,
-  onView,
   onEdit,
   onDelete,
   rowsPerPage = 10,
 }: Props<T>) {
   const [searchTerms, setSearchTerms] = useState<{ [key: string]: string }>({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [sortConfig, setSortConfig] = useState<{ key: keyof T; direction: "asc" | "desc" } | null>(null);
+  const [sortConfig, setSortConfig] = useState<{
+    key: keyof T;
+    direction: 'asc' | 'desc';
+  } | null>(null);
 
   const handleSearch = (key: string, value: string) => {
     setSearchTerms({ ...searchTerms, [key]: value });
@@ -41,8 +44,11 @@ export default function DataTable<T extends { id: number }>({
       columns.every((col) => {
         const term = searchTerms[col.accessor as string];
         if (!term) return true;
-        return row[col.accessor]?.toString().toLowerCase().includes(term.toLowerCase());
-      })
+        return row[col.accessor]
+          ?.toString()
+          .toLowerCase()
+          .includes(term.toLowerCase());
+      }),
     )
     .sort((a, b) => {
       if (!sortConfig) return 0;
@@ -50,7 +56,7 @@ export default function DataTable<T extends { id: number }>({
       const aValue = a[key];
       const bValue = b[key];
       if (aValue === bValue) return 0;
-      return direction === "asc"
+      return direction === 'asc'
         ? aValue > bValue
           ? 1
           : -1
@@ -61,7 +67,7 @@ export default function DataTable<T extends { id: number }>({
 
   const paginatedData = sortedFilteredData.slice(
     (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
+    currentPage * rowsPerPage,
   );
 
   const totalPages = Math.ceil(sortedFilteredData.length / rowsPerPage);
@@ -70,12 +76,17 @@ export default function DataTable<T extends { id: number }>({
     if (sortConfig?.key === key) {
       setSortConfig({
         key,
-        direction: sortConfig.direction === "asc" ? "desc" : "asc",
+        direction: sortConfig.direction === 'asc' ? 'desc' : 'asc',
       });
     } else {
-      setSortConfig({ key, direction: "asc" });
+      setSortConfig({ key, direction: 'asc' });
     }
   };
+
+  const getTextAlignClass = (
+    align?: 'start' | 'center' | 'end',
+    fallback = 'center',
+  ) => `text-${align ?? fallback}`;
 
   return (
     <div className="table-responsive table-bordered border-dark-subtle mt-4">
@@ -84,17 +95,17 @@ export default function DataTable<T extends { id: number }>({
           <tr>
             <th style={{ minWidth: 50 }}>SL</th>
             {columns.map((col, idx) => (
-              <th key={idx} className={`text-${col.align ?? "center"}`}>
+              <th key={idx} className={getTextAlignClass(col.align, 'center')}>
                 {col.label}
                 {col.sortable && (
                   <i
                     role="button"
                     className={`ms-1 bi ${
                       sortConfig?.key === col.accessor
-                        ? sortConfig.direction === "asc"
-                          ? "bi-caret-up-fill"
-                          : "bi-caret-down-fill"
-                        : "bi-caret-up"
+                        ? sortConfig.direction === 'asc'
+                          ? 'bi-caret-up-fill'
+                          : 'bi-caret-down-fill'
+                        : 'bi-caret-up'
                     }`}
                     onClick={() => handleSort(col.accessor)}
                   />
@@ -104,60 +115,58 @@ export default function DataTable<T extends { id: number }>({
             <th>Action</th>
           </tr>
           <tr>
-            <td>--</td>
+            <td></td>
             {columns.map((col, idx) => (
-              <td key={idx} className={`text-${col.align ?? "center"}`}>
+              <td key={idx} className={getTextAlignClass(col.align, 'center')}>
                 {col.searchable && (
                   <input
                     type="text"
                     className="form-control form-control-sm text-center rounded-1"
                     placeholder="Search"
-                    value={searchTerms[col.accessor as string] || ""}
-                    onChange={(e) => handleSearch(col.accessor as string, e.target.value)}
+                    value={searchTerms[col.accessor as string] || ''}
+                    onChange={(e) =>
+                      handleSearch(col.accessor as string, e.target.value)
+                    }
                   />
                 )}
               </td>
             ))}
-            <td>--</td>
+            <td></td>
           </tr>
         </thead>
         <tbody>
           {paginatedData.length > 0 ? (
             paginatedData.map((row: any, i) => (
-              <tr key={row.id} className={i % 2 === 0 ? "" : "table-active"}>
+              <tr key={row.id} className={i % 2 === 0 ? '' : 'table-active'} style={i % 2 !== 0 ? { backgroundColor: "#465fff1f" } : undefined}>
                 <td>{(currentPage - 1) * rowsPerPage + i + 1}</td>
                 {columns.map((col: any, idx) => (
-                  <td key={idx} className={`text-${col.align ?? "left"}`}>
+                  <td
+                    key={idx}
+                    className={getTextAlignClass(col.align, 'start')}
+                  >
                     {row[col.accessor]}
                   </td>
                 ))}
                 <td>
-                  {onView && (
-                    <button
-                      className="btn btn-sm btn-outline-secondary me-1"
-                      onClick={() => onView(row)}
-                      title="View"
-                    >
-                      <i className="bi bi-eye" />
-                    </button>
-                  )}
                   {onEdit && (
-                    <button
-                      className="btn btn-sm btn-outline-primary me-1"
+                    <Button
+                      variant="outline-success"
+                      className="btn btn-sm me-1"
                       onClick={() => onEdit(row)}
                       title="Edit"
                     >
                       <i className="bi bi-pencil" />
-                    </button>
+                    </Button>
                   )}
                   {onDelete && (
-                    <button
-                      className="btn btn-sm btn-outline-danger"
+                    <Button
+                      variant="outline-danger"
+                      className="btn btn-sm"
                       onClick={() => onDelete(row)}
                       title="Delete"
                     >
                       <i className="bi bi-trash" />
-                    </button>
+                    </Button>
                   )}
                 </td>
               </tr>
@@ -173,18 +182,18 @@ export default function DataTable<T extends { id: number }>({
       {/* Pagination */}
       <div className="d-flex justify-content-between align-items-center mt-3 px-1">
         <div className="text-muted small">
-          Showing {(currentPage - 1) * rowsPerPage + 1} to{" "}
-          {Math.min(currentPage * rowsPerPage, sortedFilteredData.length)} of{" "}
+          Showing {(currentPage - 1) * rowsPerPage + 1} to{' '}
+          {Math.min(currentPage * rowsPerPage, sortedFilteredData.length)} of{' '}
           {sortedFilteredData.length} results
         </div>
         <nav>
           <ul className="pagination pagination-sm mb-0">
-            <li className={`page-item ${currentPage === 1 && "disabled"}`}>
+            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
               <button className="page-link" onClick={() => setCurrentPage(1)}>
                 &laquo;
               </button>
             </li>
-            <li className={`page-item ${currentPage === 1 && "disabled"}`}>
+            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
               <button
                 className="page-link"
                 onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
@@ -193,22 +202,41 @@ export default function DataTable<T extends { id: number }>({
               </button>
             </li>
             {[...Array(totalPages)].map((_, i) => (
-              <li key={i} className={`page-item ${currentPage === i + 1 && "active"}`}>
-                <button className="page-link" onClick={() => setCurrentPage(i + 1)}>
+              <li
+                key={i}
+                className={`page-item ${currentPage === i + 1 ? 'active' : ''}`}
+              >
+                <button
+                  className="page-link"
+                  onClick={() => setCurrentPage(i + 1)}
+                >
                   {i + 1}
                 </button>
               </li>
             ))}
-            <li className={`page-item ${currentPage === totalPages && "disabled"}`}>
+            <li
+              className={`page-item ${
+                currentPage === totalPages ? 'disabled' : ''
+              }`}
+            >
               <button
                 className="page-link"
-                onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                onClick={() =>
+                  setCurrentPage((p) => Math.min(p + 1, totalPages))
+                }
               >
                 &gt;
               </button>
             </li>
-            <li className={`page-item ${currentPage === totalPages && "disabled"}`}>
-              <button className="page-link" onClick={() => setCurrentPage(totalPages)}>
+            <li
+              className={`page-item ${
+                currentPage === totalPages ? 'disabled' : ''
+              }`}
+            >
+              <button
+                className="page-link"
+                onClick={() => setCurrentPage(totalPages)}
+              >
                 &raquo;
               </button>
             </li>

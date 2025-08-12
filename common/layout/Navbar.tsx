@@ -12,7 +12,7 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
   const currentItem = sidebarSchema.find(item => item.path === pathname);
-  const parentItem = sidebarSchema.find(item => item.id === currentItem?.ParentId);
+  const parentItem = sidebarSchema.find(item => item.id === currentItem?.parentId);
 
   const parentName = parentItem?.name || '';
   const currentName = currentItem?.name || '';
@@ -76,7 +76,7 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
     >
       <div className="d-flex align-items-center gap-3">
         {/* Mobile Hamburger */}
-        <button onClick={toggleSidebar} className="btn btn-sm" aria-label="Toggle sidebar">
+        <button onClick={toggleSidebar} className="btn btn-sm dark-btn-outline-light" aria-label="Toggle sidebar">
           <i className="bi bi-list" />
         </button>
 

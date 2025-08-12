@@ -1,43 +1,24 @@
-// types/mission.ts
-
-export interface MenuDto {
-  id: string;
-  version: number | null;
-  deleted: boolean;
-  active: boolean;
-  createdAt: string;
-  updatedAt: string;
-  createdBy: string;
-  updatedBy: string;
-  ipAddress: string | null;
-  name: string;
-  missionDescription: string;
-  raisingDate: string;
-  missionCountryDto: any | null;
-  startDate: string;
-  endDate: string;
-}
-
 export interface MenuTables {
   id: number;
   name: string;
-  menuType: string;
-  parentMenu: string;
-  icon:string,
-  path: string;
+  menuType: 'MAIN' | 'SUB';
+  parentId?: string | null;
+  parentMenu?: string | null;
+  icon: string;
+  path: string | null;
 }
 
-
 export interface MenuParam {
+  id: number;
   menuName?: string;
-  subMenuName?:string
-  menuType: "MENUTITLE"|"MAINMENU"|"SUBMENU";
+  subName?: string;
+  menuType: 'MAIN' | 'SUB';
   icon: string;
-  path: string;
-  parentId: string;
+  path: string | null;
+  parentId?: string | null;
 }
 
 export interface MenuUpdateProps {
   itemUpdate?: MenuTables;
   closeModal: () => void;
-};
+}

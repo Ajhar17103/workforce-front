@@ -1,29 +1,30 @@
-import { useState } from "react";
-import CommonModal from "@/common/modal/CommonModal";
-import MenuCreate from "./MenuCreate";
-import MenuTable from "./MenuTable";
+import CustomButton from '@/common/Button/Button';
+import CommonModal from '@/common/modal/CommonModal';
+import { useState } from 'react';
+import MenuCreate from './MenuCreate';
+import MenuTable from './MenuTable';
 
 export default function MenuPage() {
   const [modalShow, setModalShow] = useState<boolean>(false);
 
-  const closeModal=()=>{
+  const closeModal = () => {
     setModalShow(false);
-  }
-  
-  return (
-  <div className="card shadow-sm p-3">
-      <div className="d-flex justify-content-between align-items-center">
-    <h5 className="mb-0 fw-semibold text-primary">Menus List</h5>
-<button
-  className="btn btn-sm btn-outline-info d-flex align-items-center gap-2 custom-btn"
-  onClick={() => setModalShow(true)}
->
-  <i className="bi bi-plus-lg fs-5" />
-  Add
-</button>
+  };
 
+  return (
+    <div className="card shadow-sm p-3 dark">
+      <div className="d-flex justify-content-between align-items-center">
+        <h6 className="mb-0 fw-semibold text-primary">Menus List</h6>
+        <CustomButton
+          size="xs"
+          loading={false}
+          icon="bi bi-plus-lg"
+          variant="outline-primary"
+          onClick={() => setModalShow(true)}
+          tooltip="Add New Menu"
+        />
       </div>
-      <MenuTable/>
+      <MenuTable />
 
       <CommonModal
         show={modalShow}
@@ -31,13 +32,10 @@ export default function MenuPage() {
         title="Create Menu"
         size="xl"
         footer={false}
-        fullscreen={"xl-down"}
+        fullscreen={'xl-down'}
       >
-        <MenuCreate 
-         closeModal={()=>closeModal()}
-        />
+        <MenuCreate closeModal={() => closeModal()} />
       </CommonModal>
-  </div>
-
+    </div>
   );
 }

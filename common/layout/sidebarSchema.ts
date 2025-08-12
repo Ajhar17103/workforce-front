@@ -1,37 +1,44 @@
-import { Sidebar } from "../../types/common/Sidebar";
-
+import { Sidebar } from '../../types/common/Sidebar';
 
 export const sidebarSchema: Sidebar[] = [
   {
-    id:1,
-    name: "Master Data",
-    icon:"bi bi-gear-fill me-2",
-    path:null,
-    menuType:"MAINMENU",
-    parentId:null
-  },
-   {
-    id:3,
-    name: "Menus",
-    icon:"",
-    path:"/master-data/menus",
-    menuType:"SUBMENU",
-    parentId:1
+    id: 11,
+    name: 'Dashboard',
+    icon: 'bi bi-speedometer2 me-2',
+    path: '/',
+    menuType: 'MAIN',
+    parentId: null,
   },
   {
-    id:2,
-    name: "Users",
-    icon:"",
-    path:"/master-data/users",
-    menuType:"SUBMENU",
-    parentId:1
+    id: 1,
+    name: 'Master Data',
+    icon: 'bi bi-gear-fill me-2',
+    path: null,
+    menuType: 'MAIN',
+    parentId: null,
   },
   {
-    id:55,
-    name: "Task",
-    icon:"bi bi-gear-fill me-2",
-    path:"/task",
-    menuType:"MAINMENU",
-    parentId:null,
-    }
+    id: 3,
+    name: 'Menus',
+    icon: '',
+    path: '/master-data/menus',
+    menuType: 'SUB',
+    parentId: 1,
+  },
+  {
+    id: 2,
+    name: 'Users',
+    icon: '',
+    path: '/master-data/users',
+    menuType: 'SUB',
+    parentId: 1,
+  },
+  {
+    id: 55,
+    name: 'Task',
+    icon: 'bi bi-gear-fill me-2',
+    path: '/task',
+    menuType: 'MAIN',
+    parentId: null,
+  },
 ];

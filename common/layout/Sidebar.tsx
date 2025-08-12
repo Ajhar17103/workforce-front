@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState, useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { sidebarSchema } from './sidebarSchema';
 
 interface SidebarProps {
@@ -14,28 +14,27 @@ interface SidebarProps {
 export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
   const pathname = usePathname();
 
-  // Memoize nestedMenus so it's stable across renders
   const nestedMenus = useMemo(() => {
     return sidebarSchema
-      .filter(menu => menu.menuType === 'MAINMENU')
-      .map(main => ({
+      .filter((menu) => menu.menuType === 'MAIN')
+      .map((main) => ({
         ...main,
-        subMenus: sidebarSchema.filter(sub => sub.menuType === 'SUBMENU' && sub.parentId === main.id),
+        SUBs: sidebarSchema.filter(
+          (sub) => sub.menuType === 'SUB' && sub.parentId === main.id,
+        ),
       }));
   }, [sidebarSchema]);
 
-  // State to track open main menu
   const [openMenuId, setOpenMenuId] = useState<number | null>(() => {
-    const activeMenu = nestedMenus.find(main =>
-      main.subMenus.some(sub => sub.path === pathname)
+    const activeMenu = nestedMenus.find((main) =>
+      main.SUBs.some((sub) => sub.path === pathname),
     );
     return activeMenu ? activeMenu.id : null;
   });
 
-  // Sync openMenuId only on pathname or menu changes, NOT on manual toggle state changes
   useEffect(() => {
-    const activeMenu = nestedMenus.find(main =>
-      main.subMenus.some(sub => sub.path === pathname)
+    const activeMenu = nestedMenus.find((main) =>
+      main.SUBs.some((sub) => sub.path === pathname),
     );
 
     if (activeMenu && activeMenu.id !== openMenuId) {
@@ -45,9 +44,8 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
     }
   }, [pathname, nestedMenus]);
 
-  // Toggle submenu open/close on button click
   const toggleMenu = (id: number) => {
-    setOpenMenuId(prev => (prev === id ? null : id));
+    setOpenMenuId((prev) => (prev === id ? null : id));
   };
 
   return (
@@ -81,27 +79,30 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
         </button>
       </div>
 
-      <nav className="sidebar-menu pt-2" role="navigation" aria-label="Sidebar menu">
-        <Link
+      <nav
+        className="sidebar-menu pt-2"
+        role="navigation"
+        aria-label="Sidebar menu"
+      >
+        {/* <Link
           href="/"
           className={`sidebar-link ${pathname === '/' ? 'active' : ''}`}
         >
           <i className="bi bi-speedometer2 me-2" />
           {sidebarOpen && 'Dashboard'}
-        </Link>
+        </Link> */}
 
-        {nestedMenus.map(main => {
-          const hasSubMenus = main.subMenus.length > 0;
+        {nestedMenus.map((main) => {
+          const hasSUBs = main.SUBs.length > 0;
 
-          if (hasSubMenus) {
-            // Main menu with submenu
+          if (hasSUBs) {
             return (
               <div className="sidebar-group" key={main.id}>
                 <button
                   className="sidebar-group-toggle"
                   onClick={() => toggleMenu(main.id)}
                   aria-expanded={openMenuId === main.id}
-                  aria-controls={`submenu-${main.id}`}
+                  aria-controls={`SUB-${main.id}`}
                   type="button"
                 >
                   <i className={main.icon} />
@@ -118,12 +119,14 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
                 </button>
 
                 {sidebarOpen && openMenuId === main.id && (
-                  <ul id={`submenu-${main.id}`} className="sidebar-submenu">
-                    {main.subMenus.map(sub => (
+                  <ul id={`SUB-${main.id}`} className="sidebar-SUB">
+                    {main.SUBs.map((sub) => (
                       <li key={sub.id}>
                         <Link
                           href={sub.path!}
-                          className={`submenu-item ${pathname === sub.path ? 'active' : ''}`}
+                          className={`SUB-item ${
+                            pathname === sub.path ? 'active' : ''
+                          }`}
                         >
                           {sub.name}
                         </Link>
@@ -134,20 +137,19 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
               </div>
             );
           } else if (main.path) {
-            // Main menu as direct link (no submenu)
             return (
               <Link
                 key={main.id}
                 href={main.path}
-                className={`sidebar-link ${pathname === main.path ? 'active' : ''}`}
+                className={`sidebar-link ${
+                  pathname === main.path ? 'active' : ''
+                }`}
               >
                 <i className={main.icon} />
                 {sidebarOpen && <span className="ms-2">{main.name}</span>}
               </Link>
             );
           }
-
-          // Main menu with no path and no submenu, render disabled
           return (
             <div key={main.id} className="sidebar-group">
               <span className="sidebar-link disabled">

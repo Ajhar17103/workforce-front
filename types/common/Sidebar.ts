@@ -1,8 +1,8 @@
 export type Sidebar = {
   id: number;
   name: string;
-  icon?:string;
+  icon?: string;
   path: string | null;
-  menuType:"MAINMENU"|"SUBMENU",
+  menuType: 'MAIN' | 'SUB';
   parentId?: number | null;
 };
