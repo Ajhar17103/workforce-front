@@ -1,9 +1,12 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import Image from "next/image";
-import Link from "next/link";
+import { getAuthApiUrl } from '@/utils/api';
+import axios from 'axios';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
 type SignInFormData = {
   email: string;
@@ -15,33 +18,59 @@ type SignInProps = {
 };
 
 export default function SignIn({ onLogin }: SignInProps) {
-  const { register, handleSubmit, formState: { errors } } = useForm<SignInFormData>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<SignInFormData>({
     defaultValues: {
-      email: "info@gmail.com",
-      password: "abc12345678"
-    }
+      email: 'admin@gmail.com',
+      password: '11223344',
+    },
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const authUrl = getAuthApiUrl('/login');
 
   const onSubmit = (data: SignInFormData) => {
     console.log(data);
-    localStorage.setItem("isLogin", "true");
+    localStorage.setItem('isLogin', 'true');
 
-     if (onLogin) {
-      onLogin();
-    }
-
-    window.location.reload();
+    axios
+      .post(authUrl, data)
+      .then((response) => {
+        toast.success('Login Successful, Redirect to dashboard', {
+          theme: 'dark',
+        });
+        reset();
+         localStorage.setItem('accessToken', response.data.accessToken);
+         localStorage.setItem('refreshToken', response.data.refreshToken);
+        localStorage.setItem('isLogin', 'true');
+        //  onLogin('true');
+         window.location.reload();
+      })
+      .catch((error) => {
+        toast.error('Something went wrong!', {
+          theme: 'dark',
+          closeOnClick: false,
+        });
+        console.error(error);
+      });
+    // if (onLogin) {
+    //   onLogin();
+    // }
   };
-  
+
   return (
     <div className="container-fluid min-vh-100 d-flex flex-column">
       <div className="row flex-grow-1">
-        
         {/* Left Side Image - moves below form on small screens */}
         <div className="col-12 col-lg-7 order-2 order-lg-1 p-0">
-          <div className="w-100 h-100 position-relative" style={{ minHeight: "250px" }}>
+          <div
+            className="w-100 h-100 position-relative"
+            style={{ minHeight: '250px' }}
+          >
             <Image
               src="/images/auth-1.jpg"
               alt="Login illustration"
@@ -54,14 +83,15 @@ export default function SignIn({ onLogin }: SignInProps) {
 
         {/* Right Side Form */}
         <div className="col-12 col-lg-5 d-flex align-items-center justify-content-center order-1 order-lg-2 p-4">
-          <div className="w-100" style={{ maxWidth: "400px" }}>
+          <div className="w-100" style={{ maxWidth: '400px' }}>
             <div className="mb-4 text-center">
               <h3 className="fw-semibold">Sign In</h3>
-              <p className="text-muted mb-0">Enter your email and password to sign in!</p>
+              <p className="text-muted mb-0">
+                Enter your email and password to sign in!
+              </p>
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)}>
-              
               {/* Email */}
               <div className="mb-3">
                 <label htmlFor="email" className="form-label fw-medium">
@@ -71,14 +101,14 @@ export default function SignIn({ onLogin }: SignInProps) {
                   id="email"
                   type="email"
                   placeholder="info@gmail.com"
-                  {...register("email", {
-                    required: "Email is required",
+                  {...register('email', {
+                    required: 'Email is required',
                     pattern: {
                       value: /^\S+@\S+$/i,
-                      message: "Invalid email address",
+                      message: 'Invalid email address',
                     },
                   })}
-                  className={`form-control ${errors.email ? "is-invalid" : ""}`}
+                  className={`form-control ${errors.email ? 'is-invalid' : ''}`}
                 />
                 {errors.email && (
                   <div className="invalid-feedback">{errors.email.message}</div>
@@ -93,26 +123,34 @@ export default function SignIn({ onLogin }: SignInProps) {
                 <div className="input-group">
                   <input
                     id="password"
-                    type={showPassword ? "text" : "password"}
+                    type={showPassword ? 'text' : 'password'}
                     placeholder="Enter your password"
-                    {...register("password", {
-                      required: "Password is required",
+                    {...register('password', {
+                      required: 'Password is required',
                       minLength: {
                         value: 6,
-                        message: "Password must be at least 6 characters",
+                        message: 'Password must be at least 6 characters',
                       },
                     })}
-                    className={`form-control ${errors.password ? "is-invalid" : ""}`}
+                    className={`form-control ${
+                      errors.password ? 'is-invalid' : ''
+                    }`}
                   />
                   <button
                     type="button"
                     className="input-group-text bg-white border-start-0"
-                    onClick={() => setShowPassword(prev => !prev)}
+                    onClick={() => setShowPassword((prev) => !prev)}
                   >
-                    {showPassword ? <i className="bi bi-eye"/> : <i className="bi bi-eye-slash"/>}
+                    {showPassword ? (
+                      <i className="bi bi-eye" />
+                    ) : (
+                      <i className="bi bi-eye-slash" />
+                    )}
                   </button>
                   {errors.password && (
-                    <div className="invalid-feedback d-block">{errors.password.message}</div>
+                    <div className="invalid-feedback d-block">
+                      {errors.password.message}
+                    </div>
                   )}
                 </div>
               </div>
@@ -134,7 +172,6 @@ export default function SignIn({ onLogin }: SignInProps) {
             </form>
           </div>
         </div>
-
       </div>
     </div>
   );

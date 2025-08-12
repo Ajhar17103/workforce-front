@@ -11,11 +11,12 @@ import Loading from '@/common/Loader/Loading';
 import { store } from '@/redux/store';
 import { useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
 import SignIn from './(auth)/sign-in/page';
 
 function DashboardContent({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const toggleSidebar = () => setSidebarOpen(prev => !prev);
+  const toggleSidebar = () => setSidebarOpen((prev) => !prev);
 
   const [isLogin, setIsLogin] = useState<boolean | null>(null);
 
@@ -25,13 +26,16 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
   }, []);
 
   if (isLogin === null) {
-    return <Loading fullScreen message="Please wait, loading your content..." />;
+    return (
+      <Loading fullScreen message="Please wait, loading your content..." />
+    );
   }
 
   if (!isLogin) {
     return (
       <div className="">
-        <SignIn onLogin={() => setIsLogin(true)} />
+        <SignIn />
+        <ToastContainer />
       </div>
     );
   }
@@ -51,14 +55,19 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
       <body>
         <Provider store={store}>
           <DashboardContent>
             {children}
-            </DashboardContent>
+            <ToastContainer />
+          </DashboardContent>
         </Provider>
       </body>
     </html>
