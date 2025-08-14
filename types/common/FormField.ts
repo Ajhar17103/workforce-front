@@ -1,16 +1,16 @@
-import { commonOption, showWhen } from "./CommonOption";
+import { commonOption, showWhen } from './CommonOption';
 
 export type FormField = {
   column: number;
   align: string;
   label: string;
-  labelVisibility: "visible" | "hidden" | "collapse" | "initial" | "inherit";
+  labelVisibility: 'visible' | 'hidden' | 'collapse' | 'initial' | 'inherit';
   fieldName: string;
-  dataType: "text" | "textarea" | "dropdown" | "checkbox" | "date" | "number";
+  dataType: 'text' | 'textarea' | 'dropdown' | 'checkbox' | 'date' | 'number';
   action: string | null;
-  defaultValue: any;
+  defaultValue: string | any;
   isEnum: boolean;
   enum: commonOption[];
   isRequired: boolean;
-  showWhen?:showWhen[];
+  showWhen?: showWhen[];
 };

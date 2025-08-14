@@ -1,36 +1,54 @@
-"use client";
+'use client';
 
-import { showWhen } from "@/types/common/CommonOption";
-import { FormField } from "@/types/common/FormField";
-import { formatDate } from "@/utils/formatDate";
-import { useWatch } from "react-hook-form";
+import { FormField } from '@/types/common/FormField';
+import { formatDate } from '@/utils/formatDate';
+import { useEffect, useRef } from 'react';
+import { UseFormResetField, useWatch } from 'react-hook-form';
 
 type Props = {
   schema: FormField[];
   register: any;
-  control: any; // ✅ Needed for useWatch
+  control: any;
   errors: Record<string, any>;
+  resetField: UseFormResetField<any>;
 };
 
-export default function Form({ schema, register, control, errors }: Props) {
-  // Watch all form values
+export default function Form({
+  schema,
+  register,
+  control,
+  errors,
+  resetField,
+}: Props) {
   const values = useWatch({ control });
+  const prevVisibleFieldsRef = useRef<Set<string>>(new Set());
 
-  // Filter fields based on showWhen condition
-const visibleFields = schema.filter(field => {
-  if (!field.showWhen) return true;
-
-  const checkCondition = (cond: showWhen) => {
-    return values[cond.field] === cond.value;
+  const isFieldVisible = (field: FormField) => {
+    if (!field.showWhen) return true;
+    const conditions = Array.isArray(field.showWhen)
+      ? field.showWhen
+      : [field.showWhen];
+    return conditions.some((cond) => values[cond.field] === cond.value);
   };
 
-  if (Array.isArray(field.showWhen)) {
-    return field.showWhen.some(checkCondition);
-  }
-  return checkCondition(field.showWhen);
-});
+  const visibleFields = schema.filter(isFieldVisible);
+  const visibleFieldNames = new Set(visibleFields.map((f) => f.fieldName));
 
+  useEffect(() => {
+    const prevVisibleFields = prevVisibleFieldsRef.current;
 
+    schema.forEach((field) => {
+      if (field.showWhen) {
+        const currentlyVisible = visibleFieldNames.has(field.fieldName);
+        const wasVisible = prevVisibleFields.has(field.fieldName);
+        if (wasVisible && !currentlyVisible) {
+          resetField(field.fieldName);
+        }
+      }
+    });
+
+    prevVisibleFieldsRef.current = visibleFieldNames;
+  }, [visibleFieldNames, schema, resetField]);
   return (
     <>
       {visibleFields.map((field, idx) => (
@@ -44,7 +62,7 @@ const visibleFields = schema.filter(field => {
               {field.isRequired && <span className="text-danger ms-1">*</span>}
             </label>
 
-            {field.dataType === "text" && (
+            {field.dataType === 'text' && (
               <input
                 type="text"
                 defaultValue={field.defaultValue}
@@ -53,7 +71,7 @@ const visibleFields = schema.filter(field => {
               />
             )}
 
-            {field.dataType === "textarea" && (
+            {field.dataType === 'textarea' && (
               <textarea
                 defaultValue={field.defaultValue}
                 {...register(field.fieldName, { required: field.isRequired })}
@@ -61,7 +79,7 @@ const visibleFields = schema.filter(field => {
               />
             )}
 
-            {field.dataType === "number" && (
+            {field.dataType === 'number' && (
               <input
                 type="number"
                 defaultValue={field.defaultValue}
@@ -70,23 +88,23 @@ const visibleFields = schema.filter(field => {
               />
             )}
 
-            {field.dataType === "date" && (
+            {field.dataType === 'date' && (
               <input
                 type="date"
-                defaultValue={formatDate(field.defaultValue, "yyyy-MM-dd")}
+                defaultValue={formatDate(field.defaultValue, 'yyyy-MM-dd')}
                 {...register(field.fieldName, { required: field.isRequired })}
                 className="form-control"
               />
             )}
 
-            {field.dataType === "dropdown" && (
+            {field.dataType === 'dropdown' && (
               <select
                 defaultValue={field.defaultValue}
                 {...register(field.fieldName, { required: field.isRequired })}
                 className="form-select"
               >
                 <option value="">--</option>
-                {field.enum.map(option => (
+                {field.enum.map((option) => (
                   <option key={option.id} value={String(option.id)}>
                     {option.name}
                   </option>
@@ -94,7 +112,7 @@ const visibleFields = schema.filter(field => {
               </select>
             )}
 
-            {field.dataType === "checkbox" && (
+            {field.dataType === 'checkbox' && (
               <div className="form-check mt-2">
                 <input
                   type="checkbox"

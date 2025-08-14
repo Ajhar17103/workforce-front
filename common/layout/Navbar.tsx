@@ -1,31 +1,45 @@
 'use client';
 
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { fetchMenus } from '@/redux/slices/menuSlice';
+import { removeLocalStorage, setLocalStorage } from '@/utils/storage';
 import { usePathname } from 'next/navigation';
-import { sidebarSchema } from './sidebarSchema';
 import { useEffect, useState } from 'react';
 
-export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void }) {
+export default function Navbar({
+  toggleSidebar,
+}: {
+  toggleSidebar: () => void;
+}) {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
-  const currentItem = sidebarSchema.find(item => item.path === pathname);
-  const parentItem = sidebarSchema.find(item => item.id === currentItem?.parentId);
+  const dispatch = useAppDispatch();
+  const { menus } = useAppSelector((state) => state.menu);
+
+  const currentItem = menus.find((item) => item.path === pathname);
+  const parentItem = menus.find((item) => item.id === currentItem?.parentId);
 
   const parentName = parentItem?.name || '';
   const currentName = currentItem?.name || '';
 
-  // On mount: load dark mode from localStorage or system preference
+  useEffect(() => {
+    dispatch(fetchMenus());
+  }, [dispatch]);
+
   useEffect(() => {
     const stored = localStorage.getItem('darkMode');
     if (stored !== null) {
       setDarkMode(stored === 'true');
       if (stored === 'true') document.body.classList.add('dark-mode');
     } else {
-      // Detect system preference if no stored value
-      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      if (
+        window.matchMedia &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches
+      ) {
         setDarkMode(true);
         document.body.classList.add('dark-mode');
       }
@@ -39,7 +53,6 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Toggle dark mode and persist to localStorage
   const toggleDarkMode = () => {
     const nextMode = !darkMode;
     setDarkMode(nextMode);
@@ -52,7 +65,6 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
     }
   };
 
-  // Close dropdowns on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       const target = event.target as HTMLElement;
@@ -64,8 +76,11 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
   }, []);
 
   const signout = () => {
-    localStorage.removeItem('isLogin');
-    window.location.reload();
+    removeLocalStorage('access_token');
+    removeLocalStorage('refresh_token');
+    removeLocalStorage('isLogin');
+    setLocalStorage('status', 'ISOUT');
+    window.location.href = '/';
   };
 
   return (
@@ -75,12 +90,14 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
       }`}
     >
       <div className="d-flex align-items-center gap-3">
-        {/* Mobile Hamburger */}
-        <button onClick={toggleSidebar} className="btn btn-sm dark-btn-outline-light" aria-label="Toggle sidebar">
+        <button
+          onClick={toggleSidebar}
+          className="btn btn-sm dark-btn-outline-light"
+          aria-label="Toggle sidebar"
+        >
           <i className="bi bi-list" />
         </button>
 
-        {/* Breadcrumbs */}
         <div className="navbar-breadcrumb">
           {parentName && (
             <>
@@ -92,10 +109,7 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
         </div>
       </div>
 
-      {/* Notifications & User Info & Dark Mode */}
       <div className="d-flex align-items-center gap-3">
-
-        {/* Dark Mode Toggle */}
         <button
           onClick={toggleDarkMode}
           className="btn btn-sm"
@@ -109,7 +123,6 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
           )}
         </button>
 
-        {/* Notifications Dropdown */}
         <div className="position-relative notification-dropdown">
           <button
             className="btn btn-sm position-relative"
@@ -118,25 +131,37 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
             aria-haspopup="true"
             aria-label="Notifications"
           >
-            <i className={`bi bi-bell fs-5 ${darkMode ? 'text-light' : 'text-muted'}`} />
+            <i
+              className={`bi bi-bell fs-5 ${
+                darkMode ? 'text-light' : 'text-muted'
+              }`}
+            />
             <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-              3
-              <span className="visually-hidden">unread notifications</span>
+              3<span className="visually-hidden">unread notifications</span>
             </span>
           </button>
           {notifOpen && (
             <ul
-              className={`dropdown-menu dropdown-menu-end show ${darkMode ? 'dropdown-menu-dark' : ''}`}
+              className={`dropdown-menu dropdown-menu-end show ${
+                darkMode ? 'dropdown-menu-dark' : ''
+              }`}
               style={{ minWidth: '250px' }}
             >
-              <li><h6 className="dropdown-header">Notifications</h6></li>
-              <li><hr className="dropdown-divider" /></li>
-              <li><a className="dropdown-item" href="#">No new notifications</a></li>
+              <li>
+                <h6 className="dropdown-header">Notifications</h6>
+              </li>
+              <li>
+                <hr className="dropdown-divider" />
+              </li>
+              <li>
+                <a className="dropdown-item" href="#">
+                  No new notifications
+                </a>
+              </li>
             </ul>
           )}
         </div>
 
-        {/* User Dropdown */}
         <div className="dropdown user-dropdown">
           <button
             className="btn btn-sm d-flex align-items-center gap-2"
@@ -144,14 +169,26 @@ export default function Navbar({ toggleSidebar }: { toggleSidebar: () => void })
             aria-expanded={userDropdownOpen}
             aria-haspopup="true"
           >
-            <div className={`text-end d-none d-sm-block ${darkMode ? 'text-light' : ''}`}>
+            <div
+              className={`text-end d-none d-sm-block ${
+                darkMode ? 'text-light' : ''
+              }`}
+            >
               <div className="user-role">Admin</div>
               <div className="user-name fw-semibold">Ali Hossain</div>
             </div>
-            <i className={`bi bi-caret-down-fill ${darkMode ? 'text-light' : ''}`} />
+            <i
+              className={`bi bi-caret-down-fill ${
+                darkMode ? 'text-light' : ''
+              }`}
+            />
           </button>
           {userDropdownOpen && (
-            <ul className={`dropdown-menu dropdown-menu-end show ${darkMode ? 'dropdown-menu-dark' : ''}`}>
+            <ul
+              className={`dropdown-menu dropdown-menu-end show ${
+                darkMode ? 'dropdown-menu-dark' : ''
+              }`}
+            >
               <li>
                 <a className="dropdown-item" href="/profile">
                   <i className="bi bi-person me-2"></i> Profile

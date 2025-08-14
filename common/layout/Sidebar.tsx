@@ -1,40 +1,57 @@
 'use client';
 
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { fetchMenus } from '@/redux/slices/menuSlice';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
-import { sidebarSchema } from './sidebarSchema';
 
 interface SidebarProps {
   sidebarOpen: boolean;
   toggleSidebar: () => void;
 }
 
+interface Menu {
+  id: number;
+  name: string;
+  parentId: number | null;
+  icon?: string;
+  path?: string | null;
+}
+
+interface NestedMenu extends Menu {
+  sub: Menu[];
+}
+
 export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
   const pathname = usePathname();
+  const dispatch = useAppDispatch();
+  const { menus, loading, error } = useAppSelector((state) => state.menu);
 
-  const nestedMenus = useMemo(() => {
-    return sidebarSchema
-      .filter((menu) => menu.menuType === 'MAIN')
-      .map((main) => ({
+  useEffect(() => {
+    dispatch(fetchMenus());
+  }, [dispatch]);
+
+  const nestedMenus: NestedMenu[] = useMemo(() => {
+    return menus
+      ?.filter((menu) => menu.parentId === null)
+      ?.map((main) => ({
         ...main,
-        SUBs: sidebarSchema.filter(
-          (sub) => sub.menuType === 'SUB' && sub.parentId === main.id,
-        ),
+        sub: menus?.filter((sub) => sub.parentId === main.id),
       }));
-  }, [sidebarSchema]);
+  }, [menus]);
 
   const [openMenuId, setOpenMenuId] = useState<number | null>(() => {
     const activeMenu = nestedMenus.find((main) =>
-      main.SUBs.some((sub) => sub.path === pathname),
+      main.sub.some((sub) => sub.path === pathname),
     );
     return activeMenu ? activeMenu.id : null;
   });
 
   useEffect(() => {
     const activeMenu = nestedMenus.find((main) =>
-      main.SUBs.some((sub) => sub.path === pathname),
+      main.sub.some((sub) => sub.path === pathname),
     );
 
     if (activeMenu && activeMenu.id !== openMenuId) {
@@ -84,16 +101,8 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
         role="navigation"
         aria-label="Sidebar menu"
       >
-        {/* <Link
-          href="/"
-          className={`sidebar-link ${pathname === '/' ? 'active' : ''}`}
-        >
-          <i className="bi bi-speedometer2 me-2" />
-          {sidebarOpen && 'Dashboard'}
-        </Link> */}
-
         {nestedMenus.map((main) => {
-          const hasSUBs = main.SUBs.length > 0;
+          const hasSUBs = main.sub.length > 0;
 
           if (hasSUBs) {
             return (
@@ -102,10 +111,10 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
                   className="sidebar-group-toggle"
                   onClick={() => toggleMenu(main.id)}
                   aria-expanded={openMenuId === main.id}
-                  aria-controls={`SUB-${main.id}`}
+                  aria-controls={`sub-${main.id}`}
                   type="button"
                 >
-                  <i className={main.icon} />
+                  <i className={`${main.icon} me-2`} />
                   {sidebarOpen && <span className="ms-2">{main.name}</span>}
                   {sidebarOpen && (
                     <span className="ms-auto">
@@ -119,12 +128,12 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
                 </button>
 
                 {sidebarOpen && openMenuId === main.id && (
-                  <ul id={`SUB-${main.id}`} className="sidebar-SUB">
-                    {main.SUBs.map((sub) => (
+                  <ul id={`sub-${main.id}`} className="sidebar-sub">
+                    {main.sub.map((sub) => (
                       <li key={sub.id}>
                         <Link
-                          href={sub.path!}
-                          className={`SUB-item ${
+                          href={sub?.path!}
+                          className={`sub-item ${
                             pathname === sub.path ? 'active' : ''
                           }`}
                         >
@@ -140,12 +149,12 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
             return (
               <Link
                 key={main.id}
-                href={main.path}
+                href={main?.path}
                 className={`sidebar-link ${
                   pathname === main.path ? 'active' : ''
                 }`}
               >
-                <i className={main.icon} />
+                <i className={`${main.icon} me-2`} />
                 {sidebarOpen && <span className="ms-2">{main.name}</span>}
               </Link>
             );
@@ -153,7 +162,7 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
           return (
             <div key={main.id} className="sidebar-group">
               <span className="sidebar-link disabled">
-                <i className={main.icon} />
+                <i className={`${main.icon} me-2`} />
                 {sidebarOpen && <span className="ms-2">{main.name}</span>}
               </span>
             </div>

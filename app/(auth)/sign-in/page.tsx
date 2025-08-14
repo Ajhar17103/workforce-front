@@ -1,11 +1,12 @@
 'use client';
 
+import { Toast } from '@/common/messages/toast';
 import { getAuthApiUrl } from '@/utils/api';
+import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
 
 type SignInFormData = {
   email: string;
@@ -34,26 +35,26 @@ export default function SignIn({ onLogin }: SignInProps) {
 
   const onSubmit = (data: SignInFormData) => {
     console.log(data);
-    // axios
-    //   .post(authUrl, data)
-    //   .then((response) => {
-    toast.success('Login Successful, Redirect to dashboard', {
-      theme: 'dark',
-    });
-    //     reset();
-    //     localStorage.setItem('accessToken', response.data.accessToken);
-    //     localStorage.setItem('refreshToken', response.data.refreshToken);
-    localStorage.setItem('isLogin', 'true');
-    //  onLogin('true');
-    window.location.reload();
-    // })
-    // .catch((error) => {
-    //   toast.error('Something went wrong!', {
-    //     theme: 'dark',
-    //     closeOnClick: false,
-    //   });
-    //   console.error(error);
-    // });
+    axios
+      .post(authUrl, data)
+      .then((response) => {
+        console.log(response);
+        reset();
+        localStorage.setItem('access_token', response.data.access_token);
+        localStorage.setItem('refresh_token', response.data.refresh_token);
+        localStorage.setItem('isLogin', 'true');
+        localStorage.setItem('status', 'ISIN');
+        window.location.reload();
+      })
+      .catch((error) => {
+        Toast({
+          message: 'Something went wrong!',
+          type: 'error',
+          autoClose: 1500,
+          theme: 'colored',
+        });
+        console.error(error);
+      });
   };
 
   return (

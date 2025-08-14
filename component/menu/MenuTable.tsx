@@ -1,43 +1,48 @@
-import CommonModal from '@/common/modal/CommonModal';
-import DynamicTable from '@/common/table/DataTable';
-import { useAppDispatch } from '@/redux/hooks';
-import { fetchMissions } from '@/redux/slices/missionSlice';
+'use client';
+
+import CommonModal from '@/common/modals/CommonModal';
+import DynamicTable from '@/common/tables/DataTable';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { fetchMenus } from '@/redux/slices/menuSlice';
+import { FormField } from '@/types/common/FormField';
 import { MenuDto, MenuParam } from '@/types/master-data/menu.type';
-import { getUtilityApiUrl } from '@/utils/api';
+import { getMasterApiUrl } from '@/utils/api';
 import { deleteApi } from '@/utils/deleteApi';
+import { setSchemaDefaultValue } from '@/utils/setSchemaDefaultValue';
+import { setSchemaEnum } from '@/utils/setSchemaEnum';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
+import { menuFormSchema as baseSchema } from './MenuFormSchema';
 import MenuUpdate from './MenuUpdate';
-import { menus } from './dummyData';
 
 export default function MenuTable() {
-  const missionUrl = getUtilityApiUrl('/missions');
-
+  const menuUrl = getMasterApiUrl('/menus');
   const dispatch = useAppDispatch();
+  const { menus } = useAppSelector((state) => state.menu);
 
   const [tableData, setTableData] = useState<MenuDto[]>([]);
   const [modalShow, setModalShow] = useState<boolean>(false);
   const [itemUpdate, setItemUpdate] = useState<MenuParam>({
-    id: 1,
+    id: 0,
     menuName: '',
     subName: '',
-    menuType: 'MAIN',
     icon: '',
     path: null,
     parentId: null,
   });
+  const [schema, setSchema] = useState<FormField[]>(baseSchema);
 
   useEffect(() => {
-    dispatch(fetchMissions());
+    dispatch(fetchMenus());
   }, [dispatch]);
+
   useEffect(() => {
     const transformed: MenuDto[] = menus?.map((m) => ({
       id: m.id,
-      name: m.name,
-      menuType: m.menuType,
       parentId: m.parentId,
       parentMenu: m.parentMenu,
+      name: m.name,
       icon: m.icon,
       path: m.path,
     }));
@@ -60,36 +65,54 @@ export default function MenuTable() {
 
     if (result.isConfirmed) {
       try {
-        const res = await deleteApi(missionUrl, item.id);
-        console.log('Deleted successfully:', res);
-        toast.success('Mission deleted successfully.');
-        dispatch(fetchMissions());
+        await deleteApi(menuUrl, item.id);
+        toast.success('Menu deleted successfully.');
+        dispatch(fetchMenus());
       } catch (error) {
         console.error('Failed to delete:', error);
-        toast.error('Failed to delete mission.');
+        toast.error('Failed to delete menu.');
       }
     }
   };
 
   const updateItem = (item: MenuDto) => {
     setModalShow(true);
-    let menuUpdateData = {
-      id: item.id,
-      menuName: item.menuType === 'MAIN' ? item?.name : '',
-      subName: item.menuType === 'SUB' ? '' : item?.name,
-      menuType: item.menuType,
-      icon: item.menuType === 'MAIN' ? item?.icon : '',
-      path: item?.path,
-      parentId: item?.parentId ? item?.parentId : null,
+
+    const parentItem = menus
+      .filter((menu) => menu.parentId === null)
+      .map((menu) => ({ id: menu.id, name: menu.name }));
+
+    const enumMap = {
+      parentId: parentItem,
     };
+
+    const withEnums = setSchemaEnum(baseSchema, enumMap);
+    const finalSchema = setSchemaDefaultValue(withEnums, itemUpdate);
+    console.log(baseSchema);
+    setSchema(finalSchema);
+
+    const isMainMenu = !item.parentId;
+    console.log(isMainMenu);
+
+    const menuUpdateData: MenuParam = {
+      id: item.id,
+      menuName: isMainMenu ? item?.name : item?.parentMenu,
+      subName: !isMainMenu ? item?.name : '',
+      icon: isMainMenu ? item?.icon : '',
+      path: item?.path,
+      parentId: item?.parentId,
+      menuType: item.parentId ? 'SUB' : 'MAIN',
+    };
+
     setItemUpdate(menuUpdateData);
   };
+
   const closeModal = () => {
     setModalShow(false);
   };
-
+console.log(tableData);
   return (
-    <div className="">
+    <div>
       <DynamicTable
         data={tableData}
         columns={[
@@ -99,13 +122,6 @@ export default function MenuTable() {
             sortable: true,
             searchable: true,
             align: 'start',
-          },
-          {
-            label: 'Menu Type',
-            accessor: 'menuType',
-            sortable: true,
-            searchable: true,
-            align: 'center',
           },
           {
             label: 'Parent Menu',
@@ -129,19 +145,25 @@ export default function MenuTable() {
             align: 'start',
           },
         ]}
-        onEdit={(row) => updateItem(row)}
-        onDelete={(row) => deleteItem(row)}
+        onEdit={updateItem}
+        onDelete={deleteItem}
       />
-      <CommonModal
-        show={modalShow}
-        onHide={() => setModalShow(false)}
-        title="Menu Update"
-        size="xl"
-        footer={false}
-        fullscreen={'xl-down'}
-      >
-        <MenuUpdate itemUpdate={itemUpdate} closeModal={() => closeModal()} />
-      </CommonModal>
+      {modalShow && (
+        <CommonModal
+          show={modalShow}
+          onHide={closeModal}
+          title="Menu Update"
+          size="xl"
+          footer={false}
+          fullscreen="xl-down"
+        >
+          <MenuUpdate
+            schema={schema}
+            itemUpdate={itemUpdate}
+            closeModal={closeModal}
+          />
+        </CommonModal>
+      )}
     </div>
   );
 }

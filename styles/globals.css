@@ -10,6 +10,10 @@
   }
 }
 
+.text-blue {
+  color: #101828 !important;
+}
+
 html,
 body {
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -40,15 +44,15 @@ body.dark-mode .sidebar-group-toggle {
 }
 
 body.dark-mode .sidebar-link.active,
-body.dark-mode .SUB-item.active {
+body.dark-mode .sub-item.active {
   background-color: #333;
   color: #7592ff;
-  border-left-color: #0d6efd;
+  border-left-color: #101828;
 }
 
 body.dark-mode .sidebar-link:hover,
 body.dark-mode .sidebar-group-toggle:hover,
-body.dark-mode .SUB-item:hover {
+body.dark-mode .sub-item:hover {
   background-color: #2a2a2a;
   color: #eee;
 }
@@ -66,7 +70,7 @@ body.dark-mode .dropdown-menu-dark .dropdown-item {
 
 body.dark-mode .dropdown-menu-dark .dropdown-item:hover,
 body.dark-mode .dropdown-menu-dark .dropdown-item:focus {
-  background-color: #0d6efd;
+  background-color: #101828;
   color: white;
 }
 
@@ -173,16 +177,16 @@ a {
 .sidebar-link:hover,
 .sidebar-group-toggle:hover {
   background-color: #f0f4ff;
-  color: #0d6efd;
+  color: #101828;
 }
 
-.sidebar-SUB {
+.sidebar-sub {
   list-style: none;
   margin: 0;
   padding: 5px 0 5px 15px;
 }
 
-.SUB-item {
+.sub-item {
   display: block;
   padding: 8px 25px;
   font-size: 0.9rem;
@@ -191,24 +195,24 @@ a {
   transition: 0.2s;
 }
 
-.SUB-item:hover {
+.sub-item:hover {
   background-color: #f8f9fa;
-  color: #0d6efd;
+  color: #101828;
 }
 
 .sidebar .active {
   background-color: #e9f3ff;
-  color: #0d6efd;
+  color: #101828;
   font-weight: 600;
-  border-left: 4px solid #0d6efd;
+  border-left: 2px solid #101828;
 }
 
 /* Hide text when collapsed (desktop) */
 @media (min-width: 992px) {
   .sidebar.closed .sidebar-header h6,
   .sidebar.closed .sidebar-group-toggle span,
-  .sidebar.closed .sidebar-SUB,
-  .sidebar.closed .SUB-item {
+  .sidebar.closed .sidebar-sub,
+  .sidebar.closed .sub-item {
     display: none;
   }
 
@@ -256,7 +260,7 @@ a {
   background-color: white;
   position: sticky;
   top: 0;
-  z-index: 1100;
+  z-index: 1050;
   transition: box-shadow 0.2s ease;
   font-family: 'Segoe UI', sans-serif;
   font-size: 0.95rem;
@@ -289,7 +293,7 @@ a {
 
 /* Notifications */
 .notification-icon:hover {
-  color: #0d6efd;
+  color: #101828;
   cursor: pointer;
 }
 
@@ -372,7 +376,7 @@ body.dark-mode .content-area {
 body.dark-mode {
   background-color: #101828;
   color: #ddd;
-  box-shadow: #0d6efd;
+  box-shadow: #101828;
 }
 
 /* Make sidebar overlay on mobile */

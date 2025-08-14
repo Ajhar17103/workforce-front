@@ -1,13 +1,11 @@
-import { configureStore } from "@reduxjs/toolkit";
-import countryReducer from "./slices/countrySlice";
-import misssionReducer from "./slices/missionSlice"
-import allowanceReducer from "./slices/allowanceSlice"
+import { configureStore } from '@reduxjs/toolkit';
+import menuReducer from './slices/menuSlice';
+import roleReducer from './slices/roleSlice';
 
 export const store = configureStore({
   reducer: {
-    country: countryReducer,
-    mission:misssionReducer,
-    allowance:allowanceReducer
+    menu: menuReducer,
+    role:roleReducer,
   },
 });
 

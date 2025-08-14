@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 
 type Column<T> = {
@@ -14,7 +14,7 @@ type Column<T> = {
 type Props<T> = {
   data: T[];
   columns: Column<T>[];
-  onView?: (row: T) => void;
+  onPermission?: (row: T) => void;
   onEdit?: (row: T) => void;
   onDelete?: (row: T) => void;
   rowsPerPage?: number;
@@ -23,6 +23,7 @@ type Props<T> = {
 export default function DataTable<T extends { id: number }>({
   data,
   columns,
+  onPermission,
   onEdit,
   onDelete,
   rowsPerPage = 10,
@@ -137,7 +138,13 @@ export default function DataTable<T extends { id: number }>({
         <tbody>
           {paginatedData.length > 0 ? (
             paginatedData.map((row: any, i) => (
-              <tr key={row.id} className={i % 2 === 0 ? '' : 'table-active'} style={i % 2 !== 0 ? { backgroundColor: "#465fff1f" } : undefined}>
+              <tr
+                key={row.id}
+                className={i % 2 === 0 ? '' : 'table-active'}
+                style={
+                  i % 2 !== 0 ? { backgroundColor: '#465fff1f' } : undefined
+                }
+              >
                 <td>{(currentPage - 1) * rowsPerPage + i + 1}</td>
                 {columns.map((col: any, idx) => (
                   <td
@@ -148,6 +155,16 @@ export default function DataTable<T extends { id: number }>({
                   </td>
                 ))}
                 <td>
+                  {onPermission && (
+                    <Button
+                      variant="outline-primary"
+                      className="btn btn-sm me-1"
+                      onClick={() => onPermission(row)}
+                      title="Permission"
+                    >
+                      <i className="bi bi-shield-check" />
+                    </Button>
+                  )}
                   {onEdit && (
                     <Button
                       variant="outline-success"
@@ -214,6 +231,7 @@ export default function DataTable<T extends { id: number }>({
                 </button>
               </li>
             ))}
+
             <li
               className={`page-item ${
                 currentPage === totalPages ? 'disabled' : ''

@@ -4,18 +4,19 @@ import Form from '@/common/forms/Form';
 import { Toast } from '@/common/messages/toast';
 import axiosInstance from '@/lib/axiosInstance';
 import { useAppDispatch } from '@/redux/hooks';
-import { fetchMenus } from '@/redux/slices/menuSlice';
-import { MenuParam, MenuUpdateProps } from '@/types/master-data/menu.type';
+import { fetchRoles } from '@/redux/slices/roleSlice';
+
+import { RoleParam, RoleUpdateProps } from '@/types/master-data/role.type';
 import { getMasterApiUrl } from '@/utils/api';
 import { getDefaultValues } from '@/utils/getDefaultValues';
 import { Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 
-export default function MenuUpdate({
+export default function RoleUpdate({
   schema,
   itemUpdate,
   closeModal,
-}: MenuUpdateProps) {
+}: RoleUpdateProps) {
   const {
     register,
     handleSubmit,
@@ -23,34 +24,29 @@ export default function MenuUpdate({
     resetField,
     formState: { errors },
     reset,
-  } = useForm<MenuParam>({
-    defaultValues: getDefaultValues<MenuParam>(itemUpdate),
+  } = useForm<RoleParam>({
+    defaultValues: getDefaultValues<RoleParam>(itemUpdate),
   });
 
-  const menuUrl = getMasterApiUrl('/menus');
+  const roleUrl = getMasterApiUrl('/roles');
   const dispatch = useAppDispatch();
 
-  const handleFormSubmit = (data: MenuParam) => {
-    const isMainMenu = !data.parentId;
-
-    const menuPostData = {
-      name: data?.menuName,
-      icon: isMainMenu ? data?.icon : '',
-      path: data?.path || '',
-      parentId: data?.parentId || null,
+  const handleFormSubmit = (data: RoleParam) => {
+    const postData = {
+      name: data?.name,
     };
 
     if (itemUpdate?.id) {
       axiosInstance
-        .put(`${menuUrl}/${itemUpdate.id}`, menuPostData)
+        .put(`${roleUrl}/${itemUpdate.id}`, postData)
         .then((response) => {
           Toast({
-            message: 'Menu Updated Successful!',
+            message: 'Role Updated Successful!',
             type: 'success',
             autoClose: 1500,
             theme: 'colored',
           });
-          dispatch(fetchMenus());
+          dispatch(fetchRoles());
           closeModal();
           console.log(response);
         })

@@ -23,6 +23,7 @@ export default function CommonModal({
       onHide={onHide}
       fullscreen={fullscreen}
       aria-labelledby="contained-modal-title-vcenter"
+      
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">{title}</Modal.Title>

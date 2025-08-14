@@ -3,18 +3,16 @@
 import Form from '@/common/forms/Form';
 import { Toast } from '@/common/messages/toast';
 import axiosInstance from '@/lib/axiosInstance';
-import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { fetchMenus } from '@/redux/slices/menuSlice';
-import { FormField } from '@/types/common/FormField';
-import { MenuParam, MenuUpdateProps } from '@/types/master-data/menu.type';
+import { useAppDispatch } from '@/redux/hooks';
+import { fetchRoles } from '@/redux/slices/roleSlice';
+import { RoleParam, RoleUpdateProps } from '@/types/master-data/role.type';
 import { getMasterApiUrl } from '@/utils/api';
-import { setSchemaEnum } from '@/utils/setSchemaEnum';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-import { menuFormSchema as baseSchema } from './MenuFormSchema';
+import { roleFormSchema as schema } from './RoleFormSchema';
 
-export default function MenuCreate({ closeModal }: MenuUpdateProps) {
+export default function RoleCreate({ closeModal }: RoleUpdateProps) {
   const {
     register,
     control,
@@ -22,57 +20,26 @@ export default function MenuCreate({ closeModal }: MenuUpdateProps) {
     reset,
     handleSubmit,
     formState: { errors },
-  } = useForm<MenuParam>();
+  } = useForm<RoleParam>();
 
-  const menuUrl = getMasterApiUrl('/menus');
+  const roleUrl = getMasterApiUrl('/roles');
   const dispatch = useAppDispatch();
-  const { menus } = useAppSelector((state) => state.menu);
-  const [schema, setSchema] = useState<FormField[]>(baseSchema);
 
   useEffect(() => {
-    dispatch(fetchMenus());
+    dispatch(fetchRoles());
   }, [dispatch]);
 
-  useEffect(() => {
-    if (menus) {
-      const parentItem = menus
-        .filter((menu) => menu.parentId === null)
-        .map((menu) => ({ id: menu.id, name: menu.name }));
-
-      const enumMap = {
-        parentId: parentItem,
-      };
-
-      const finalSchema = setSchemaEnum(baseSchema, enumMap);
-      setSchema(finalSchema);
-    }
-  }, [menus]);
-
-
-
-  const handleFormSubmit = (data: MenuParam) => {
-    const isMainMenu = !data.parentId;
-    let parentMenu = data?.parentId
-      ? menus?.find((menu) => menu.id === data.parentId)?.name || ''
-      : '';
-
-    const menuPostData = {
-      parentId: data.parentId || null,
-      parentMenu: parentMenu,
-      name: data.parentId ? data.subName : data.menuName,
-      icon: isMainMenu ? data.icon : null,
-      path: data.path || null,
-    };
+  const handleFormSubmit = (data: RoleParam) => {
     axiosInstance
-      .post(menuUrl, menuPostData)
+      .post(roleUrl, data)
       .then((response) => {
         Toast({
-          message: 'Menu Create Successful!',
+          message: 'Role Create Successful!',
           type: 'success',
           autoClose: 1500,
           theme: 'colored',
         });
-        dispatch(fetchMenus());
+        dispatch(fetchRoles());
         reset();
         closeModal();
       })
