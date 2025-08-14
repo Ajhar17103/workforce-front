@@ -122,7 +122,7 @@ export default function DataTable<T extends { id: number }>({
                 {col.searchable && (
                   <input
                     type="text"
-                    className="form-control form-control-sm text-center rounded-1"
+                    className={`form-control form-control-sm text-${col.align} rounded-1`}
                     placeholder="Search"
                     value={searchTerms[col.accessor as string] || ''}
                     onChange={(e) =>
