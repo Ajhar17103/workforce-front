@@ -9,7 +9,7 @@ import { FormField } from '@/types/common/FormField';
 import {
   DesignationDto,
   DesignationParam,
-} from '@/types/master-data/designation.type';
+} from '@/types/master-data/designationt.type';
 import { getMasterApiUrl } from '@/utils/api';
 import { deleteApi } from '@/utils/deleteApi';
 import { getByEntityApi } from '@/utils/getByEntityApi';

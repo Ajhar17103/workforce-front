@@ -10,6 +10,19 @@ export interface MenuDto {
   path: string | null;
 }
 
+export interface MenuPermissionDto {
+  id: string;
+  parentId: string | null;
+  parentMenu: string;
+  name: string;
+  icon: string | null;
+  path: string | null;
+  view: boolean;
+  add: boolean;
+  update: boolean;
+  delete: boolean;
+}
+
 export interface MenuParam {
   id: number;
   parentId?: string | null;

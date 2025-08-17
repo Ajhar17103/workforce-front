@@ -10,7 +10,7 @@ import { FormField } from '@/types/common/FormField';
 import {
   DesignationParam,
   DesignationUpdateProps,
-} from '@/types/master-data/designation.type';
+} from '@/types/master-data/designationt.type';
 import { getMasterApiUrl } from '@/utils/api';
 import { setSchemaEnum } from '@/utils/setSchemaEnum';
 import { useEffect, useState } from 'react';

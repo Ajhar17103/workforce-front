@@ -1,5 +1,12 @@
+import { Toast } from '@/common/messages/toast';
+import axiosInstance from '@/lib/axiosInstance';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { fetchMenus } from '@/redux/slices/menuSlice';
+import { fetchRoleMenuPermissions } from '@/redux/slices/roleMenuPermissionSlice';
+import { MenuPermissionDto } from '@/types/master-data/menu.type';
 import { RoleParam } from '@/types/master-data/role.type';
-import { useState } from 'react';
+import { getMasterApiUrl } from '@/utils/api';
+import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 
 interface Menu {
@@ -99,19 +106,75 @@ export default function PermissionModal({
   role,
   onClose,
 }: PermissionModalProps) {
-  const [menus, setMenus] = useState<Menu[]>(initialMenus);
+  const roleUrl = getMasterApiUrl('/roles');
+  const dispatch = useAppDispatch();
+  const { menus } = useAppSelector((state) => state.menu);
+  const { roleMenuPermissions, loading, error } = useAppSelector(
+    (state) => state.roleMenuPermission,
+  );
+  const [menu, setMenu] = useState<Menu[]>(initialMenus);
+
+  useEffect(() => {
+    if (role?.id) {
+      dispatch(fetchRoleMenuPermissions(role?.id));
+      dispatch(fetchMenus());
+    }
+  }, [dispatch, role]);
+
+  useEffect(() => {
+    if (!menus) return;
+    const transformedMenu: MenuPermissionDto[] = menus.map((m) => ({
+      id: m.id,
+      parentId: m.parentId,
+      parentMenu: m.parentMenu,
+      name: m.name,
+      icon: m.icon,
+      path: m.path,
+      view: false,
+      add: false,
+      update: false,
+      delete: false,
+    }));
+
+    const transformedPermission =
+      roleMenuPermissions?.map((p) => ({
+        id: p.id,
+        roleId: p.roleId,
+        menuId: p.menuId,
+        view: p.view,
+        add: p.add,
+        update: p.update,
+        delete: p.delete,
+      })) ?? [];
+
+    const mergedMenu = transformedMenu.map((menu) => {
+      const perm = transformedPermission.find((p) => p.menuId === menu.id);
+      if (perm) {
+        return {
+          ...menu,
+          view: perm.view,
+          add: perm.add,
+          update: perm.update,
+          delete: perm.delete,
+        };
+      }
+      return menu;
+    });
+
+    setMenu(mergedMenu);
+  }, [menus, roleMenuPermissions]);
 
   const togglePermission = (menuId: string, field: keyof Menu) => {
-    setMenus((prev) =>
+    setMenu((prev) =>
       prev.map((m) => (m.id === menuId ? { ...m, [field]: !m[field] } : m)),
     );
   };
 
   const renderTableWithRowSpan = () => {
-    const parents = menus.filter((menu) => menu.parentId === null);
+    const parents = menu.filter((menu) => menu.parentId === null);
 
     return parents.flatMap((parent) => {
-      const children = menus.filter((menu) => menu.parentId === parent.id);
+      const children = menu.filter((menu) => menu.parentId === parent.id);
 
       if (children.length === 0) {
         // No children, just render parent with its permissions
@@ -181,8 +244,35 @@ export default function PermissionModal({
   };
 
   const savePermissions = () => {
-    console.log(`Permissions for role ${role.name}:`, menus);
-    onClose();
+    const transformedPermission =
+      menu?.map((p) => ({
+        roleId: role?.id,
+        menuId: p.id,
+        view: p.view,
+        add: p.add,
+        update: p.update,
+        delete: p.delete,
+      })) ?? [];
+    axiosInstance
+      .patch(`${roleUrl}/${role?.id}`, transformedPermission)
+      .then((response) => {
+        Toast({
+          message: 'Permission has been saved successfully!',
+          type: 'success',
+          autoClose: 1500,
+          theme: 'colored',
+        });
+        onClose();
+      })
+      .catch((error) => {
+        Toast({
+          message: 'Something went worng!',
+          type: 'warning',
+          autoClose: 1500,
+          theme: 'colored',
+        });
+        console.error(error);
+      });
   };
 
   return (
@@ -200,7 +290,6 @@ export default function PermissionModal({
         </thead>
         <tbody>{renderTableWithRowSpan()}</tbody>
       </table>
-      <pre>{JSON.stringify(menus, null, 2)}</pre>
       <div className="d-flex justify-content-end gap-2 mt-3 py-2 border-top">
         <Button variant="danger" onClick={onClose}>
           <i className="bi bi-x" /> Cancel

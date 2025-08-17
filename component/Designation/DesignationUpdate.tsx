@@ -8,7 +8,7 @@ import { fetchDesignations } from '@/redux/slices/designationSlice';
 import {
   DesignationParam,
   DesignationUpdateProps,
-} from '@/types/master-data/designation.type';
+} from '@/types/master-data/designationt.type';
 import { getMasterApiUrl } from '@/utils/api';
 import { getDefaultValues } from '@/utils/getDefaultValues';
 import { Button } from 'react-bootstrap';
@@ -36,7 +36,7 @@ export default function DesignationUpdate({
   const handleFormSubmit = (data: DesignationParam) => {
     const postData = {
       name: data?.name,
-      departmentId: data?.departmentId
+      departmentId: data?.departmentId,
     };
 
     if (itemUpdate?.id) {
