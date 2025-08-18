@@ -25,8 +25,8 @@ export default function SignIn({ onLogin }: SignInProps) {
     formState: { errors },
   } = useForm<SignInFormData>({
     defaultValues: {
-      email: 'admin@gmail.com',
-      password: '11223344',
+      email: 'test@gmail.com',
+      password: 'inc@rrEc1',
     },
   });
 
@@ -40,8 +40,8 @@ export default function SignIn({ onLogin }: SignInProps) {
       .then((response) => {
         console.log(response);
         reset();
-        localStorage.setItem('access_token', response.data.access_token);
-        localStorage.setItem('refresh_token', response.data.refresh_token);
+        localStorage.setItem('access_token', response.data.accessToken);
+        localStorage.setItem('refresh_token', response.data.refreshToken);
         localStorage.setItem('isLogin', 'true');
         localStorage.setItem('status', 'ISIN');
         window.location.reload();

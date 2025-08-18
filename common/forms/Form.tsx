@@ -2,7 +2,7 @@
 
 import { FormField } from '@/types/common/FormField';
 import { formatDate } from '@/utils/formatDate';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { UseFormResetField, useWatch } from 'react-hook-form';
 
 type Props = {
@@ -11,6 +11,7 @@ type Props = {
   control: any;
   errors: Record<string, any>;
   resetField: UseFormResetField<any>;
+  setOnchangeType?: any;
 };
 
 export default function Form({
@@ -19,9 +20,11 @@ export default function Form({
   control,
   errors,
   resetField,
+  setOnchangeType,
 }: Props) {
   const values = useWatch({ control });
   const prevVisibleFieldsRef = useRef<Set<string>>(new Set());
+  const [showPassword, setShowPassword] = useState(false);
 
   const isFieldVisible = (field: FormField) => {
     if (!field.showWhen) return true;
@@ -49,6 +52,13 @@ export default function Form({
 
     prevVisibleFieldsRef.current = visibleFieldNames;
   }, [visibleFieldNames, schema, resetField]);
+
+  const handleOnChange = (e: any, field: any) => {
+    setOnchangeType({
+      id: e.target.value,
+      type: field.onChange,
+    });
+  };
   return (
     <>
       {visibleFields.map((field, idx) => (
@@ -68,6 +78,17 @@ export default function Form({
                 defaultValue={field.defaultValue}
                 {...register(field.fieldName, { required: field.isRequired })}
                 className="form-control"
+                onChange={(e: any) => handleOnChange(e, field)}
+              />
+            )}
+
+            {field.dataType === 'email' && (
+              <input
+                type="email"
+                defaultValue={field.defaultValue}
+                {...register(field.fieldName, { required: field.isRequired })}
+                className="form-control"
+                onChange={(e: any) => handleOnChange(e, field)}
               />
             )}
 
@@ -76,6 +97,7 @@ export default function Form({
                 defaultValue={field.defaultValue}
                 {...register(field.fieldName, { required: field.isRequired })}
                 className="form-control"
+                onChange={(e: any) => handleOnChange(e, field)}
               />
             )}
 
@@ -85,6 +107,7 @@ export default function Form({
                 defaultValue={field.defaultValue}
                 {...register(field.fieldName, { required: field.isRequired })}
                 className="form-control"
+                onChange={(e: any) => handleOnChange(e, field)}
               />
             )}
 
@@ -94,6 +117,17 @@ export default function Form({
                 defaultValue={formatDate(field.defaultValue, 'yyyy-MM-dd')}
                 {...register(field.fieldName, { required: field.isRequired })}
                 className="form-control"
+                onChange={(e: any) => handleOnChange(e, field)}
+              />
+            )}
+
+            {field.dataType === 'image' && (
+              <input
+                type="file"
+                defaultValue={field.defaultValue}
+                {...register(field.fieldName, { required: field.isRequired })}
+                className="form-control"
+                onChange={(e: any) => handleOnChange(e, field)}
               />
             )}
 
@@ -102,6 +136,7 @@ export default function Form({
                 defaultValue={field.defaultValue}
                 {...register(field.fieldName, { required: field.isRequired })}
                 className="form-select"
+                onClick={(e: any) => handleOnChange(e, field)}
               >
                 <option value="">--</option>
                 {field.enum.map((option) => (
@@ -120,6 +155,7 @@ export default function Form({
                   {...register(field.fieldName)}
                   className="form-check-input"
                   id={`checkbox-${field.fieldName}`}
+                  onChange={(e: any) => handleOnChange(e, field)}
                 />
                 <label
                   className="form-check-label"
@@ -127,6 +163,26 @@ export default function Form({
                 >
                   {field.label}
                 </label>
+              </div>
+            )}
+            {field.dataType === 'password' && (
+              <div className="position-relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  defaultValue={field.defaultValue}
+                  {...register(field.fieldName, { required: field.isRequired })}
+                  className="form-control pe-5"
+                  onChange={(e: any) => handleOnChange(e, field)}
+                />
+                <button
+                  type="button"
+                  className="btn btn-link position-absolute top-50 end-0 translate-middle-y p-0 me-2"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                >
+                  <i
+                    className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'}`}
+                  ></i>
+                </button>
               </div>
             )}
 

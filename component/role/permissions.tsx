@@ -107,6 +107,7 @@ export default function PermissionModal({
   onClose,
 }: PermissionModalProps) {
   const roleUrl = getMasterApiUrl('/roles');
+  const permissionUrl = getMasterApiUrl('/role-menu-permissions');
   const dispatch = useAppDispatch();
   const { menus } = useAppSelector((state) => state.menu);
   const { roleMenuPermissions, loading, error } = useAppSelector(
@@ -254,7 +255,7 @@ export default function PermissionModal({
         delete: p.delete,
       })) ?? [];
     axiosInstance
-      .patch(`${roleUrl}/${role?.id}`, transformedPermission)
+      .patch(`${permissionUrl}/${role?.id}`, transformedPermission)
       .then((response) => {
         Toast({
           message: 'Permission has been saved successfully!',

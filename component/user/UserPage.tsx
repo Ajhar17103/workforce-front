@@ -1,7 +1,9 @@
 'use client';
 
 import CustomButton from '@/common/Buttons/Button';
+import CommonModal from '@/common/modals/CommonModal';
 import { useState } from 'react';
+import CreateForm from './UserCreate';
 
 export default function UserPage() {
   const [modalShow, setModalShow] = useState<boolean>(false);
@@ -24,6 +26,18 @@ export default function UserPage() {
         />
       </div>
       <h6 className="p-5 text-center">Development under construction</h6>
+      {modalShow && (
+        <CommonModal
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+          title="Create User"
+          size="xl"
+          footer={false}
+          fullscreen={'xl-down'}
+        >
+          <CreateForm closeModal={() => closeModal()} />
+        </CommonModal>
+      )}
     </div>
   );
 }

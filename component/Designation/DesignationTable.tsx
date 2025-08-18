@@ -4,6 +4,7 @@ import { Toast } from '@/common/messages/toast';
 import CommonModal from '@/common/modals/CommonModal';
 import DynamicTable from '@/common/tables/DataTable';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { fetchDepartments } from '@/redux/slices/departmentSlice';
 import { fetchDesignations } from '@/redux/slices/designationSlice';
 import { FormField } from '@/types/common/FormField';
 import {
@@ -12,7 +13,7 @@ import {
 } from '@/types/master-data/designationt.type';
 import { getMasterApiUrl } from '@/utils/api';
 import { deleteApi } from '@/utils/deleteApi';
-import { getByEntityApi } from '@/utils/getByEntityApi';
+import { getBySingleEntityApi } from '@/utils/getBySingleEntityApi';
 import { setSchemaDefaultValue } from '@/utils/setSchemaDefaultValue';
 import { setSchemaEnum } from '@/utils/setSchemaEnum';
 import { useEffect, useState } from 'react';
@@ -33,10 +34,11 @@ export default function DesignationTable() {
     name: '',
   });
   const [schema, setSchema] = useState<FormField[]>(baseSchema);
-  const { deparments } = useAppSelector((state) => state.department);
+  const { departments } = useAppSelector((state) => state.department);
 
   useEffect(() => {
     dispatch(fetchDesignations());
+    dispatch(fetchDepartments());
   }, [dispatch]);
 
   useEffect(() => {
@@ -46,7 +48,7 @@ export default function DesignationTable() {
       const transformed: DesignationDto[] = await Promise.all(
         designations.map(async (d) => ({
           id: d.id,
-          departmentName: await getByEntityApi(
+          departmentName: await getBySingleEntityApi(
             departmentUrl,
             d.departmentId,
             'name',
@@ -63,7 +65,7 @@ export default function DesignationTable() {
 
   const updateItem = (item: DesignationDto) => {
     setModalShow(true);
-    const departmentId = deparments.map((d) => ({
+    const departmentId = departments.map((d) => ({
       id: d.id,
       name: d.name,
     }));
@@ -120,8 +122,6 @@ export default function DesignationTable() {
   const closeModal = () => {
     setModalShow(false);
   };
-
-  console.log(deparments, 'departmentId');
 
   return (
     <div>

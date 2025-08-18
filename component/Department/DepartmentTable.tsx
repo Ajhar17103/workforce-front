@@ -4,7 +4,7 @@ import { Toast } from '@/common/messages/toast';
 import CommonModal from '@/common/modals/CommonModal';
 import DynamicTable from '@/common/tables/DataTable';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { fetchDeparments } from '@/redux/slices/departmentSlice';
+import { fetchDepartments } from '@/redux/slices/departmentSlice';
 import {
   DepartmentDto,
   DepartmentParam,
@@ -20,7 +20,7 @@ import Update from './DepartmentUpdate';
 export default function DepartmentTable() {
   const departmentUrl = getMasterApiUrl('/departments');
   const dispatch = useAppDispatch();
-  const { deparments } = useAppSelector((state) => state.department);
+  const { departments } = useAppSelector((state) => state.department);
   const [tableData, setTableData] = useState<DepartmentDto[]>([]);
   const [modalShow, setModalShow] = useState<boolean>(false);
   const [itemUpdate, setItemUpdate] = useState<DepartmentParam>({
@@ -29,16 +29,16 @@ export default function DepartmentTable() {
   });
 
   useEffect(() => {
-    dispatch(fetchDeparments());
+    dispatch(fetchDepartments());
   }, [dispatch]);
 
   useEffect(() => {
-    const transformed: DepartmentDto[] = deparments?.map((d) => ({
+    const transformed: DepartmentDto[] = departments?.map((d) => ({
       id: d.id,
       name: d.name,
     }));
     setTableData(transformed);
-  }, [deparments]);
+  }, [departments]);
 
   const updateItem = (item: DepartmentDto) => {
     setModalShow(true);
@@ -72,7 +72,7 @@ export default function DepartmentTable() {
           autoClose: 1500,
           theme: 'colored',
         });
-        dispatch(fetchDeparments());
+        dispatch(fetchDepartments());
       } catch (error) {
         console.error('Failed to delete:', error);
         toast.error('Failed to delete role.');

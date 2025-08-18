@@ -4,7 +4,7 @@ import Form from '@/common/forms/Form';
 import { Toast } from '@/common/messages/toast';
 import axiosInstance from '@/lib/axiosInstance';
 import { useAppDispatch } from '@/redux/hooks';
-import { fetchDeparments } from '@/redux/slices/departmentSlice';
+import { fetchDepartments } from '@/redux/slices/departmentSlice';
 import {
   DepartmentParam,
   DepartmentUpdateProps,
@@ -31,7 +31,7 @@ export default function DepartmentCreate({
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(fetchDeparments());
+    dispatch(fetchDepartments());
   }, [dispatch]);
 
   const handleFormSubmit = (data: DepartmentParam) => {
@@ -44,7 +44,7 @@ export default function DepartmentCreate({
           autoClose: 1500,
           theme: 'colored',
         });
-        dispatch(fetchDeparments());
+        dispatch(fetchDepartments());
         reset();
         closeModal();
       })

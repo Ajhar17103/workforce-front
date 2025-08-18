@@ -4,7 +4,7 @@ import Form from '@/common/forms/Form';
 import { Toast } from '@/common/messages/toast';
 import axiosInstance from '@/lib/axiosInstance';
 import { useAppDispatch } from '@/redux/hooks';
-import { fetchDeparments } from '@/redux/slices/departmentSlice';
+import { fetchDepartments } from '@/redux/slices/departmentSlice';
 import {
   DepartmentParam,
   DepartmentUpdateProps,
@@ -48,7 +48,7 @@ export default function DepartmentUpdate({
             autoClose: 1500,
             theme: 'colored',
           });
-          dispatch(fetchDeparments());
+          dispatch(fetchDepartments());
           closeModal();
           console.log(response);
         })

@@ -5,7 +5,7 @@ import { Toast } from '@/common/messages/toast';
 import axiosInstance from '@/lib/axiosInstance';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { fetchMenus } from '@/redux/slices/menuSlice';
-import { FormField } from '@/types/common/FormField';
+import { FormField, onChangeField } from '@/types/common/FormField';
 import { MenuParam, MenuUpdateProps } from '@/types/master-data/menu.type';
 import { getMasterApiUrl } from '@/utils/api';
 import { setSchemaEnum } from '@/utils/setSchemaEnum';
@@ -28,6 +28,7 @@ export default function MenuCreate({ closeModal }: MenuUpdateProps) {
   const dispatch = useAppDispatch();
   const { menus } = useAppSelector((state) => state.menu);
   const [schema, setSchema] = useState<FormField[]>(baseSchema);
+  const [onChangeType, setOnchangeType] = useState<onChangeField>({});
 
   useEffect(() => {
     dispatch(fetchMenus());
@@ -47,8 +48,6 @@ export default function MenuCreate({ closeModal }: MenuUpdateProps) {
       setSchema(finalSchema);
     }
   }, [menus]);
-
-
 
   const handleFormSubmit = (data: MenuParam) => {
     const isMainMenu = !data.parentId;
@@ -101,6 +100,7 @@ export default function MenuCreate({ closeModal }: MenuUpdateProps) {
           control={control}
           errors={errors}
           resetField={resetField}
+          setOnchangeType={setOnchangeType}
         />
       </div>
 

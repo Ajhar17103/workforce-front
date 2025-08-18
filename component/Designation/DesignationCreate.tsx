@@ -4,7 +4,7 @@ import Form from '@/common/forms/Form';
 import { Toast } from '@/common/messages/toast';
 import axiosInstance from '@/lib/axiosInstance';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { fetchDeparments } from '@/redux/slices/departmentSlice';
+import { fetchDepartments } from '@/redux/slices/departmentSlice';
 import { fetchDesignations } from '@/redux/slices/designationSlice';
 import { FormField } from '@/types/common/FormField';
 import {
@@ -33,15 +33,15 @@ export default function DesignationCreate({
   const designationUrl = getMasterApiUrl('/designations');
   const dispatch = useAppDispatch();
   const [schema, setSchema] = useState<FormField[]>(baseSchema);
-  const { deparments } = useAppSelector((state) => state.department);
+  const { departments } = useAppSelector((state) => state.department);
 
   useEffect(() => {
-    dispatch(fetchDeparments());
+    dispatch(fetchDepartments());
   }, [dispatch]);
 
   useEffect(() => {
-    if (deparments) {
-      const departmentId = deparments.map((deparment) => ({
+    if (departments) {
+      const departmentId = departments.map((deparment) => ({
         id: deparment.id,
         name: deparment.name,
       }));
@@ -52,7 +52,7 @@ export default function DesignationCreate({
       const finalSchema = setSchemaEnum(baseSchema, enumMap);
       setSchema(finalSchema);
     }
-  }, [deparments]);
+  }, [departments]);
 
   const handleFormSubmit = (data: DesignationParam) => {
     axiosInstance
