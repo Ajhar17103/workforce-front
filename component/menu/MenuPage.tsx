@@ -14,7 +14,7 @@ export default function MenuPage() {
   };
 
   return (
-    <div className="card shadow-sm p-3 dark">
+    <div className="card shadow-lg p-3 dark">
       <div className="d-flex justify-content-between align-items-center">
         <h6 className="mb-0 fw-semibold text-blue">Menus Lists</h6>
         <CustomButton

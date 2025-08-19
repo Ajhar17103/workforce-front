@@ -373,9 +373,19 @@ body.dark-mode .content-area {
   color: #ddd;
 }
 
-body.dark-mode {
-  background-color: #101828;
+body.dark-mode .dark {
+  background-color: #1c2944;
   color: #ddd;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+body.dark-mode .text-blue {
+  color: #ddd !important;
+  box-shadow: #101828;
+}
+
+body.dark-mode .text-muted {
+  color: #ddd !important;
   box-shadow: #101828;
 }
 

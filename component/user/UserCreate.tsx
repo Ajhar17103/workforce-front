@@ -1,6 +1,8 @@
 'use client';
 
 import Form from '@/common/forms/Form';
+import { Toast } from '@/common/messages/toast';
+import axiosInstance from '@/lib/axiosInstance';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { fetchDepartments } from '@/redux/slices/departmentSlice';
 import { fetchRoles } from '@/redux/slices/roleSlice';
@@ -13,8 +15,6 @@ import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { userFormSchema as baseSchema } from './UserFormSchema';
-
-
 
 export default function UserCreate({ closeModal }: UserUpdateProps) {
   const {
@@ -82,29 +82,41 @@ export default function UserCreate({ closeModal }: UserUpdateProps) {
   };
 
   const handleFormSubmit = (data: UserParam) => {
-    console.log(data);
-    // axiosInstance
-    //   .post(usersUrl, data)
-    //   .then((response) => {
-    //     Toast({
-    //       message: 'Designation Create Successful!',
-    //       type: 'success',
-    //       autoClose: 1500,
-    //       theme: 'colored',
-    //     });
-    //     dispatch(fetchDesignations());
-    //     reset();
-    //     closeModal();
-    //   })
-    //   .catch((error) => {
-    //     Toast({
-    //       message: 'Something went worng!',
-    //       type: 'warning',
-    //       autoClose: 1500,
-    //       theme: 'colored',
-    //     });
-    //     console.error(error);
-    //   });
+    const postData = {
+      name: data?.name,
+      designationId: data?.designationId,
+      roleId: data?.roleId,
+      dob: data?.dob,
+      phone: data?.phone,
+      email: data?.email,
+      currentAddress: data?.currentAddress,
+      presentAddress: data?.presentAddress,
+      bloodGroup: data?.bloodGroup,
+      profileIcon: data?.profileIcon[0],
+      password: data?.password,
+    };
+    console.log(postData);
+    axiosInstance
+      .post(usersUrl, postData)
+      .then((response) => {
+        Toast({
+          message: 'User Create Successful!',
+          type: 'success',
+          autoClose: 1500,
+          theme: 'colored',
+        });
+        // reset();
+        // closeModal();
+      })
+      .catch((error) => {
+        Toast({
+          message: 'Something went worng!',
+          type: 'warning',
+          autoClose: 1500,
+          theme: 'colored',
+        });
+        console.error(error);
+      });
   };
 
   const handleClear = () => reset();

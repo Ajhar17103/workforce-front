@@ -3,12 +3,14 @@ export interface UserDto {
   name?: string;
   designationId: string;
   roleId: string;
+  dob: string;
   phone: string;
   email: string;
   currentAddress: string;
   presentAddress: string;
   bloodGroup: string;
-  profile: string;
+  profileIcon: string;
+  password: string;
 }
 
 export interface UserParam {
@@ -16,12 +18,14 @@ export interface UserParam {
   name?: string;
   designationId: string;
   roleId: string;
+  dob: string;
   phone: string;
   email: string;
   currentAddress: string;
   presentAddress: string;
   bloodGroup: string;
-  profile: string;
+  profileIcon: string;
+  password: string;
 }
 
 export interface UserUpdateProps {
