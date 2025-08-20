@@ -1,5 +1,5 @@
 export interface MenuDto {
-  id: number;
+  id: string;
   menuType?: 'MAIN' | 'SUB';
   menuName?: String;
   subName?: string;
@@ -24,7 +24,7 @@ export interface MenuPermissionDto {
 }
 
 export interface MenuParam {
-  id: number;
+  id: string;
   parentId?: string | null;
   menuName?: string;
   subName?: string;

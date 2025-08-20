@@ -24,7 +24,7 @@ export default function MenuTable() {
   const [tableData, setTableData] = useState<MenuDto[]>([]);
   const [modalShow, setModalShow] = useState<boolean>(false);
   const [itemUpdate, setItemUpdate] = useState<MenuParam>({
-    id: 0,
+    id: '0',
     menuName: '',
     subName: '',
     icon: '',
@@ -110,7 +110,6 @@ export default function MenuTable() {
   const closeModal = () => {
     setModalShow(false);
   };
-console.log(tableData);
   return (
     <div>
       <DynamicTable

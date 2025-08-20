@@ -16,7 +16,7 @@ const initialState: RoleMenuPermissionState = {
 
 export const fetchRoleMenuPermissions = createAsyncThunk(
   'roleMenuPermissions/fetchByRoleId',
-  async (roleId: number, { rejectWithValue }) => {
+  async (roleId: string, { rejectWithValue }) => {
     try {
       const res: any = await axiosInstance.get(
         getMasterApiUrl(`/role-menu-permissions/${roleId}`),

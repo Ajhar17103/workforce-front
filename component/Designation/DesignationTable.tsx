@@ -19,7 +19,10 @@ import { setSchemaEnum } from '@/utils/setSchemaEnum';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
-import { designationFormSchema as baseSchema } from './DesignationFormSchema';
+import {
+  designationFormSchema as baseSchema,
+  designationTableSchema as tableColumn,
+} from './DesignationFormSchema';
 import Update from './DesignationUpdate';
 
 export default function DesignationTable() {
@@ -30,7 +33,7 @@ export default function DesignationTable() {
   const [tableData, setTableData] = useState<DesignationDto[]>([]);
   const [modalShow, setModalShow] = useState<boolean>(false);
   const [itemUpdate, setItemUpdate] = useState<DesignationParam>({
-    id: 0,
+    id: '0',
     name: '',
   });
   const [schema, setSchema] = useState<FormField[]>(baseSchema);
@@ -127,22 +130,7 @@ export default function DesignationTable() {
     <div>
       <DynamicTable
         data={tableData}
-        columns={[
-          {
-            label: 'Department Name',
-            accessor: 'departmentName',
-            sortable: true,
-            searchable: true,
-            align: 'start',
-          },
-          {
-            label: 'Name',
-            accessor: 'name',
-            sortable: true,
-            searchable: true,
-            align: 'start',
-          },
-        ]}
+        columns={tableColumn}
         onEdit={updateItem}
         onDelete={deleteItem}
       />

@@ -79,6 +79,7 @@ export default function Form({
                 {...register(field.fieldName, { required: field.isRequired })}
                 className="form-control"
                 onChange={(e: any) => handleOnChange(e, field)}
+                disabled={field?.disabled ? field?.disabled : false}
               />
             )}
 
@@ -89,6 +90,7 @@ export default function Form({
                 {...register(field.fieldName, { required: field.isRequired })}
                 className="form-control"
                 onChange={(e: any) => handleOnChange(e, field)}
+                disabled={field?.disabled ? field?.disabled : false}
               />
             )}
 
@@ -98,6 +100,7 @@ export default function Form({
                 {...register(field.fieldName, { required: field.isRequired })}
                 className="form-control"
                 onChange={(e: any) => handleOnChange(e, field)}
+                disabled={field?.disabled ? field?.disabled : false}
               />
             )}
 
@@ -108,6 +111,7 @@ export default function Form({
                 {...register(field.fieldName, { required: field.isRequired })}
                 className="form-control"
                 onChange={(e: any) => handleOnChange(e, field)}
+                disabled={field?.disabled ? field?.disabled : false}
               />
             )}
 
@@ -118,6 +122,7 @@ export default function Form({
                 {...register(field.fieldName, { required: field.isRequired })}
                 className="form-control"
                 onChange={(e: any) => handleOnChange(e, field)}
+                disabled={field?.disabled ? field?.disabled : false}
               />
             )}
 
@@ -128,6 +133,7 @@ export default function Form({
                 {...register(field.fieldName, { required: field.isRequired })}
                 className="form-control"
                 onChange={(e: any) => handleOnChange(e, field)}
+                disabled={field?.disabled ? field?.disabled : false}
               />
             )}
 
@@ -137,6 +143,7 @@ export default function Form({
                 {...register(field.fieldName, { required: field.isRequired })}
                 className="form-select"
                 onClick={(e: any) => handleOnChange(e, field)}
+                disabled={field?.disabled ? field?.disabled : false}
               >
                 <option value="">--</option>
                 {field.enum.map((option) => (
@@ -156,6 +163,7 @@ export default function Form({
                   className="form-check-input"
                   id={`checkbox-${field.fieldName}`}
                   onChange={(e: any) => handleOnChange(e, field)}
+                  disabled={field?.disabled ? field?.disabled : false}
                 />
                 <label
                   className="form-check-label"
@@ -173,6 +181,7 @@ export default function Form({
                   {...register(field.fieldName, { required: field.isRequired })}
                   className="form-control pe-5"
                   onChange={(e: any) => handleOnChange(e, field)}
+                  disabled={field?.disabled ? field?.disabled : false}
                 />
                 <button
                   type="button"

@@ -4,6 +4,7 @@ import CustomButton from '@/common/Buttons/Button';
 import CommonModal from '@/common/modals/CommonModal';
 import { useState } from 'react';
 import CreateForm from './UserCreate';
+import UserTable from './UserTable';
 
 export default function UserPage() {
   const [modalShow, setModalShow] = useState<boolean>(false);
@@ -22,16 +23,16 @@ export default function UserPage() {
           icon="bi bi-plus-lg"
           variant="outline-primary"
           onClick={() => setModalShow(true)}
-          tooltip="Add New Role"
+          tooltip="Add New User"
         />
       </div>
-      <h6 className="p-5 text-center">Development under construction</h6>
+      <UserTable />
       {modalShow && (
         <CommonModal
           show={modalShow}
           onHide={() => setModalShow(false)}
           title="Create User"
-          size="xl"
+          size="lg"
           footer={false}
           fullscreen={'xl-down'}
         >

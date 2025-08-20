@@ -21,7 +21,7 @@ export default function RoleTable() {
   const { roles } = useAppSelector((state) => state.role);
   const [tableData, setTableData] = useState<RoleDto[]>([]);
   const [modalShow, setModalShow] = useState<boolean>(false);
-  const [itemUpdate, setItemUpdate] = useState<RoleParam>({ id: 0, name: '' });
+  const [itemUpdate, setItemUpdate] = useState<RoleParam>({ id: '0', name: '' });
   const [showPermissionModal, setShowPermissionModal] =
     useState<boolean>(false);
 

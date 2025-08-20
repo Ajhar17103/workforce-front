@@ -2,6 +2,9 @@
 
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { fetchMenus } from '@/redux/slices/menuSlice';
+import { fetchRoleMenuPermissions } from '@/redux/slices/roleMenuPermissionSlice';
+import { MenuPermissionDto } from '@/types/master-data/menu.type';
+import { getLocalStorage } from '@/utils/storage';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -13,11 +16,16 @@ interface SidebarProps {
 }
 
 interface Menu {
-  id: number;
+  id: string;
+  parentId: string | null;
+  parentMenu: string;
   name: string;
-  parentId: number | null;
-  icon?: string;
-  path?: string | null;
+  icon: string | null;
+  path: string | null;
+  view: boolean;
+  add: boolean;
+  update: boolean;
+  delete: boolean;
 }
 
 interface NestedMenu extends Menu {
@@ -25,24 +33,75 @@ interface NestedMenu extends Menu {
 }
 
 export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
+  const roleId = getLocalStorage('role_Id');
   const pathname = usePathname();
   const dispatch = useAppDispatch();
   const { menus, loading, error } = useAppSelector((state) => state.menu);
+  const { roleMenuPermissions } = useAppSelector(
+    (state) => state.roleMenuPermission,
+  );
+  const [menu, setMenu] = useState<Menu[]>([]);
 
   useEffect(() => {
-    dispatch(fetchMenus());
-  }, [dispatch]);
+    if (roleId) {
+      dispatch(fetchMenus());
+      dispatch(fetchRoleMenuPermissions(roleId));
+    }
+  }, [dispatch, roleId]);
+
+  useEffect(() => {
+    if (!menus) return;
+    const transformedMenu: MenuPermissionDto[] = menus.map((m) => ({
+      id: m.id,
+      parentId: m.parentId,
+      parentMenu: m.parentMenu,
+      name: m.name,
+      icon: m.icon,
+      path: m.path,
+      view: false,
+      add: false,
+      update: false,
+      delete: false,
+    }));
+
+    const transformedPermission =
+      roleMenuPermissions?.map((p) => ({
+        id: p.id,
+        roleId: p.roleId,
+        menuId: p.menuId,
+        view: p.view,
+        add: p.add,
+        update: p.update,
+        delete: p.delete,
+      })) ?? [];
+
+    const mergedMenu = transformedMenu.map((menu) => {
+      const perm = transformedPermission.find((p) => p.menuId === menu.id);
+      if (perm) {
+        return {
+          ...menu,
+          view: perm.view,
+          add: perm.add,
+          update: perm.update,
+          delete: perm.delete,
+        };
+      }
+      return menu;
+    });
+
+    setMenu(mergedMenu);
+  }, [menus, roleMenuPermissions]);
 
   const nestedMenus: NestedMenu[] = useMemo(() => {
-    return menus
+    return menu
       ?.filter((menu) => menu.parentId === null)
       ?.map((main) => ({
         ...main,
-        sub: menus?.filter((sub) => sub.parentId === main.id),
+        sub: menu?.filter((sub) => sub.parentId === main.id),
       }));
-  }, [menus]);
+  }, [menu]);
 
-  const [openMenuId, setOpenMenuId] = useState<number | null>(() => {
+  const [openMenuId, setOpenMenuId] = useState<string | null>(() => {
     const activeMenu = nestedMenus.find((main) =>
       main.sub.some((sub) => sub.path === pathname),
     );
@@ -61,7 +120,7 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
     }
   }, [pathname, nestedMenus]);
 
-  const toggleMenu = (id: number) => {
+  const toggleMenu = (id: string) => {
     setOpenMenuId((prev) => (prev === id ? null : id));
   };
 
@@ -104,7 +163,7 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
         {nestedMenus.map((main) => {
           const hasSUBs = main.sub.length > 0;
 
-          if (hasSUBs) {
+          if (hasSUBs && main.view) {
             return (
               <div className="sidebar-group" key={main.id}>
                 <button
@@ -129,23 +188,26 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
 
                 {sidebarOpen && openMenuId === main.id && (
                   <ul id={`sub-${main.id}`} className="sidebar-sub">
-                    {main.sub.map((sub) => (
-                      <li key={sub.id}>
-                        <Link
-                          href={sub?.path!}
-                          className={`sub-item ${
-                            pathname === sub.path ? 'active' : ''
-                          }`}
-                        >
-                          {sub.name}
-                        </Link>
-                      </li>
-                    ))}
+                    {main.sub.map(
+                      (sub) =>
+                        sub.view && (
+                          <li key={sub.id}>
+                            <Link
+                              href={sub?.path!}
+                              className={`sub-item ${
+                                pathname === sub.path ? 'active' : ''
+                              }`}
+                            >
+                              {sub.name}
+                            </Link>
+                          </li>
+                        ),
+                    )}
                   </ul>
                 )}
               </div>
             );
-          } else if (main.path) {
+          } else if (main.path && main.view) {
             return (
               <Link
                 key={main.id}
@@ -158,15 +220,16 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
                 {sidebarOpen && <span className="ms-2">{main.name}</span>}
               </Link>
             );
+          } else if (main.view) {
+            return (
+              <div key={main.id} className="sidebar-group">
+                <span className="sidebar-link disabled">
+                  <i className={`${main.icon} me-2`} />
+                  {sidebarOpen && <span className="ms-2">{main.name}</span>}
+                </span>
+              </div>
+            );
           }
-          return (
-            <div key={main.id} className="sidebar-group">
-              <span className="sidebar-link disabled">
-                <i className={`${main.icon} me-2`} />
-                {sidebarOpen && <span className="ms-2">{main.name}</span>}
-              </span>
-            </div>
-          );
         })}
       </nav>
     </aside>

@@ -9,7 +9,8 @@ export type FormField = {
   column: number;
   align: string;
   label: string;
-  labelVisibility: 'visible'|'hidden'|'collapse'|'initial'|'inherit';
+  labelVisibility?: 'visible' | 'hidden' | 'collapse' | 'initial' | 'inherit';
+  fieldVisibility?: 'visible'|'hidden'|'collapse'|'initial'|'inherit';
   fieldName: string;
   dataType:|'text'|'textarea'|'dropdown'|'checkbox'|'date'|'number'|'email'|'image'|'password';
   action: string | null;
@@ -19,4 +20,5 @@ export type FormField = {
   isRequired: boolean;
   showWhen?: showWhen[];
   onChange?: string;
+  disabled?: boolean;
 };

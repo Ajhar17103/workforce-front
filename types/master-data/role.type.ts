@@ -1,10 +1,10 @@
 export interface RoleDto {
-  id: number;
+  id: string;
   name?: string;
 }
 
 export interface RoleParam {
-  id: number;
+  id: string;
   name?: string;
 }
 

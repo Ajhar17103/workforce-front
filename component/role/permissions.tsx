@@ -275,7 +275,7 @@ export default function PermissionModal({
         console.error(error);
       });
   };
-
+  console.log('menu:', menu);
   return (
     <div className="container">
       <table className="table table-bordered">

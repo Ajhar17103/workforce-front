@@ -1,4 +1,6 @@
 import { FormField } from '@/types/common/FormField';
+import { TableHead } from '@/types/common/TableHead';
+import { DesignationDto } from '@/types/master-data/designationt.type';
 
 export const designationFormSchema: FormField[] = [
   {
@@ -28,3 +30,21 @@ export const designationFormSchema: FormField[] = [
     isRequired: true,
   },
 ];
+
+
+export const designationTableSchema: TableHead <DesignationDto>[] = [
+          {
+            label: 'Department Name',
+            accessor: 'departmentName',
+            sortable: true,
+            searchable: true,
+            align: 'start',
+          },
+          {
+            label: 'Name',
+            accessor: 'name',
+            sortable: true,
+            searchable: true,
+            align: 'start',
+          },
+        ]

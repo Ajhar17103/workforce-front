@@ -1,12 +1,12 @@
 export interface DesignationDto {
-  id: number;
+  id: string;
   departmentName?: string;
   departmentId?: string;
   name?: string;
 }
 
 export interface DesignationParam {
-  id: number;
+  id: string;
   departmentId?: string;
   name?: string;
 }

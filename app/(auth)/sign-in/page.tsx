@@ -2,6 +2,7 @@
 
 import { Toast } from '@/common/messages/toast';
 import { getAuthApiUrl } from '@/utils/api';
+import { setLocalStorage } from '@/utils/storage';
 import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -26,7 +27,7 @@ export default function SignIn({ onLogin }: SignInProps) {
   } = useForm<SignInFormData>({
     defaultValues: {
       email: 'test@gmail.com',
-      password: 'inc@rrEc1',
+      password: '12345678',
     },
   });
 
@@ -40,10 +41,11 @@ export default function SignIn({ onLogin }: SignInProps) {
       .then((response) => {
         console.log(response);
         reset();
-        localStorage.setItem('access_token', response.data.accessToken);
-        localStorage.setItem('refresh_token', response.data.refreshToken);
-        localStorage.setItem('isLogin', 'true');
-        localStorage.setItem('status', 'ISIN');
+        setLocalStorage('access_token', response.data.accessToken);
+        setLocalStorage('refresh_token', response.data.refreshToken);
+        setLocalStorage('role_Id', response.data?.user?.roleId);
+        setLocalStorage('isLogin', 'true');
+        setLocalStorage('status', 'ISIN');
         window.location.reload();
       })
       .catch((error) => {

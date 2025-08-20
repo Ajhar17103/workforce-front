@@ -14,15 +14,17 @@ type Column<T> = {
 type Props<T> = {
   data: T[];
   columns: Column<T>[];
+  onView?: (row: T) => void;
   onPermission?: (row: T) => void;
   onEdit?: (row: T) => void;
   onDelete?: (row: T) => void;
   rowsPerPage?: number;
 };
 
-export default function DataTable<T extends { id: number }>({
+export default function DataTable<T extends { id: string }>({
   data,
   columns,
+  onView,
   onPermission,
   onEdit,
   onDelete,
@@ -155,6 +157,16 @@ export default function DataTable<T extends { id: number }>({
                   </td>
                 ))}
                 <td>
+                  {onView && (
+                    <Button
+                      variant="outline-primary"
+                      className="btn btn-sm me-1"
+                      onClick={() => onView(row)}
+                      title="View"
+                    >
+                      <i className="bi bi-eye" />
+                    </Button>
+                  )}
                   {onPermission && (
                     <Button
                       variant="outline-primary"

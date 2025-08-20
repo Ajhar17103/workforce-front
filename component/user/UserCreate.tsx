@@ -9,6 +9,7 @@ import { fetchRoles } from '@/redux/slices/roleSlice';
 import { FormField, onChangeField } from '@/types/common/FormField';
 import { UserParam, UserUpdateProps } from '@/types/master-data/user.type';
 import { getMasterApiUrl } from '@/utils/api';
+import { handleApiError } from '@/utils/errorHandler';
 import { getByEntityApi } from '@/utils/getByEntityApi';
 import { setSchemaEnum } from '@/utils/setSchemaEnum';
 import { useEffect, useState } from 'react';
@@ -92,7 +93,6 @@ export default function UserCreate({ closeModal }: UserUpdateProps) {
       currentAddress: data?.currentAddress,
       presentAddress: data?.presentAddress,
       bloodGroup: data?.bloodGroup,
-      profileIcon: data?.profileIcon[0],
       password: data?.password,
     };
     console.log(postData);
@@ -109,12 +109,7 @@ export default function UserCreate({ closeModal }: UserUpdateProps) {
         // closeModal();
       })
       .catch((error) => {
-        Toast({
-          message: 'Something went worng!',
-          type: 'warning',
-          autoClose: 1500,
-          theme: 'colored',
-        });
+        handleApiError(error, 'Failed to create user!');
         console.error(error);
       });
   };

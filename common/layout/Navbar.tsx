@@ -2,7 +2,12 @@
 
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { fetchMenus } from '@/redux/slices/menuSlice';
-import { removeLocalStorage, setLocalStorage } from '@/utils/storage';
+import { fetchRoleMenuPermissions } from '@/redux/slices/roleMenuPermissionSlice';
+import {
+  getLocalStorage,
+  removeLocalStorage,
+  setLocalStorage,
+} from '@/utils/storage';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -19,6 +24,9 @@ export default function Navbar({
 
   const dispatch = useAppDispatch();
   const { menus } = useAppSelector((state) => state.menu);
+  const { roleMenuPermissions } = useAppSelector(
+    (state) => state.roleMenuPermission,
+  );
 
   const currentItem = menus.find((item) => item.path === pathname);
   const parentItem = menus.find((item) => item.id === currentItem?.parentId);
@@ -26,9 +34,15 @@ export default function Navbar({
   const parentName = parentItem?.name || '';
   const currentName = currentItem?.name || '';
 
+  const roleId = getLocalStorage('role_Id');
+
   useEffect(() => {
-    dispatch(fetchMenus());
-  }, [dispatch]);
+    console.log(roleId);
+    if (roleId) {
+      dispatch(fetchMenus());
+      dispatch(fetchRoleMenuPermissions(roleId));
+    }
+  }, [dispatch, roleId]);
 
   useEffect(() => {
     const stored = localStorage.getItem('darkMode');
@@ -78,6 +92,7 @@ export default function Navbar({
   const signout = () => {
     removeLocalStorage('access_token');
     removeLocalStorage('refresh_token');
+    removeLocalStorage('role_id');
     removeLocalStorage('isLogin');
     setLocalStorage('status', 'ISOUT');
     window.location.href = '/';
