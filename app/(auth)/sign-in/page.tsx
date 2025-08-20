@@ -14,11 +14,7 @@ type SignInFormData = {
   password: string;
 };
 
-type SignInProps = {
-  onLogin?: () => void;
-};
-
-export default function SignIn({ onLogin }: SignInProps) {
+export default function SignIn() {
   const {
     register,
     handleSubmit,

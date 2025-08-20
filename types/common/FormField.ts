@@ -12,13 +12,13 @@ export type FormField = {
   labelVisibility?: 'visible' | 'hidden' | 'collapse' | 'initial' | 'inherit';
   fieldVisibility?: 'visible'|'hidden'|'collapse'|'initial'|'inherit';
   fieldName: string;
-  dataType:|'text'|'textarea'|'dropdown'|'checkbox'|'date'|'number'|'email'|'image'|'password';
+  dataType:|'text'|'textarea'|'dropdown'|'checkbox'|'date'|'number'|'email'|'image'|'password'|'multi-select';
   action: string | null;
   defaultValue: string | any;
   isEnum: boolean;
   enum: commonOption[];
   isRequired: boolean;
-  showWhen?: showWhen[];
-  onChange?: string;
+  showWhen?: showWhen[] | null;
+  onChange?: string | null;
   disabled?: boolean;
 };

@@ -3,7 +3,8 @@
 import { FormField } from '@/types/common/FormField';
 import { formatDate } from '@/utils/formatDate';
 import { useEffect, useRef, useState } from 'react';
-import { UseFormResetField, useWatch } from 'react-hook-form';
+import { Controller, UseFormResetField, useWatch } from 'react-hook-form';
+import StateManagedSelect from 'react-select';
 
 type Props = {
   schema: FormField[];
@@ -193,6 +194,33 @@ export default function Form({
                   ></i>
                 </button>
               </div>
+            )}
+
+            {field.dataType === 'multi-select' && (
+              <Controller
+                name={field.fieldName}
+                control={control}
+                defaultValue={field.defaultValue || []}
+                rules={{ required: field.isRequired }}
+                render={({ field: { onChange, value } }) => (
+                  <StateManagedSelect
+                    isMulti
+                    options={field.enum.map((option) => ({
+                      value: option.id,
+                      label: option.name,
+                    }))}
+                    value={field.enum
+                      .filter((option) => value.includes(option.id))
+                      .map((option) => ({
+                        value: option.id,
+                        label: option.name,
+                      }))}
+                    onChange={(selected) =>
+                      onChange(selected.map((s: any) => s.value))
+                    }
+                  />
+                )}
+              />
             )}
 
             {errors[field.fieldName] && (

@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import deparmentReducer from './slices/departmentSlice';
 import designationReducer from './slices/designationSlice';
 import menuReducer from './slices/menuSlice';
+import projectReducer from './slices/projectSlice';
 import roleMenuPermissionReducer from './slices/roleMenuPermissionSlice';
 import roleReducer from './slices/roleSlice';
 import userReducer from './slices/userSlice';
@@ -14,6 +15,7 @@ export const store = configureStore({
     department: deparmentReducer,
     designation: designationReducer,
     user: userReducer,
+    project: projectReducer,
   },
 });
 
