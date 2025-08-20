@@ -4,7 +4,8 @@ export interface ProjectDto {
   description?: string;
   startDate: string;
   endDate?: string | null;
-  assignToUser?: string[];
+  status?: string;
+  assignUser?: string[];
 }
 
 export interface ProjectParam {
@@ -13,7 +14,8 @@ export interface ProjectParam {
   description?: string;
   startDate: string;
   endDate?: string | null;
-  assignToUser?: string[];
+  status?: string;
+  assignUser?: string[];
 }
 
 export interface ProjectUpdateProps {

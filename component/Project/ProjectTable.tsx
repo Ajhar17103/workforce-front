@@ -3,12 +3,13 @@
 import CommonModal from '@/common/modals/CommonModal';
 import DynamicTable from '@/common/tables/DataTable';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { fetchMenus } from '@/redux/slices/menuSlice';
 import { fetchProjects } from '@/redux/slices/projectSlice';
+import { fetchUsers } from '@/redux/slices/userSlice';
 import { FormField } from '@/types/common/FormField';
 import { ProjectDto, ProjectParam } from '@/types/master-data/project.type';
 import { getMasterApiUrl } from '@/utils/api';
 import { deleteApi } from '@/utils/deleteApi';
+import { handleApiError } from '@/utils/errorHandler';
 import { setSchemaDefaultValue } from '@/utils/setSchemaDefaultValue';
 import { setSchemaEnum } from '@/utils/setSchemaEnum';
 import { useEffect, useState } from 'react';
@@ -18,13 +19,14 @@ import {
   projectFormSchema as baseSchema,
   projectTableSchema,
 } from './ProjectFormSchema';
+import FullView from './ProjectFullView';
 import Update from './ProjectUpdate';
 
 export default function ProjectTable() {
   const projectUrl = getMasterApiUrl('/projects');
   const dispatch = useAppDispatch();
+  const { users } = useAppSelector((state) => state.user);
   const { projects } = useAppSelector((state) => state.project);
-
   const [tableData, setTableData] = useState<ProjectDto[]>([]);
   const [modalShow, setModalShow] = useState<boolean>(false);
   const [itemUpdate, setItemUpdate] = useState<ProjectParam>({
@@ -33,25 +35,66 @@ export default function ProjectTable() {
     description: '',
     startDate: '',
     endDate: null,
-    assignToUser: [],
+    assignUser: [],
   });
+  const [itemView, setItemView] = useState<ProjectParam>({
+    id: '0',
+    name: '',
+    description: '',
+    startDate: '',
+    endDate: null,
+    assignUser: [],
+  });
+  const [modalFullViewShow, setModalFullViewShow] = useState<boolean>(false);
+  const [viewschema, setViewSchema] = useState<FormField[]>(baseSchema);
   const [schema, setSchema] = useState<FormField[]>(baseSchema);
 
   useEffect(() => {
+    dispatch(fetchUsers());
     dispatch(fetchProjects());
   }, [dispatch]);
 
   useEffect(() => {
-    const transformed: ProjectDto[] = projects?.map((m) => ({
-      id: m.id,
-      name: '',
-      description: '',
-      startDate: '',
-      endDate: null,
-      assignToUser: [],
+    const transformed: ProjectDto[] = projects?.map((p) => ({
+      id: p.id,
+      name: p.name,
+      description: p?.description,
+      startDate: p?.startDate,
+      endDate: p?.endDate,
+      status: p?.status,
+      assignUser: p?.assignUser,
     }));
     setTableData(transformed);
   }, [projects]);
+
+  const fulView = async (item: ProjectDto) => {
+    setModalFullViewShow(true);
+
+    const assignUser = users.map((user) => ({
+      id: user.id,
+      name: `${user.name}, ${user.designationName}`,
+    }));
+
+    const enumMap = {
+      assignUser: assignUser,
+    };
+
+    const withEnums = setSchemaEnum(baseSchema, enumMap);
+    const finalSchema = setSchemaDefaultValue(withEnums, itemUpdate);
+    setViewSchema(finalSchema);
+
+    const viewData: ProjectParam = {
+      id: item?.id,
+      name: item?.name,
+      description: item?.description,
+      startDate: item?.startDate,
+      endDate: item?.endDate,
+      status: item?.status,
+      assignUser: item?.assignUser,
+    };
+
+    setItemView(viewData);
+  };
 
   const deleteItem = async (item: ProjectDto) => {
     if (!item?.id) return;
@@ -70,11 +113,11 @@ export default function ProjectTable() {
     if (result.isConfirmed) {
       try {
         await deleteApi(projectUrl, item.id);
-        toast.success('Menu deleted successfully.');
-        dispatch(fetchMenus());
+        toast.success('Project deleted successfully.');
+        dispatch(fetchProjects());
       } catch (error) {
         console.error('Failed to delete:', error);
-        toast.error('Failed to delete menu.');
+        handleApiError(error, 'Failed to delete project!');
       }
     }
   };
@@ -82,29 +125,30 @@ export default function ProjectTable() {
   const updateItem = (item: ProjectDto) => {
     setModalShow(true);
 
-    const parentItem = projects
-      .filter((menu) => menu.parentId === null)
-      .map((menu) => ({ id: menu.id, name: menu.name }));
+    const assignUser = users.map((user) => ({
+      id: user.id,
+      name: `${user.name}, ${user.designationName}`,
+    }));
 
     const enumMap = {
-      parentId: parentItem,
+      assignUser: assignUser,
     };
 
     const withEnums = setSchemaEnum(baseSchema, enumMap);
     const finalSchema = setSchemaDefaultValue(withEnums, itemUpdate);
-    console.log(baseSchema);
     setSchema(finalSchema);
 
-    const menuUpdateData: ProjectParam = {
+    const updateData: ProjectParam = {
       id: item.id,
-      name: '',
-      description: '',
-      startDate: '',
-      endDate: null,
-      assignToUser: [],
+      name: item.name,
+      description: item?.description,
+      startDate: item?.startDate,
+      endDate: item?.endDate,
+      status: item?.status,
+      assignUser: item?.assignUser,
     };
 
-    setItemUpdate(menuUpdateData);
+    setItemUpdate(updateData);
   };
 
   const closeModal = () => {
@@ -115,14 +159,32 @@ export default function ProjectTable() {
       <DynamicTable
         data={tableData}
         columns={projectTableSchema}
+        onView={fulView}
         onEdit={updateItem}
         onDelete={deleteItem}
       />
+
+      {modalFullViewShow && (
+        <CommonModal
+          show={modalFullViewShow}
+          onHide={() => setModalFullViewShow(false)}
+          title="Project View"
+          size="xl"
+          footer={false}
+          fullscreen="xl-down"
+        >
+          <FullView
+            schema={viewschema}
+            itemUpdate={itemView}
+            closeModal={() => setModalFullViewShow(false)}
+          />
+        </CommonModal>
+      )}
       {modalShow && (
         <CommonModal
           show={modalShow}
           onHide={closeModal}
-          title="Menu Update"
+          title="Project Update"
           size="xl"
           footer={false}
           fullscreen="xl-down"

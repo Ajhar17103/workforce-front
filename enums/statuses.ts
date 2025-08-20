@@ -1,6 +1,5 @@
 export const statuses = [
-  { id: 'ACTIVE', name: 'ACTIVE' },
-  { id: 'INACTIVE', name: 'INACTIVE' },
-  { id: 'SUSPENDED', name: 'SUSPENDED' },
-  { id: 'UNKNOWN', name: 'UNKNOWN' },
+  { id: 'ACTIVE', name: 'Active' },
+  { id: 'INACTIVE', name: 'Inactive' },
+  { id: 'SUSPENDED', name: 'Suspened' },
 ];

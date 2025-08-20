@@ -22,7 +22,7 @@ import {
   userFormViewSchema as fullviewSchema,
   userTableSchema as tableColumn,
 } from './UserFormSchema';
-import UserFullView from './UserFullView';
+import FullView from './UserFullView';
 import Update from './UserUpdate';
 
 export default function UserTable() {
@@ -33,7 +33,6 @@ export default function UserTable() {
   const { departments } = useAppSelector((state) => state.department);
   const { roles } = useAppSelector((state) => state.role);
   const [schema, setSchema] = useState<FormField[]>(baseSchema);
-  const [viewschema, setViewSchema] = useState<FormField[]>(fullviewSchema);
   const [tableData, setTableData] = useState<UserDto[]>([]);
   const [modalShow, setModalShow] = useState<boolean>(false);
   const [modalFullViewShow, setModalFullViewShow] = useState<boolean>(false);
@@ -252,7 +251,7 @@ export default function UserTable() {
           footer={false}
           fullscreen="xl-down"
         >
-          <UserFullView
+          <FullView
             schema={fullviewSchema}
             itemUpdate={itemView}
             closeModal={() => setModalFullViewShow(false)}

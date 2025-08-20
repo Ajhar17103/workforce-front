@@ -1,6 +1,8 @@
 'use client';
 
 import Form from '@/common/forms/Form';
+import { Toast } from '@/common/messages/toast';
+import axiosInstance from '@/lib/axiosInstance';
 import PermissionGuard from '@/lib/PermissionGuard';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { fetchProjects } from '@/redux/slices/projectSlice';
@@ -11,6 +13,7 @@ import {
   ProjectUpdateProps,
 } from '@/types/master-data/project.type';
 import { getMasterApiUrl } from '@/utils/api';
+import { handleApiError } from '@/utils/errorHandler';
 import { setSchemaEnum } from '@/utils/setSchemaEnum';
 import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
@@ -40,13 +43,13 @@ export default function ProjectCreate({ closeModal }: ProjectUpdateProps) {
 
   useEffect(() => {
     if (users) {
-      const assignToUser = users.map((user) => ({
+      const assignUser = users.map((user) => ({
         id: user.id,
         name: `${user.name}, ${user.designationName}`,
       }));
 
       const enumMap = {
-        assignToUser: assignToUser,
+        assignUser: assignUser,
       };
 
       const finalSchema = setSchemaEnum(baseSchema, enumMap);
@@ -55,39 +58,25 @@ export default function ProjectCreate({ closeModal }: ProjectUpdateProps) {
   }, [users]);
 
   const handleFormSubmit = (data: ProjectParam) => {
-    // const isMainMenu = !data.parentId;
-    // let parentMenu = data?.parentId
-    //   ? menus?.find((menu) => menu.id === data.parentId)?.name || ''
-    //   : '';
-    // const menuPostData = {
-    //   parentId: data.parentId || null,
-    //   parentMenu: parentMenu,
-    //   name: data.parentId ? data.subName : data.menuName,
-    //   icon: isMainMenu ? data.icon : null,
-    //   path: data.path || null,
-    // };
-    // axiosInstance
-    //   .post(projectUrl, menuPostData)
-    //   .then((response) => {
-    //     Toast({
-    //       message: 'Menu Create Successful!',
-    //       type: 'success',
-    //       autoClose: 1500,
-    //       theme: 'colored',
-    //     });
-    //     dispatch(fetchProjects());
-    //     reset();
-    //     closeModal();
-    //   })
-    //   .catch((error) => {
-    //     Toast({
-    //       message: 'Something went worng!',
-    //       type: 'warning',
-    //       autoClose: 1500,
-    //       theme: 'colored',
-    //     });
-    //     console.error(error);
-    //   });
+    console.log(data);
+
+    axiosInstance
+      .post(projectUrl, data)
+      .then((response) => {
+        Toast({
+          message: 'Project Create Successful!',
+          type: 'success',
+          autoClose: 1500,
+          theme: 'colored',
+        });
+        dispatch(fetchProjects());
+        reset();
+        closeModal();
+      })
+      .catch((error) => {
+        handleApiError(error, 'Failed to create project!');
+        console.error(error);
+      });
   };
 
   const handleClear = () => reset();

@@ -5,13 +5,16 @@ import { Toast } from '@/common/messages/toast';
 import axiosInstance from '@/lib/axiosInstance';
 import PermissionGuard from '@/lib/PermissionGuard';
 import { useAppDispatch } from '@/redux/hooks';
-import { fetchMenus } from '@/redux/slices/menuSlice';
-import { ProjectParam, ProjectUpdateProps } from '@/types/master-data/project.type';
+import { fetchProjects } from '@/redux/slices/projectSlice';
+import {
+  ProjectParam,
+  ProjectUpdateProps,
+} from '@/types/master-data/project.type';
 import { getMasterApiUrl } from '@/utils/api';
+import { handleApiError } from '@/utils/errorHandler';
 import { getDefaultValues } from '@/utils/getDefaultValues';
 import { Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-
 
 export default function ProjectUpdate({
   schema,
@@ -33,17 +36,18 @@ export default function ProjectUpdate({
   const dispatch = useAppDispatch();
 
   const handleFormSubmit = (data: ProjectParam) => {
-    const menuPostData = {
-      name: '',
-      description: '',
-      startDate: '',
-      endDate: null,
-      assignToUser: [],
+    const postData = {
+      name: data?.name,
+      description: data?.description,
+      startDate: data?.startDate,
+      endDate: data?.endDate,
+      status: data?.status,
+      assignUser: data?.assignUser,
     };
 
     if (itemUpdate?.id) {
       axiosInstance
-        .put(`${projectUrl}/${itemUpdate.id}`, menuPostData)
+        .put(`${projectUrl}/${itemUpdate.id}`, postData)
         .then((response) => {
           Toast({
             message: 'Project Updated Successful!',
@@ -51,17 +55,12 @@ export default function ProjectUpdate({
             autoClose: 1500,
             theme: 'colored',
           });
-          dispatch(fetchMenus());
+          dispatch(fetchProjects());
           closeModal();
           console.log(response);
         })
         .catch((error) => {
-          Toast({
-            message: 'Something went worng!',
-            type: 'warning',
-            autoClose: 1500,
-            theme: 'colored',
-          });
+          handleApiError(error, 'Failed to update projects!');
           console.error(error);
         });
     }

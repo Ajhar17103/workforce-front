@@ -55,10 +55,13 @@ export default function Form({
   }, [visibleFieldNames, schema, resetField]);
 
   const handleOnChange = (e: any, field: any) => {
-    setOnchangeType({
-      id: e.target.value,
-      type: field.onChange,
-    });
+    console.log(setOnchangeType, 'setOnchangeType');
+    if (setOnchangeType) {
+      setOnchangeType({
+        id: e.target.value,
+        type: field.onChange,
+      });
+    }
   };
   return (
     <>

@@ -8,6 +8,7 @@ import { useAppDispatch } from '@/redux/hooks';
 import { fetchUsers } from '@/redux/slices/userSlice';
 import { UserParam, UserUpdateProps } from '@/types/master-data/user.type';
 import { getMasterApiUrl } from '@/utils/api';
+import { handleApiError } from '@/utils/errorHandler';
 import { getDefaultValues } from '@/utils/getDefaultValues';
 import { useEffect } from 'react';
 import { Button } from 'react-bootstrap';
@@ -70,12 +71,7 @@ export default function UserUpdate({
           console.log(response);
         })
         .catch((error) => {
-          Toast({
-            message: 'Something went worng!',
-            type: 'warning',
-            autoClose: 1500,
-            theme: 'colored',
-          });
+          handleApiError(error, 'Failed to create user!');
           console.error(error);
         });
     }

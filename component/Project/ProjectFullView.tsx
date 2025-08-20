@@ -1,20 +1,24 @@
 'use client';
 
 import Form from '@/common/forms/Form';
-import { UserParam, UserUpdateProps } from '@/types/master-data/user.type';
+import {
+  ProjectParam,
+  ProjectUpdateProps,
+} from '@/types/master-data/project.type';
 import { getDefaultValues } from '@/utils/getDefaultValues';
 import { useForm } from 'react-hook-form';
 
-export default function UserFullView({ schema, itemUpdate }: UserUpdateProps) {
+export default function ProjectFullView({
+  schema,
+  itemUpdate,
+}: ProjectUpdateProps) {
   const {
     register,
-    handleSubmit,
     control,
     resetField,
     formState: { errors },
-    reset,
-  } = useForm<UserParam>({
-    defaultValues: getDefaultValues<UserParam>(itemUpdate),
+  } = useForm({
+    defaultValues: getDefaultValues<ProjectParam>(itemUpdate),
   });
 
   return (

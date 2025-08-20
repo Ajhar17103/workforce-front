@@ -1,3 +1,4 @@
+import { statuses } from '@/enums/statuses';
 import { FormField } from '@/types/common/FormField';
 import { TableHead } from '@/types/common/TableHead';
 import { ProjectDto } from '@/types/master-data/project.type';
@@ -68,11 +69,27 @@ export const projectFormSchema: FormField[] = [
     disabled: false,
   },
   {
-    column: 12,
+    column: 6,
+    align: 'default',
+    label: 'Status',
+    labelVisibility: 'visible',
+    fieldName: 'status',
+    dataType: 'dropdown',
+    action: null,
+    defaultValue: '',
+    isEnum: true,
+    enum: statuses,
+    isRequired: false,
+    showWhen: null,
+    onChange: null,
+    disabled: false,
+  },
+  {
+    column: 6,
     align: 'default',
     label: 'Assine To Users',
     labelVisibility: 'visible',
-    fieldName: 'assignToUser',
+    fieldName: 'assignUser',
     dataType: 'multi-select',
     action: null,
     defaultValue: '',
