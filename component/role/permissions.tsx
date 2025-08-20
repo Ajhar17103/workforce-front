@@ -1,5 +1,6 @@
 import { Toast } from '@/common/messages/toast';
 import axiosInstance from '@/lib/axiosInstance';
+import PermissionGuard from '@/lib/PermissionGuard';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { fetchMenus } from '@/redux/slices/menuSlice';
 import { fetchRoleMenuPermissions } from '@/redux/slices/roleMenuPermissionSlice';
@@ -295,10 +296,11 @@ export default function PermissionModal({
         <Button variant="danger" onClick={onClose}>
           <i className="bi bi-x" /> Cancel
         </Button>
-
-        <Button variant="primary" type="submit" onClick={savePermissions}>
-          <i className="bi bi-floppy2-fill" /> Save
-        </Button>
+        <PermissionGuard action="add">
+          <Button variant="primary" type="submit" onClick={savePermissions}>
+            <i className="bi bi-floppy2-fill" /> Save
+          </Button>
+        </PermissionGuard>
       </div>
     </div>
   );

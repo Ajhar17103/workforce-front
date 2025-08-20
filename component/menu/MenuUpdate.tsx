@@ -3,6 +3,7 @@
 import Form from '@/common/forms/Form';
 import { Toast } from '@/common/messages/toast';
 import axiosInstance from '@/lib/axiosInstance';
+import PermissionGuard from '@/lib/PermissionGuard';
 import { useAppDispatch } from '@/redux/hooks';
 import { fetchMenus } from '@/redux/slices/menuSlice';
 import { MenuParam, MenuUpdateProps } from '@/types/master-data/menu.type';
@@ -84,10 +85,11 @@ export default function MenuUpdate({
         <Button variant="danger" onClick={() => closeModal()}>
           <i className="bi bi-x" /> Cancel
         </Button>
-
-        <Button variant="primary" type="submit">
-          <i className="bi bi-floppy2-fill" /> Save
-        </Button>
+        <PermissionGuard action="update">
+          <Button variant="primary" type="submit">
+            <i className="bi bi-floppy2-fill" /> Update
+          </Button>
+        </PermissionGuard>
       </div>
     </form>
   );

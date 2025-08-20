@@ -474,20 +474,6 @@ export const userFormViewSchema: FormField[] = [
     isRequired: true,
     disabled: true,
   },
-  {
-    column: 6,
-    align: 'default',
-    label: 'Profile',
-    labelVisibility: 'visible',
-    fieldName: 'profileIcon',
-    dataType: 'image',
-    action: null,
-    defaultValue: '',
-    isEnum: false,
-    enum: [],
-    isRequired: false,
-    disabled: true,
-  },
 ];
 
 export const userTableSchema: TableHead<UserDto>[] = [

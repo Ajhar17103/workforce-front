@@ -1,5 +1,6 @@
 'use client';
 
+import PermissionGuard from '@/lib/PermissionGuard';
 import { useState } from 'react';
 import { Button } from 'react-bootstrap';
 
@@ -158,44 +159,52 @@ export default function DataTable<T extends { id: string }>({
                 ))}
                 <td>
                   {onView && (
-                    <Button
-                      variant="outline-primary"
-                      className="btn btn-sm me-1"
-                      onClick={() => onView(row)}
-                      title="View"
-                    >
-                      <i className="bi bi-eye" />
-                    </Button>
+                    <PermissionGuard action="view">
+                      <Button
+                        variant="outline-primary"
+                        className="btn btn-sm me-1"
+                        onClick={() => onView(row)}
+                        title="View"
+                      >
+                        <i className="bi bi-eye" />
+                      </Button>
+                    </PermissionGuard>
                   )}
                   {onPermission && (
-                    <Button
-                      variant="outline-primary"
-                      className="btn btn-sm me-1"
-                      onClick={() => onPermission(row)}
-                      title="Permission"
-                    >
-                      <i className="bi bi-shield-check" />
-                    </Button>
+                    <PermissionGuard action="add">
+                      <Button
+                        variant="outline-primary"
+                        className="btn btn-sm me-1"
+                        onClick={() => onPermission(row)}
+                        title="Permission"
+                      >
+                        <i className="bi bi-shield-check" />
+                      </Button>
+                    </PermissionGuard>
                   )}
                   {onEdit && (
-                    <Button
-                      variant="outline-success"
-                      className="btn btn-sm me-1"
-                      onClick={() => onEdit(row)}
-                      title="Edit"
-                    >
-                      <i className="bi bi-pencil" />
-                    </Button>
+                    <PermissionGuard action="update">
+                      <Button
+                        variant="outline-success"
+                        className="btn btn-sm me-1"
+                        onClick={() => onEdit(row)}
+                        title="Edit"
+                      >
+                        <i className="bi bi-pencil" />
+                      </Button>
+                    </PermissionGuard>
                   )}
                   {onDelete && (
-                    <Button
-                      variant="outline-danger"
-                      className="btn btn-sm"
-                      onClick={() => onDelete(row)}
-                      title="Delete"
-                    >
-                      <i className="bi bi-trash" />
-                    </Button>
+                    <PermissionGuard action="delete">
+                      <Button
+                        variant="outline-danger"
+                        className="btn btn-sm"
+                        onClick={() => onDelete(row)}
+                        title="Delete"
+                      >
+                        <i className="bi bi-trash" />
+                      </Button>
+                    </PermissionGuard>
                   )}
                 </td>
               </tr>

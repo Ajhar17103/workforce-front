@@ -3,6 +3,7 @@
 import Form from '@/common/forms/Form';
 import { Toast } from '@/common/messages/toast';
 import axiosInstance from '@/lib/axiosInstance';
+import PermissionGuard from '@/lib/PermissionGuard';
 import { useAppDispatch } from '@/redux/hooks';
 import { fetchDesignations } from '@/redux/slices/designationSlice';
 import {
@@ -84,9 +85,11 @@ export default function DesignationUpdate({
           <i className="bi bi-x" /> Cancel
         </Button>
 
-        <Button variant="primary" type="submit">
-          <i className="bi bi-floppy2-fill" /> Save
-        </Button>
+        <PermissionGuard action="update">
+          <Button variant="primary" type="submit">
+            <i className="bi bi-floppy2-fill" /> Update
+          </Button>
+        </PermissionGuard>
       </div>
     </form>
   );

@@ -3,11 +3,7 @@
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { fetchMenus } from '@/redux/slices/menuSlice';
 import { fetchRoleMenuPermissions } from '@/redux/slices/roleMenuPermissionSlice';
-import {
-  getLocalStorage,
-  removeLocalStorage,
-  setLocalStorage,
-} from '@/utils/storage';
+import { getSessionStorage, removeSessionStorage, setSessionStorage } from '@/utils/storage';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -34,7 +30,7 @@ export default function Navbar({
   const parentName = parentItem?.name || '';
   const currentName = currentItem?.name || '';
 
-  const roleId = getLocalStorage('role_Id');
+  const roleId = getSessionStorage('role_Id');
 
   useEffect(() => {
     console.log(roleId);
@@ -45,7 +41,7 @@ export default function Navbar({
   }, [dispatch, roleId]);
 
   useEffect(() => {
-    const stored = localStorage.getItem('darkMode');
+    const stored = getSessionStorage('darkMode');
     if (stored !== null) {
       setDarkMode(stored === 'true');
       if (stored === 'true') document.body.classList.add('dark-mode');
@@ -72,10 +68,10 @@ export default function Navbar({
     setDarkMode(nextMode);
     if (nextMode) {
       document.body.classList.add('dark-mode');
-      localStorage.setItem('darkMode', 'true');
+      setSessionStorage('darkMode', 'true');
     } else {
       document.body.classList.remove('dark-mode');
-      localStorage.setItem('darkMode', 'false');
+      setSessionStorage('darkMode', 'false');
     }
   };
 
@@ -90,11 +86,11 @@ export default function Navbar({
   }, []);
 
   const signout = () => {
-    removeLocalStorage('access_token');
-    removeLocalStorage('refresh_token');
-    removeLocalStorage('role_id');
-    removeLocalStorage('isLogin');
-    setLocalStorage('status', 'ISOUT');
+    removeSessionStorage('access_token');
+    removeSessionStorage('refresh_token');
+    removeSessionStorage('role_id');
+    removeSessionStorage('isLogin');
+    setSessionStorage('status', 'ISOUT');
     window.location.href = '/';
   };
 

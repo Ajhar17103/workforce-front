@@ -3,6 +3,7 @@
 import Form from '@/common/forms/Form';
 import { Toast } from '@/common/messages/toast';
 import axiosInstance from '@/lib/axiosInstance';
+import PermissionGuard from '@/lib/PermissionGuard';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { fetchDepartments } from '@/redux/slices/departmentSlice';
 import { fetchRoles } from '@/redux/slices/roleSlice';
@@ -137,9 +138,11 @@ export default function UserCreate({ closeModal }: UserUpdateProps) {
           <i className="bi bi-x" /> Cancel
         </Button>
 
-        <Button variant="primary" type="submit">
-          <i className="bi bi-floppy2-fill" /> Save
-        </Button>
+        <PermissionGuard action="add">
+          <Button variant="primary" type="submit">
+            <i className="bi bi-floppy2-fill" /> Save
+          </Button>
+        </PermissionGuard>
       </div>
     </form>
   );

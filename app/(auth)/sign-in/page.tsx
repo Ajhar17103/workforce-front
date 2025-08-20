@@ -2,7 +2,7 @@
 
 import { Toast } from '@/common/messages/toast';
 import { getAuthApiUrl } from '@/utils/api';
-import { setLocalStorage } from '@/utils/storage';
+import { setSessionStorage } from '@/utils/storage';
 import axios from 'axios';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -41,11 +41,11 @@ export default function SignIn({ onLogin }: SignInProps) {
       .then((response) => {
         console.log(response);
         reset();
-        setLocalStorage('access_token', response.data.accessToken);
-        setLocalStorage('refresh_token', response.data.refreshToken);
-        setLocalStorage('role_Id', response.data?.user?.roleId);
-        setLocalStorage('isLogin', 'true');
-        setLocalStorage('status', 'ISIN');
+        setSessionStorage('access_token', response.data.accessToken);
+        setSessionStorage('refresh_token', response.data.refreshToken);
+        setSessionStorage('role_Id', response.data?.user?.roleId);
+        setSessionStorage('isLogin', 'true');
+        setSessionStorage('status', 'ISIN');
         window.location.reload();
       })
       .catch((error) => {

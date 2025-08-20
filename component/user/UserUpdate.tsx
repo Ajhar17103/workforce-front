@@ -3,6 +3,7 @@
 import Form from '@/common/forms/Form';
 import { Toast } from '@/common/messages/toast';
 import axiosInstance from '@/lib/axiosInstance';
+import PermissionGuard from '@/lib/PermissionGuard';
 import { useAppDispatch } from '@/redux/hooks';
 import { fetchUsers } from '@/redux/slices/userSlice';
 import { UserParam, UserUpdateProps } from '@/types/master-data/user.type';
@@ -100,9 +101,11 @@ export default function UserUpdate({
           <i className="bi bi-x" /> Cancel
         </Button>
 
-        <Button variant="primary" type="submit">
-          <i className="bi bi-floppy2-fill" /> Save
-        </Button>
+        <PermissionGuard action="update">
+          <Button variant="primary" type="submit">
+            <i className="bi bi-floppy2-fill" /> Update
+          </Button>
+        </PermissionGuard>
       </div>
     </form>
   );

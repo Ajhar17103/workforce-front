@@ -10,7 +10,7 @@ import Sidebar from '@/common/layout/Sidebar';
 import Loading from '@/common/Loader/Loading';
 import { Toast } from '@/common/messages/toast';
 import { store } from '@/redux/store';
-import { getLocalStorage, setLocalStorage } from '@/utils/storage';
+import { getSessionStorage, setSessionStorage } from '@/utils/storage';
 import { useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
@@ -24,10 +24,10 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
   const [isStatus, setIsStatus] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedLogin = localStorage.getItem('isLogin') === 'true';
+    const storedLogin = getSessionStorage('isLogin') === 'true';
     setIsLogin(storedLogin);
 
-    const status = getLocalStorage('status');
+    const status = getSessionStorage('status');
     setIsStatus(status);
   }, []);
 
@@ -41,7 +41,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
         autoClose: 1500,
         theme: 'colored',
       });
-      setLocalStorage('status', 'DONE');
+      setSessionStorage('status', 'DONE');
     } else if (isStatus === 'ISOUT') {
       Toast({
         message: 'Logging Out...',
@@ -49,7 +49,7 @@ function DashboardContent({ children }: { children: React.ReactNode }) {
         autoClose: 1500, // optional, default 2000ms
         theme: 'colored',
       });
-      setLocalStorage('status', 'DONE');
+      setSessionStorage('status', 'DONE');
     }
   }, [isStatus]);
 

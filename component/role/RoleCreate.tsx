@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { roleFormSchema as schema } from './RoleFormSchema';
+import PermissionGuard from '@/lib/PermissionGuard';
 
 export default function RoleCreate({ closeModal }: RoleUpdateProps) {
   const {
@@ -75,10 +76,11 @@ export default function RoleCreate({ closeModal }: RoleUpdateProps) {
         <Button variant="danger" onClick={() => handleClear()}>
           <i className="bi bi-x" /> Cancel
         </Button>
-
-        <Button variant="primary" type="submit">
-          <i className="bi bi-floppy2-fill" /> Save
-        </Button>
+        <PermissionGuard action="add">
+          <Button variant="primary" type="submit">
+            <i className="bi bi-floppy2-fill" /> Save
+          </Button>
+        </PermissionGuard>
       </div>
     </form>
   );

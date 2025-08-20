@@ -17,6 +17,7 @@ import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { designationFormSchema as baseSchema } from './DesignationFormSchema';
+import PermissionGuard from '@/lib/PermissionGuard';
 
 export default function DesignationCreate({
   closeModal,
@@ -101,9 +102,11 @@ export default function DesignationCreate({
           <i className="bi bi-x" /> Cancel
         </Button>
 
-        <Button variant="primary" type="submit">
-          <i className="bi bi-floppy2-fill" /> Save
-        </Button>
+        <PermissionGuard action="add">
+          <Button variant="primary" type="submit">
+            <i className="bi bi-floppy2-fill" /> Save
+          </Button>
+        </PermissionGuard>
       </div>
     </form>
   );

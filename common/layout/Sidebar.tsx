@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { fetchMenus } from '@/redux/slices/menuSlice';
 import { fetchRoleMenuPermissions } from '@/redux/slices/roleMenuPermissionSlice';
 import { MenuPermissionDto } from '@/types/master-data/menu.type';
-import { getLocalStorage } from '@/utils/storage';
+import { getSessionStorage } from '@/utils/storage';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -33,7 +33,7 @@ interface NestedMenu extends Menu {
 }
 
 export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
-  const roleId = getLocalStorage('role_Id');
+  const roleId = getSessionStorage('role_Id');
   const pathname = usePathname();
   const dispatch = useAppDispatch();
   const { menus, loading, error } = useAppSelector((state) => state.menu);

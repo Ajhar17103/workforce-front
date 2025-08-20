@@ -1,11 +1,11 @@
 export interface DepartmentDto {
-  id: number;
+  id: string;
   departmentName?: string;
   name?: string;
 }
 
 export interface DepartmentParam {
-  id: number;
+  id: string;
   name?: string;
 }
 

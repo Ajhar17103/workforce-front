@@ -2,6 +2,7 @@
 
 import CustomButton from '@/common/Buttons/Button';
 import CommonModal from '@/common/modals/CommonModal';
+import PermissionGuard from '@/lib/PermissionGuard';
 import { useState } from 'react';
 import CreateForm from './UserCreate';
 import UserTable from './UserTable';
@@ -17,14 +18,16 @@ export default function UserPage() {
     <div className="card shadow-sm p-3 dark">
       <div className="d-flex justify-content-between align-items-center">
         <h6 className="mb-0 fw-semibold text-blue">User Lists</h6>
-        <CustomButton
-          size="xs"
-          loading={false}
-          icon="bi bi-plus-lg"
-          variant="outline-primary"
-          onClick={() => setModalShow(true)}
-          tooltip="Add New User"
-        />
+        <PermissionGuard action="add">
+          <CustomButton
+            size="xs"
+            loading={false}
+            icon="bi bi-plus-lg"
+            variant="outline-primary"
+            onClick={() => setModalShow(true)}
+            tooltip="Add New User"
+          />
+        </PermissionGuard>
       </div>
       <UserTable />
       {modalShow && (

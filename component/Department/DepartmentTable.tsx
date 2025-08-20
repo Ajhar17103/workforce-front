@@ -24,7 +24,7 @@ export default function DepartmentTable() {
   const [tableData, setTableData] = useState<DepartmentDto[]>([]);
   const [modalShow, setModalShow] = useState<boolean>(false);
   const [itemUpdate, setItemUpdate] = useState<DepartmentParam>({
-    id: 0,
+    id: '0',
     name: '',
   });
 
