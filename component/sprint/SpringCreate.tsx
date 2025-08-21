@@ -6,21 +6,21 @@ import axiosInstance from '@/lib/axiosInstance';
 import PermissionGuard from '@/lib/PermissionGuard';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { fetchProjects } from '@/redux/slices/projectSlice';
-import { fetchUsers } from '@/redux/slices/userSlice';
+import { fetchSprints } from '@/redux/slices/sprintSlice';
 import { FormField } from '@/types/common/FormField';
 import {
-  ProjectParam,
-  ProjectUpdateProps,
-} from '@/types/master-data/project.type';
+  SprintParam,
+  SprintUpdateProps,
+} from '@/types/master-data/sprint.type';
 import { getMasterApiUrl } from '@/utils/api';
 import { handleApiError } from '@/utils/errorHandler';
 import { setSchemaEnum } from '@/utils/setSchemaEnum';
 import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-import { projectFormSchema as baseSchema } from './ProjectSchema';
+import { formSchema as baseSchema } from './SprintSchema';
 
-export default function ProjectCreate({ closeModal }: ProjectUpdateProps) {
+export default function SpringCreate({ closeModal }: SprintUpdateProps) {
   const {
     register,
     control,
@@ -28,53 +28,61 @@ export default function ProjectCreate({ closeModal }: ProjectUpdateProps) {
     reset,
     handleSubmit,
     formState: { errors },
-  } = useForm<ProjectParam>();
+  } = useForm<SprintParam>();
 
-  const projectUrl = getMasterApiUrl('/projects');
+  const sprintUrl = getMasterApiUrl('/sprints');
   const dispatch = useAppDispatch();
-  const { users } = useAppSelector((state) => state.user);
   const { projects } = useAppSelector((state) => state.project);
   const [schema, setSchema] = useState<FormField[]>(baseSchema);
 
   useEffect(() => {
-    dispatch(fetchUsers());
     dispatch(fetchProjects());
   }, [dispatch]);
 
   useEffect(() => {
-    if (users) {
-      const assignUser = users.map((user) => ({
+    if (projects) {
+      const projectId = projects.map((user) => ({
         id: user.id,
-        name: `${user.name}, ${user.designationName}`,
+        name: user.name,
       }));
 
       const enumMap = {
-        assignUser: assignUser,
+        projectId: projectId,
       };
 
       const finalSchema = setSchemaEnum(baseSchema, enumMap);
       setSchema(finalSchema);
     }
-  }, [users]);
+  }, [projects]);
 
-  const handleFormSubmit = (data: ProjectParam) => {
+  const handleFormSubmit = (data: SprintParam) => {
     console.log(data);
-
+    const postData = {
+      projectId: data?.projectId,
+      name: data?.name,
+      startDate: data?.startDate,
+      endDate: data?.endDate,
+      workingDays: Number(data?.workingDays),
+      dailyWorkingHrs: Number(data?.dailyWorkingHrs),
+      totalSprintHrs: Number(data?.workingDays) * Number(data?.dailyWorkingHrs),
+      sprintType: data?.sprintType,
+    };
+    console.log('postData', postData);
     axiosInstance
-      .post(projectUrl, data)
+      .post(sprintUrl, postData)
       .then((response) => {
         Toast({
-          message: 'Project Create Successful!',
+          message: 'Sprint Create Successful!',
           type: 'success',
           autoClose: 1500,
           theme: 'colored',
         });
-        dispatch(fetchProjects());
-        reset();
-        closeModal();
+        dispatch(fetchSprints());
+        // reset();
+        // closeModal();
       })
       .catch((error) => {
-        handleApiError(error, 'Failed to create project!');
+        handleApiError(error, 'Failed to create sprint!');
         console.error(error);
       });
   };

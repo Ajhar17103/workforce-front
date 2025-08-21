@@ -15,11 +15,11 @@ import { setSchemaEnum } from '@/utils/setSchemaEnum';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
+import FullView from './ProjectFullView';
 import {
   projectFormSchema as baseSchema,
   projectTableSchema,
-} from './ProjectFormSchema';
-import FullView from './ProjectFullView';
+} from './ProjectSchema';
 import Update from './ProjectUpdate';
 
 export default function ProjectTable() {

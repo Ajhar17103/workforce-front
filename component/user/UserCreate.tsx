@@ -106,8 +106,8 @@ export default function UserCreate({ closeModal }: UserUpdateProps) {
           autoClose: 1500,
           theme: 'colored',
         });
-        // reset();
-        // closeModal();
+        reset();
+        closeModal();
       })
       .catch((error) => {
         handleApiError(error, 'Failed to create user!');
