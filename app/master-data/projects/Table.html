@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dynamic Transaction Log</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background: #f8f9fa;
+      }
+      .cursor-pointer {
+        cursor: pointer;
+      }
+      .nested-table {
+        margin-left: 1rem;
+      }
+      .accordion-collapse td {
+        background: #fafafa !important;
+      }
+      .badge {
+        font-size: 0.75rem;
+      }
+    </style>
+  </head>
+  <body class="p-4">
+    <div class="container">
+      <h4 class="mb-3">Transaction Log</h4>
+      <div class="card shadow-sm rounded-3">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Transaction ID</th>
+                <th>Method</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Duration</th>
+                <th>Status</th>
+                <th>Thread</th>
+              </tr>
+            </thead>
+            <tbody id="transaction-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const transactions = [
+        {
+          transactionId: 'tx-8124',
+          method: 'OrderService.processOrder',
+          startTime: '8:22:32 AM',
+          endTime: '8:22:32 AM',
+          duration: '229ms',
+          status: 'Committed',
+          thread: 'thread-7',
+          steps: [
+            {
+              transactionId: 'tx-0826',
+              method: 'CacheService.InvalidateCache',
+              startTime: '7:57:37 AM',
+              endTime: '7:57:38 AM',
+              duration: '1.01s',
+              status: 'Rolled Back',
+              thread: 'thread-2',
+              steps: [
+                {
+                  transactionId: 'tx-0826',
+                  method: 'CacheService.InvalidateCache',
+                  startTime: '7:57:37 AM',
+                  endTime: '7:57:38 AM',
+                  duration: '1.01s',
+                  status: 'Rolled Back',
+                  thread: 'thread-2',
+                  steps: [
+                    {
+                      transactionId: 'tx-0826',
+                      method: 'CacheService.InvalidateCache',
+                      startTime: '7:57:37 AM',
+                      endTime: '7:57:38 AM',
+                      duration: '1.01s',
+                      status: 'Rolled Back',
+                      thread: 'thread-2',
+                      steps: [],
+                    },
+                  ],
+                },
+              ],
+            },
+            {
+              transactionId: 'tx-0826',
+              method: 'CacheService.InvalidateCache',
+              startTime: '7:57:37 AM',
+              endTime: '7:57:38 AM',
+              duration: '1.01s',
+              status: 'Rolled Back',
+              thread: 'thread-2',
+              steps: [
+                {
+                  step: 1,
+                  action: 'Clear Cache',
+                  time: '7:57:37 AM',
+                  status: 'OK',
+                },
+                {
+                  step: 2,
+                  action: 'Commit Transaction',
+                  time: '7:57:38 AM',
+                  status: 'Rolled Back',
+                },
+              ],
+            },
+          ],
+        },
+        {
+          transactionId: 'tx-0826',
+          method: 'CacheService.InvalidateCache',
+          startTime: '7:57:37 AM',
+          endTime: '7:57:38 AM',
+          duration: '1.01s',
+          status: 'Rolled Back',
+          thread: 'thread-2',
+          steps: [
+            {
+              transactionId: 'tx-0826',
+              method: 'CacheService.InvalidateCache',
+              startTime: '7:57:37 AM',
+              endTime: '7:57:38 AM',
+              duration: '1.01s',
+              status: 'Rolled Back',
+              thread: 'thread-2',
+              steps: [],
+            },
+            {
+              transactionId: 'tx-0826',
+              method: 'CacheService.InvalidateCache',
+              startTime: '7:57:37 AM',
+              endTime: '7:57:38 AM',
+              duration: '1.01s',
+              status: 'Rolled Back',
+              thread: 'thread-2',
+              steps: [
+                {
+                  transactionId: 'tx-0826',
+                  method: 'CacheService.InvalidateCache',
+                  startTime: '7:57:37 AM',
+                  endTime: '7:57:38 AM',
+                  duration: '1.01s',
+                  status: 'Rolled Back',
+                  thread: 'thread-2',
+                  steps: [],
+                },
+                {
+                  transactionId: 'tx-0826',
+                  method: 'CacheService.InvalidateCache',
+                  startTime: '7:57:37 AM',
+                  endTime: '7:57:38 AM',
+                  duration: '1.01s',
+                  status: 'Rolled Back',
+                  thread: 'thread-2',
+                  steps: [],
+                },
+              ],
+            },
+          ],
+        },
+      ];
+
+      const tbody = document.getElementById('transaction-body');
+
+      function renderTransactions(data, parentId) {
+        return data.map((txn, index) => {
+          const uniqueId = parentId ? `${parentId}-${index}` : `row${index}`;
+          const badgeClass =
+            txn.status === 'Committed' || txn.status === 'OK'
+              ? 'bg-success'
+              : 'bg-danger';
+
+          // Main row
+          let html = `
+          <tr data-bs-toggle="collapse" data-bs-target="#${uniqueId}" class="cursor-pointer">
+            <td>${txn.transactionId || ''}</td>
+            <td>${txn.method || txn.action || ''}</td>
+            <td>${txn.startTime || txn.time || ''}</td>
+            <td>${txn.endTime || ''}</td>
+            <td>${txn.duration || ''}</td>
+            <td><span class="badge ${badgeClass}">${
+            txn.status || ''
+          }</span></td>
+            <td>${txn.thread || ''}</td>
+          </tr>
+        `;
+
+          // If has steps → add nested table
+          if (txn.steps && txn.steps.length > 0) {
+            html += `
+            <tr class="accordion-collapse collapse" id="${uniqueId}" data-bs-parent="#${
+              parentId || 'transaction-body'
+            }">
+              <td colspan="7">
+                <div class="p-2 bg-white rounded border">
+                  <table class="table table-sm table-bordered nested-table">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Transaction ID</th>
+                        <th>Method</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Duration</th>
+                        <th>Status</th>
+                        <th>Thread</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      ${renderTransactions(txn.steps, uniqueId).join('')}
+                    </tbody>
+                  </table>
+                </div>
+              </td>
+            </tr>
+          `;
+          }
+
+          return html;
+        });
+      }
+
+      tbody.innerHTML = renderTransactions(transactions).join('');
+    </script>
+  </body>
+</html>

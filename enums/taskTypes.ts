@@ -1,5 +1,4 @@
 export const taskTypes = [
-  { id: 'PLANNED', name: 'PLANNED' },
-  { id: 'UNPLANNED', name: 'UNPLANNED' },
-  { id: 'UNKNOWN', name: 'UNKNOWN' },
+  { id: 'PLANNED', name: 'Planned' },
+  { id: 'UNPLANNED', name: 'Unplanned' },
 ];

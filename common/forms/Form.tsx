@@ -130,7 +130,7 @@ export default function Form({
               />
             )}
 
-            {field.dataType === 'image' && (
+            {field.dataType === 'file' && (
               <input
                 type="file"
                 defaultValue={field.defaultValue}
@@ -139,23 +139,6 @@ export default function Form({
                 onChange={(e: any) => handleOnChange(e, field)}
                 disabled={field?.disabled ? field?.disabled : false}
               />
-            )}
-
-            {field.dataType === 'dropdown' && (
-              <select
-                defaultValue={field.defaultValue}
-                {...register(field.fieldName, { required: field.isRequired })}
-                className="form-select"
-                onClick={(e: any) => handleOnChange(e, field)}
-                disabled={field?.disabled ? field?.disabled : false}
-              >
-                <option value="">--</option>
-                {field.enum.map((option) => (
-                  <option key={option.id} value={String(option.id)}>
-                    {option.name}
-                  </option>
-                ))}
-              </select>
             )}
 
             {field.dataType === 'checkbox' && (
@@ -197,6 +180,23 @@ export default function Form({
                   ></i>
                 </button>
               </div>
+            )}
+
+            {field.dataType === 'dropdown' && (
+              <select
+                defaultValue={field.defaultValue}
+                {...register(field.fieldName, { required: field.isRequired })}
+                className="form-select"
+                onClick={(e: any) => handleOnChange(e, field)}
+                disabled={field?.disabled ? field?.disabled : false}
+              >
+                <option value="">--</option>
+                {field.enum.map((option) => (
+                  <option key={option.id} value={String(option.id)}>
+                    {option.name}
+                  </option>
+                ))}
+              </select>
             )}
 
             {field.dataType === 'multi-select' && (

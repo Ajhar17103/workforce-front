@@ -13,7 +13,7 @@ import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 import { roleFormSchema as baseSchema } from './RoleFormSchema';
 import Update from './RoleUpdate';
-import PermissionsPage from './permissions';
+import PermissionsPage from './Permissions';
 
 export default function RoleTable() {
   const roleUrl = getMasterApiUrl('/roles');

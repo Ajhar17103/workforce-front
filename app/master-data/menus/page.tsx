@@ -1,5 +1,5 @@
 'use client';
-import MenuPage from '@/component/menu/MenuPage';
+import MenuPage from '@/component/Menu/MenuPage';
 
 export default function Menus() {
   return <MenuPage />;
