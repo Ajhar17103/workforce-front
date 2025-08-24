@@ -296,11 +296,11 @@ export default function PermissionModal({
         <Button variant="danger" onClick={onClose}>
           <i className="bi bi-x" /> Cancel
         </Button>
-        <PermissionGuard action="add">
+        {/* <PermissionGuard action="add"> */}
           <Button variant="primary" type="submit" onClick={savePermissions}>
             <i className="bi bi-floppy2-fill" /> Save
           </Button>
-        </PermissionGuard>
+        {/* </PermissionGuard> */}
       </div>
     </div>
   );

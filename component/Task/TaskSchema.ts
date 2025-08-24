@@ -1,6 +1,5 @@
 import { taskPriority } from '@/enums/priority';
 import { taskTracker } from '@/enums/taskTracker';
-import { taskTypes } from '@/enums/taskTypes';
 import { FormField } from '@/types/common/FormField';
 import { TableHead } from '@/types/common/TableHead';
 import { TaskDto } from '@/types/task-board/task.type';
@@ -114,22 +113,6 @@ export const formSchema: FormField[] = [
     isEnum: true,
     enum: taskPriority,
     isRequired: true,
-    showWhen: null,
-    onChange: null,
-    disabled: false,
-  },
-  {
-    column: 4,
-    align: 'default',
-    label: 'Start Date',
-    labelVisibility: 'visible',
-    fieldName: 'startDate',
-    dataType: 'date',
-    action: null,
-    defaultValue: '',
-    isEnum: false,
-    enum: [],
-    isRequired: false,
     showWhen: null,
     onChange: null,
     disabled: false,

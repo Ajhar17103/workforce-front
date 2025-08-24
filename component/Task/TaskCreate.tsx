@@ -97,7 +97,7 @@ export default function TaskCreate({ closeModal }: TaskUpdateProps) {
       taskTracker: data?.taskTracker,
       priority: data?.priority,
       taskType: 'PLANNED',
-      startDate: data?.startDate,
+      startDate: null,
       estimatedTime: data?.estimatedTime,
       taskStatus: 'IN_PROGRESS',
       // file:data?.file[0]

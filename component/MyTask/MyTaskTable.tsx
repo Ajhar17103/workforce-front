@@ -20,6 +20,7 @@ import {
   tableSchema,
 } from './MyTaskSchema';
 import View from './MyTaskView';
+import { formatDate } from '@/utils/formatDate';
 
 export default function MyTaskTable() {
   const taskUrl = getTaskApiUrl('/tasks');
@@ -94,7 +95,7 @@ export default function MyTaskTable() {
       taskTracker: item.taskTracker,
       priority: item.priority,
       taskType: item.taskType,
-      startDate: item.startDate,
+      startDate: formatDate(new Date(), 'yyyy-MM-dd'),
       estimatedTime: item.estimatedTime,
       taskStatus: 'IN_PROGRESS',
     };
@@ -245,7 +246,7 @@ export default function MyTaskTable() {
   };
 
   const closeViewModal = () => {
-    setModalShow(false);
+    setModalViewShow(false);
   };
 
   return (
