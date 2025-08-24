@@ -130,6 +130,38 @@ export default function Form({
               />
             )}
 
+            {field.dataType === 'time' && (
+              <input
+                type="time"
+                step="60"
+                defaultValue={
+                  field.defaultValue
+                    ? formatDate(field.defaultValue, 'HH:mm')
+                    : ''
+                }
+                {...register(field.fieldName, { required: field.isRequired })}
+                className="form-control"
+                onChange={(e: any) => handleOnChange(e, field)}
+                disabled={field?.disabled ? field?.disabled : false}
+              />
+            )}
+
+            {field.dataType === 'hour' && (
+              <input
+                type="number"
+                step="0.01" // allows decimals (two places)
+                defaultValue={field.defaultValue ?? ''}
+                {...register(field.fieldName, {
+                  required: field.isRequired,
+                  valueAsNumber: true, // react-hook-form will convert to number
+                  validate: (v:any) => !isNaN(v) || 'Invalid number',
+                })}
+                className="form-control"
+                onChange={(e: any) => handleOnChange(e, field)}
+                disabled={field?.disabled ? field?.disabled : false}
+              />
+            )}
+
             {field.dataType === 'file' && (
               <input
                 type="file"

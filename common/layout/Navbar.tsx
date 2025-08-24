@@ -3,7 +3,11 @@
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { fetchMenus } from '@/redux/slices/menuSlice';
 import { fetchRoleMenuPermissions } from '@/redux/slices/roleMenuPermissionSlice';
-import { getSessionStorage, removeSessionStorage, setSessionStorage } from '@/utils/storage';
+import {
+  getSessionStorage,
+  removeSessionStorage,
+  setSessionStorage,
+} from '@/utils/storage';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -30,10 +34,9 @@ export default function Navbar({
   const parentName = parentItem?.name || '';
   const currentName = currentItem?.name || '';
 
-  const roleId = getSessionStorage('role_Id');
+  const roleId = getSessionStorage('role_id');
 
   useEffect(() => {
-    console.log(roleId);
     if (roleId) {
       dispatch(fetchMenus());
       dispatch(fetchRoleMenuPermissions(roleId));
@@ -88,6 +91,7 @@ export default function Navbar({
   const signout = () => {
     removeSessionStorage('access_token');
     removeSessionStorage('refresh_token');
+    removeSessionStorage('user_id');
     removeSessionStorage('role_id');
     removeSessionStorage('isLogin');
     setSessionStorage('status', 'ISOUT');

@@ -9,7 +9,7 @@ type Column<T> = {
   accessor: keyof T;
   sortable?: boolean;
   searchable?: boolean;
-  align?: 'start' | 'center' | 'end'; // updated to your types
+  align?: 'start' | 'center' | 'end';
 };
 
 type Props<T> = {
@@ -19,6 +19,9 @@ type Props<T> = {
   onPermission?: (row: T) => void;
   onEdit?: (row: T) => void;
   onDelete?: (row: T) => void;
+  onProgress?: (row: T) => void | Promise<void> | null;
+  onHold?: (row: T) => void | Promise<void> | null;
+  onCompleted?: (row: T) => void | Promise<void> | null;
   rowsPerPage?: number;
 };
 
@@ -29,6 +32,9 @@ export default function DataTable<T extends { id: string }>({
   onPermission,
   onEdit,
   onDelete,
+  onProgress,
+  onHold,
+  onCompleted,
   rowsPerPage = 10,
 }: Props<T>) {
   const [searchTerms, setSearchTerms] = useState<{ [key: string]: string }>({});
@@ -170,6 +176,7 @@ export default function DataTable<T extends { id: string }>({
                       </Button>
                     </PermissionGuard>
                   )}
+
                   {onPermission && (
                     <PermissionGuard action="add">
                       <Button
@@ -182,6 +189,7 @@ export default function DataTable<T extends { id: string }>({
                       </Button>
                     </PermissionGuard>
                   )}
+
                   {onEdit && (
                     <PermissionGuard action="update">
                       <Button
@@ -194,6 +202,7 @@ export default function DataTable<T extends { id: string }>({
                       </Button>
                     </PermissionGuard>
                   )}
+
                   {onDelete && (
                     <PermissionGuard action="delete">
                       <Button
@@ -205,6 +214,39 @@ export default function DataTable<T extends { id: string }>({
                         <i className="bi bi-trash" />
                       </Button>
                     </PermissionGuard>
+                  )}
+
+                  {onProgress && (
+                    <Button
+                      variant="outline-secondary"
+                      className="btn btn-sm me-1"
+                      onClick={() => onProgress(row)}
+                      title="Complete"
+                    >
+                      <i className="bi bi-arrow-repeat" />
+                    </Button>
+                  )}
+
+                  {onHold && (
+                    <Button
+                      variant="outline-info"
+                      className="btn btn-sm me-1"
+                      onClick={() => onHold(row)}
+                      title="Hold"
+                    >
+                      <i className="bi bi-pause-circle" />
+                    </Button>
+                  )}
+
+                  {onCompleted && (
+                    <Button
+                      variant="outline-success"
+                      className="btn btn-sm me-1"
+                      onClick={() => onCompleted(row)}
+                      title="Complete"
+                    >
+                      <i className="bi bi-check-circle" />
+                    </Button>
                   )}
                 </td>
               </tr>

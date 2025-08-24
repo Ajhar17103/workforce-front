@@ -7,21 +7,20 @@ import PermissionGuard from '@/lib/PermissionGuard';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { fetchProjects } from '@/redux/slices/projectSlice';
 import { fetchSprints } from '@/redux/slices/sprintSlice';
+import { fetchTaskByUserId } from '@/redux/slices/taskSlice';
 import { FormField, onChangeField } from '@/types/common/FormField';
-import {
-  SprintParam,
-  SprintUpdateProps,
-} from '@/types/master-data/sprint.type';
-import { getMasterApiUrl } from '@/utils/api';
+import { TaskParam, TaskUpdateProps } from '@/types/task-board/task.type';
+import { getMasterApiUrl, getTaskApiUrl } from '@/utils/api';
 import { handleApiError } from '@/utils/errorHandler';
 import { getByEntityApi } from '@/utils/getByEntityApi';
 import { setSchemaEnum } from '@/utils/setSchemaEnum';
+import { getSessionStorage } from '@/utils/storage';
 import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { formSchema as baseSchema } from './MyTaskSchema';
 
-export default function TaskCreate({ closeModal }: SprintUpdateProps) {
+export default function TaskCreate({ closeModal }: TaskUpdateProps) {
   const {
     register,
     control,
@@ -29,10 +28,10 @@ export default function TaskCreate({ closeModal }: SprintUpdateProps) {
     reset,
     handleSubmit,
     formState: { errors },
-  } = useForm<SprintParam>();
-  const projectUrl = getMasterApiUrl('/projects');
+  } = useForm<TaskParam>();
+  const user_id = getSessionStorage('user_id');
   const sprintUrl = getMasterApiUrl('/sprints');
-  const taskUrl = getMasterApiUrl('/tasks');
+  const taskUrl = getTaskApiUrl('/tasks');
   const dispatch = useAppDispatch();
   const { projects } = useAppSelector((state) => state.project);
   const { sprints } = useAppSelector((state) => state.sprint);
@@ -67,13 +66,7 @@ export default function TaskCreate({ closeModal }: SprintUpdateProps) {
   }, [onChangeType]);
 
   const handleProjectChange = async (id: any) => {
-    let users = await getByEntityApi(`${projectUrl}/assign-user`, id);
     let sprints = await getByEntityApi(`${sprintUrl}/by-project`, id);
-
-    const usersId = users?.map((user: any) => ({
-      id: user.id,
-      name: `${user.name}, ${user.designationName}`,
-    }));
 
     const sprintsId = sprints?.map((sprint: any) => ({
       id: sprint.id,
@@ -81,43 +74,48 @@ export default function TaskCreate({ closeModal }: SprintUpdateProps) {
     }));
 
     const enumMap = {
-      userId: usersId,
       sprintId: sprintsId,
     };
 
     setSchema((prevSchema) => setSchemaEnum(prevSchema, enumMap));
   };
 
-  const handleFormSubmit = (data: SprintParam) => {
+  const handleFormSubmit = (data: TaskParam) => {
     console.log(data);
     const postData = {
       projectId: data?.projectId,
+      sprintId: data?.sprintId,
+      userId: user_id,
       name: data?.name,
+      description: data?.description,
+      taskTracker: data?.taskTracker,
+      priority: data?.priority,
+      taskType: 'UNPLANNED',
       startDate: data?.startDate,
-      endDate: data?.endDate,
-      workingDays: Number(data?.workingDays),
-      dailyWorkingHrs: Number(data?.dailyWorkingHrs),
-      totalSprintHrs: Number(data?.workingDays) * Number(data?.dailyWorkingHrs),
-      sprintType: data?.sprintType,
+      estimatedTime: data?.estimatedTime,
+      taskStatus: 'TO_DO',
+      // file:data?.file[0]
     };
     console.log('postData', postData);
-    axiosInstance
-      .post(taskUrl, postData)
-      .then((response) => {
-        Toast({
-          message: 'Task Create Successful!',
-          type: 'success',
-          autoClose: 1500,
-          theme: 'colored',
+    if (user_id) {
+      axiosInstance
+        .post(taskUrl, postData)
+        .then((response) => {
+          Toast({
+            message: 'Task Create Successful!',
+            type: 'success',
+            autoClose: 1500,
+            theme: 'colored',
+          });
+          dispatch(fetchTaskByUserId(user_id));
+          reset();
+          closeModal();
+        })
+        .catch((error) => {
+          handleApiError(error, 'Failed to create task!');
+          console.error(error);
         });
-        dispatch(fetchSprints());
-        // reset();
-        // closeModal();
-      })
-      .catch((error) => {
-        handleApiError(error, 'Failed to create task!');
-        console.error(error);
-      });
+    }
   };
 
   const handleClear = () => reset();

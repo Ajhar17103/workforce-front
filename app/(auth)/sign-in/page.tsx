@@ -39,7 +39,8 @@ export default function SignIn() {
         reset();
         setSessionStorage('access_token', response.data.accessToken);
         setSessionStorage('refresh_token', response.data.refreshToken);
-        setSessionStorage('role_Id', response.data?.user?.roleId);
+        setSessionStorage('user_id', response.data?.user?.id);
+        setSessionStorage('role_id', response.data?.user?.roleId);
         setSessionStorage('isLogin', 'true');
         setSessionStorage('status', 'ISIN');
         window.location.reload();

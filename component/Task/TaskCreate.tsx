@@ -7,12 +7,10 @@ import PermissionGuard from '@/lib/PermissionGuard';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { fetchProjects } from '@/redux/slices/projectSlice';
 import { fetchSprints } from '@/redux/slices/sprintSlice';
+import { fetchTasks } from '@/redux/slices/taskSlice';
 import { FormField, onChangeField } from '@/types/common/FormField';
-import {
-  SprintParam,
-  SprintUpdateProps,
-} from '@/types/master-data/sprint.type';
-import { getMasterApiUrl } from '@/utils/api';
+import { TaskParam, TaskUpdateProps } from '@/types/task-board/task.type';
+import { getMasterApiUrl, getTaskApiUrl } from '@/utils/api';
 import { handleApiError } from '@/utils/errorHandler';
 import { getByEntityApi } from '@/utils/getByEntityApi';
 import { setSchemaEnum } from '@/utils/setSchemaEnum';
@@ -21,7 +19,7 @@ import { Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { formSchema as baseSchema } from './TaskSchema';
 
-export default function TaskCreate({ closeModal }: SprintUpdateProps) {
+export default function TaskCreate({ closeModal }: TaskUpdateProps) {
   const {
     register,
     control,
@@ -29,10 +27,10 @@ export default function TaskCreate({ closeModal }: SprintUpdateProps) {
     reset,
     handleSubmit,
     formState: { errors },
-  } = useForm<SprintParam>();
+  } = useForm<TaskParam>();
   const projectUrl = getMasterApiUrl('/projects');
   const sprintUrl = getMasterApiUrl('/sprints');
-  const taskUrl = getMasterApiUrl('/tasks');
+  const taskUrl = getTaskApiUrl('/tasks');
   const dispatch = useAppDispatch();
   const { projects } = useAppSelector((state) => state.project);
   const { sprints } = useAppSelector((state) => state.sprint);
@@ -88,17 +86,21 @@ export default function TaskCreate({ closeModal }: SprintUpdateProps) {
     setSchema((prevSchema) => setSchemaEnum(prevSchema, enumMap));
   };
 
-  const handleFormSubmit = (data: SprintParam) => {
+  const handleFormSubmit = (data: TaskParam) => {
     console.log(data);
     const postData = {
       projectId: data?.projectId,
+      sprintId: data?.sprintId,
+      userId: data?.userId,
       name: data?.name,
+      description: data?.description,
+      taskTracker: data?.taskTracker,
+      priority: data?.priority,
+      taskType: 'PLANNED',
       startDate: data?.startDate,
-      endDate: data?.endDate,
-      workingDays: Number(data?.workingDays),
-      dailyWorkingHrs: Number(data?.dailyWorkingHrs),
-      totalSprintHrs: Number(data?.workingDays) * Number(data?.dailyWorkingHrs),
-      sprintType: data?.sprintType,
+      estimatedTime: data?.estimatedTime,
+      taskStatus: 'IN_PROGRESS',
+      // file:data?.file[0]
     };
     console.log('postData', postData);
     axiosInstance
@@ -110,9 +112,9 @@ export default function TaskCreate({ closeModal }: SprintUpdateProps) {
           autoClose: 1500,
           theme: 'colored',
         });
-        dispatch(fetchSprints());
-        // reset();
-        // closeModal();
+        dispatch(fetchTasks());
+        reset();
+        closeModal();
       })
       .catch((error) => {
         handleApiError(error, 'Failed to create task!');

@@ -17,3 +17,9 @@ export const getMasterApiUrl = (endpoint: string): string => {
     endpoint.startsWith('/') ? endpoint : `/${endpoint}`
   }`;
 };
+
+export const getTaskApiUrl = (endpoint: string): string => {
+  return `${BASE_URL}/task-board/${API_VERSION}${
+    endpoint.startsWith('/') ? endpoint : `/${endpoint}`
+  }`;
+};

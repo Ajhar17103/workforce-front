@@ -6,6 +6,7 @@ import projectReducer from './slices/projectSlice';
 import roleMenuPermissionReducer from './slices/roleMenuPermissionSlice';
 import roleReducer from './slices/roleSlice';
 import sprintReducer from './slices/sprintSlice';
+import taskReducer from './slices/taskSlice';
 import userReducer from './slices/userSlice';
 
 export const store = configureStore({
@@ -18,6 +19,7 @@ export const store = configureStore({
     user: userReducer,
     project: projectReducer,
     sprint: sprintReducer,
+    task: taskReducer,
   },
 });
 

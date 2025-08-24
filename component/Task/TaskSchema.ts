@@ -3,7 +3,7 @@ import { taskTracker } from '@/enums/taskTracker';
 import { taskTypes } from '@/enums/taskTypes';
 import { FormField } from '@/types/common/FormField';
 import { TableHead } from '@/types/common/TableHead';
-import { SprintDto } from '@/types/master-data/sprint.type';
+import { TaskDto } from '@/types/task-board/task.type';
 
 export const formSchema: FormField[] = [
   {
@@ -81,7 +81,7 @@ export const formSchema: FormField[] = [
     defaultValue: '',
     isEnum: true,
     enum: [],
-    isRequired: true,
+    isRequired: false,
     showWhen: null,
     onChange: null,
     disabled: false,
@@ -121,22 +121,6 @@ export const formSchema: FormField[] = [
   {
     column: 4,
     align: 'default',
-    label: 'Task Type',
-    labelVisibility: 'visible',
-    fieldName: 'taskType',
-    dataType: 'dropdown',
-    action: null,
-    defaultValue: '',
-    isEnum: true,
-    enum: taskTypes,
-    isRequired: true,
-    showWhen: null,
-    onChange: null,
-    disabled: false,
-  },
-  {
-    column: 4,
-    align: 'default',
     label: 'Start Date',
     labelVisibility: 'visible',
     fieldName: 'startDate',
@@ -156,7 +140,7 @@ export const formSchema: FormField[] = [
     label: 'Estimated Time(Hrs)',
     labelVisibility: 'visible',
     fieldName: 'estimatedTime',
-    dataType: 'text',
+    dataType: 'hour',
     action: null,
     defaultValue: '',
     isEnum: false,
@@ -171,7 +155,7 @@ export const formSchema: FormField[] = [
     align: 'default',
     label: 'Files',
     labelVisibility: 'visible',
-    fieldName: 'files',
+    fieldName: 'file',
     dataType: 'file',
     action: null,
     defaultValue: '',
@@ -184,7 +168,7 @@ export const formSchema: FormField[] = [
   },
 ];
 
-export const tableSchema: TableHead<SprintDto>[] = [
+export const tableSchema: TableHead<TaskDto>[] = [
   {
     label: 'Name',
     accessor: 'name',
@@ -200,29 +184,22 @@ export const tableSchema: TableHead<SprintDto>[] = [
     align: 'start',
   },
   {
-    label: 'Start Date',
-    accessor: 'startDate',
+    label: 'Sprint Name',
+    accessor: 'sprintName',
     sortable: true,
     searchable: true,
     align: 'start',
   },
   {
-    label: 'End Date',
-    accessor: 'endDate',
-    sortable: true,
-    searchable: true,
-    align: 'start',
-  },
-  {
-    label: 'Sprint Hours',
-    accessor: 'totalSprintHrs',
+    label: 'Priority',
+    accessor: 'priority',
     sortable: true,
     searchable: true,
     align: 'center',
   },
   {
-    label: 'Status',
-    accessor: 'sprintType',
+    label: 'Assign User',
+    accessor: 'userName',
     sortable: true,
     searchable: true,
     align: 'center',

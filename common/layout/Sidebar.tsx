@@ -33,7 +33,7 @@ interface NestedMenu extends Menu {
 }
 
 export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
-  const roleId = getSessionStorage('role_Id');
+  const roleId = getSessionStorage('role_id');
   const pathname = usePathname();
   const dispatch = useAppDispatch();
   const { menus, loading, error } = useAppSelector((state) => state.menu);

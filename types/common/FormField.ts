@@ -12,7 +12,7 @@ export type FormField = {
   labelVisibility?: 'visible' | 'hidden' | 'collapse' | 'initial' | 'inherit';
   fieldVisibility?: 'visible'|'hidden'|'collapse'|'initial'|'inherit';
   fieldName: string;
-  dataType:|'text'|'textarea'|'dropdown'|'checkbox'|'date'|'number'|'email'|'file'|'password'|'multi-select';
+  dataType:|'text'|'textarea'|'dropdown'|'checkbox'|'date'|'time'|'hour'|'number'|'email'|'file'|'password'|'multi-select';
   action: string | null;
   defaultValue: string | any;
   isEnum: boolean;

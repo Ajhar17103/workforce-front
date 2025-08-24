@@ -5,6 +5,7 @@ import CommonModal from '@/common/modals/CommonModal';
 import PermissionGuard from '@/lib/PermissionGuard';
 import { useState } from 'react';
 import Create from './TaskCreate';
+import Table from './TaskTable';
 
 export default function TaskPage() {
   const [modalShow, setModalShow] = useState<boolean>(false);
@@ -12,6 +13,8 @@ export default function TaskPage() {
   const closeModal = () => {
     setModalShow(false);
   };
+
+  
 
   return (
     <div className="card shadow-sm p-3 dark">
@@ -28,6 +31,7 @@ export default function TaskPage() {
           />
         </PermissionGuard>
       </div>
+      <Table />
 
       {modalShow && (
         <CommonModal
