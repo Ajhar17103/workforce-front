@@ -17,6 +17,7 @@ import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { userFormSchema as baseSchema } from './UserFormSchema';
+import { fetchUsers } from '@/redux/slices/userSlice';
 
 export default function UserCreate({ closeModal }: UserUpdateProps) {
   const {
@@ -108,6 +109,7 @@ export default function UserCreate({ closeModal }: UserUpdateProps) {
         });
         reset();
         closeModal();
+        dispatch(fetchUsers());
       })
       .catch((error) => {
         handleApiError(error, 'Failed to create user!');

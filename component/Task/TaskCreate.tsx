@@ -99,7 +99,7 @@ export default function TaskCreate({ closeModal }: TaskUpdateProps) {
       taskType: 'PLANNED',
       startDate: null,
       estimatedTime: data?.estimatedTime,
-      taskStatus: 'IN_PROGRESS',
+      taskStatus: 'TO_DO',
       // file:data?.file[0]
     };
     console.log('postData', postData);

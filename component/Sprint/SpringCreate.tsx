@@ -78,8 +78,8 @@ export default function SpringCreate({ closeModal }: SprintUpdateProps) {
           theme: 'colored',
         });
         dispatch(fetchSprints());
-        // reset();
-        // closeModal();
+        reset();
+        closeModal();
       })
       .catch((error) => {
         handleApiError(error, 'Failed to create sprint!');
