@@ -22,7 +22,7 @@ export default function SignIn() {
     formState: { errors },
   } = useForm<SignInFormData>({
     defaultValues: {
-      email: 'test@gmail.com',
+      email: 'azhar@gmail.com',
       password: '12345678',
     },
   });

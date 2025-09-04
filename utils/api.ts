@@ -23,3 +23,9 @@ export const getTaskApiUrl = (endpoint: string): string => {
     endpoint.startsWith('/') ? endpoint : `/${endpoint}`
   }`;
 };
+
+export const getAttendanceApiUrl = (endpoint: string): string => {
+  return `${BASE_URL}/attendance-insight/${API_VERSION}${
+    endpoint.startsWith('/') ? endpoint : `/${endpoint}`
+  }`;
+};

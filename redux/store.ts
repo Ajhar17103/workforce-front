@@ -1,4 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
+import attendanceReducer from './slices/attendanceSlice';
 import deparmentReducer from './slices/departmentSlice';
 import designationReducer from './slices/designationSlice';
 import menuReducer from './slices/menuSlice';
@@ -20,6 +21,7 @@ export const store = configureStore({
     project: projectReducer,
     sprint: sprintReducer,
     task: taskReducer,
+    attendance: attendanceReducer,
   },
 });
 

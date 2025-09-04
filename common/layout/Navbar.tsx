@@ -138,7 +138,7 @@ export default function Navbar({
           )}
         </button>
 
-        <div className="position-relative notification-dropdown">
+        {/* <div className="position-relative notification-dropdown">
           <button
             className="btn btn-sm position-relative"
             onClick={() => setNotifOpen(!notifOpen)}
@@ -175,7 +175,7 @@ export default function Navbar({
               </li>
             </ul>
           )}
-        </div>
+        </div> */}
 
         <div className="dropdown user-dropdown">
           <button
