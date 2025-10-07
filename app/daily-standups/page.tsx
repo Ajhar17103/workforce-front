@@ -1,7 +1,7 @@
 'use client';
 
-import TaskPage from '@/component/Task/TaskPage';
+import DailyStandupPage from '@/component/DailyStandup/DailyStandupPage';
 
 export default function DailyStandups() {
-  return <TaskPage />;
+  return <DailyStandupPage />;
 }

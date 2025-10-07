@@ -403,3 +403,24 @@ body.dark-mode .text-muted {
 .table-actived {
   background-color: rgba(70, 95, 255, 0.12) !important;
 }
+
+
+/* Dashboard.css */
+
+.dashboard-container {
+  background-color: #f8fafc;
+  padding: 1.5rem;
+}
+
+.metric-card {
+  transition: all 0.25s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.section-card {
+  border-radius: 18px;
+}

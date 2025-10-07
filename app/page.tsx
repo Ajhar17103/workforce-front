@@ -1,9 +1,9 @@
-
+import Metrics from "@/component/Dashboard/Metrics";
 
 export default function Home() {
   return (
     <div className="">
-      <h1>Dashboard</h1>
+      <Metrics />
     </div>
   );
 }
