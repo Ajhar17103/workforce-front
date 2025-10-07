@@ -17,6 +17,7 @@ import { setSchemaEnum } from '@/utils/setSchemaEnum';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
+import Move from './TaskMove';
 import { formSchema as baseSchema, tableSchema } from './TaskSchema';
 import Update from './TaskUpdate';
 
@@ -46,6 +47,22 @@ export default function TaskTable() {
     file: '',
   });
   const [schema, setSchema] = useState<FormField[]>(baseSchema);
+  const [moveModalShow, setMoveModalShow] = useState<boolean>(false);
+  const [itemMove, setItemMove] = useState<TaskParam>({
+    id: '',
+    projectId: '',
+    sprintId: '',
+    userId: '',
+    name: '',
+    description: '',
+    taskTracker: '',
+    priority: '',
+    taskType: '',
+    startDate: '',
+    estimatedTime: '',
+    taskStatus: '',
+    file: '',
+  });
 
   useEffect(() => {
     dispatch(fetchProjects());
@@ -160,6 +177,29 @@ export default function TaskTable() {
     }, 200);
   };
 
+  const moveTask = (item: TaskDto) => {
+    const currentSprint = sprints.find(
+      (sprint) => sprint.id === item?.sprintId,
+    );
+    const moveData: TaskParam = {
+      id: item?.id,
+      projectId: item?.projectId,
+      sprintId: item?.sprintId,
+      currentSprintName: currentSprint?.name,
+      userId: item?.userId,
+      name: item?.name,
+      description: item?.description,
+      taskTracker: item?.taskTracker,
+      priority: item?.priority,
+      taskType: item?.taskType,
+      startDate: item?.startDate,
+      estimatedTime: item?.estimatedTime,
+      taskStatus: item?.taskStatus,
+    };
+    setItemMove(moveData);
+    setMoveModalShow(true);
+  };
+
   const closeModal = () => {
     setModalShow(false);
   };
@@ -169,6 +209,7 @@ export default function TaskTable() {
         data={tableData}
         columns={tableSchema}
         onEdit={updateItem}
+        onMove={moveTask}
         onDelete={deleteItem}
       />
 
@@ -185,6 +226,22 @@ export default function TaskTable() {
             schema={schema}
             itemUpdate={itemUpdate}
             closeModal={closeModal}
+          />
+        </CommonModal>
+      )}
+
+      {moveModalShow && (
+        <CommonModal
+          show={moveModalShow}
+          onHide={() => setMoveModalShow(false)}
+          title="Task Move"
+          size="xl"
+          footer={false}
+          fullscreen="xl-down"
+        >
+          <Move
+            itemUpdate={itemMove}
+            closeModal={() => setMoveModalShow(false)}
           />
         </CommonModal>
       )}

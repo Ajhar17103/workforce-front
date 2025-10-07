@@ -23,6 +23,7 @@ export interface TaskParam {
   id: string;
   projectId: string;
   sprintId: string;
+  currentSprintName?: string;
   userId: string;
   name: string;
   description?: string;

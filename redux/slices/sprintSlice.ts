@@ -5,6 +5,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 interface SprintState {
   sprints: any[];
   sprint: any | null;
+  projectSprints: any[]; 
   loading: boolean;
   error: string | null;
 }
@@ -12,11 +13,11 @@ interface SprintState {
 const initialState: SprintState = {
   sprints: [],
   sprint: null,
+  projectSprints: [],
   loading: false,
   error: null,
 };
 
-// Fetch all sprints
 export const fetchSprints = createAsyncThunk(
   'sprint/fetchSprints',
   async (_, { rejectWithValue }) => {
@@ -29,7 +30,7 @@ export const fetchSprints = createAsyncThunk(
   },
 );
 
-// Fetch single sprint by ID
+
 export const fetchSprintById = createAsyncThunk(
   'sprint/fetchSprintById',
   async (id: string, { rejectWithValue }) => {
@@ -44,13 +45,26 @@ export const fetchSprintById = createAsyncThunk(
   },
 );
 
+export const fetchSprintsByProject = createAsyncThunk(
+  'sprint/fetchSprintsByProject',
+  async (projectId: string, { rejectWithValue }) => {
+    try {
+      const res: any = await axiosInstance.get(
+        getMasterApiUrl(`/sprints/by-project/${projectId}`),
+      );
+      return res.data.payload;
+    } catch (err: any) {
+      return rejectWithValue(err?.message || 'Failed to fetch project sprints');
+    }
+  },
+);
+
 const sprintSlice = createSlice({
   name: 'sprint',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // fetchSprints
       .addCase(fetchSprints.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -64,7 +78,6 @@ const sprintSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      // fetchSprintById
       .addCase(fetchSprintById.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -74,6 +87,19 @@ const sprintSlice = createSlice({
         state.sprint = action.payload;
       })
       .addCase(fetchSprintById.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+
+      .addCase(fetchSprintsByProject.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchSprintsByProject.fulfilled, (state, action) => {
+        state.loading = false;
+        state.projectSprints = action.payload;
+      })
+      .addCase(fetchSprintsByProject.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

@@ -18,10 +18,11 @@ type Props<T> = {
   onView?: (row: T) => void;
   onPermission?: (row: T) => void;
   onEdit?: (row: T) => void;
-  onDelete?: (row: T) => void;
   onProgress?: (row: T) => void | Promise<void> | null;
   onHold?: (row: T) => void | Promise<void> | null;
   onCompleted?: (row: T) => void | Promise<void> | null;
+  onMove?: (row: T) => void | Promise<void> | null;
+  onDelete?: (row: T) => void;
   rowsPerPage?: number;
 };
 
@@ -31,10 +32,11 @@ export default function DataTable<T extends { id: string }>({
   onView,
   onPermission,
   onEdit,
-  onDelete,
   onProgress,
   onHold,
   onCompleted,
+  onMove,
+  onDelete,
   rowsPerPage = 10,
 }: Props<T>) {
   const [searchTerms, setSearchTerms] = useState<{ [key: string]: string }>({});
@@ -203,19 +205,6 @@ export default function DataTable<T extends { id: string }>({
                     </PermissionGuard>
                   )}
 
-                  {onDelete && (
-                    <PermissionGuard action="delete">
-                      <Button
-                        variant="outline-danger"
-                        className="btn btn-sm"
-                        onClick={() => onDelete(row)}
-                        title="Delete"
-                      >
-                        <i className="bi bi-trash" />
-                      </Button>
-                    </PermissionGuard>
-                  )}
-
                   {onProgress && (
                     <Button
                       variant="outline-secondary"
@@ -247,6 +236,30 @@ export default function DataTable<T extends { id: string }>({
                     >
                       <i className="bi bi-check-circle" />
                     </Button>
+                  )}
+
+                  {onMove && (
+                    <Button
+                      variant="outline-info"
+                      className="btn btn-sm me-1"
+                      onClick={() => onMove(row)}
+                      title="Complete"
+                    >
+                      <i className="bi bi-arrows-move" />
+                    </Button>
+                  )}
+
+                  {onDelete && (
+                    <PermissionGuard action="delete">
+                      <Button
+                        variant="outline-danger"
+                        className="btn btn-sm me-1"
+                        onClick={() => onDelete(row)}
+                        title="Delete"
+                      >
+                        <i className="bi bi-trash" />
+                      </Button>
+                    </PermissionGuard>
                   )}
                 </td>
               </tr>
