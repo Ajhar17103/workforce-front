@@ -208,6 +208,8 @@ export default function TaskTable() {
       <DynamicTable
         data={tableData}
         columns={tableSchema}
+        action={true}
+        pagination={true}
         onEdit={updateItem}
         onMove={moveTask}
         onDelete={deleteItem}

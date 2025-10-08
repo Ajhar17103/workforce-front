@@ -144,6 +144,8 @@ export default function MenuTable() {
             align: 'start',
           },
         ]}
+        action={true}
+        pagination={true}
         onEdit={updateItem}
         onDelete={deleteItem}
       />

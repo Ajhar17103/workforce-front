@@ -131,6 +131,8 @@ export default function DesignationTable() {
       <DynamicTable
         data={tableData}
         columns={tableColumn}
+        action={true}
+        pagination={true}
         onEdit={updateItem}
         onDelete={deleteItem}
       />

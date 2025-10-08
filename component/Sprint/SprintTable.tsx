@@ -124,6 +124,8 @@ export default function SprintTable() {
       <DynamicTable
         data={tableData}
         columns={tableSchema}
+        action={true}
+        pagination={true}
         onEdit={updateItem}
         onDelete={deleteItem}
       />

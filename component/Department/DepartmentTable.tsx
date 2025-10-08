@@ -99,6 +99,8 @@ export default function DepartmentTable() {
             align: 'start',
           },
         ]}
+        action={true}
+        pagination={true}
         onEdit={updateItem}
         onDelete={deleteItem}
       />

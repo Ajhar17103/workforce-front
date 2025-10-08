@@ -159,6 +159,8 @@ export default function ProjectTable() {
       <DynamicTable
         data={tableData}
         columns={projectTableSchema}
+        action={true}
+        pagination={true}
         onView={fulView}
         onEdit={updateItem}
         onDelete={deleteItem}

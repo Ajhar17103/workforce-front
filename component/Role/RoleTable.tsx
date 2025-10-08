@@ -106,6 +106,8 @@ export default function RoleTable() {
             align: 'start',
           },
         ]}
+        action={true}
+        pagination={true}
         onPermission={updatePermission}
         onEdit={updateItem}
         onDelete={deleteItem}

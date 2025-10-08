@@ -10,6 +10,7 @@ import { fetchTaskByUserId } from '@/redux/slices/taskSlice';
 import { TaskDto, TaskParam } from '@/types/task-board/task.type';
 import { getTaskApiUrl } from '@/utils/api';
 import { handleApiError } from '@/utils/errorHandler';
+import { formatDate } from '@/utils/formatDate';
 import { getSessionStorage } from '@/utils/storage';
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
@@ -20,7 +21,6 @@ import {
   tableSchema,
 } from './MyTaskSchema';
 import View from './MyTaskView';
-import { formatDate } from '@/utils/formatDate';
 
 export default function MyTaskTable() {
   const taskUrl = getTaskApiUrl('/tasks');
@@ -309,6 +309,8 @@ export default function MyTaskTable() {
         <DynamicTable
           data={tableData}
           columns={tableSchema}
+          action={true}
+          pagination={true}
           onProgress={
             activeTab === 'TO_DO' || activeTab === 'HOLD'
               ? onProgress

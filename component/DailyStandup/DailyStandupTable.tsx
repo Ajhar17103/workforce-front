@@ -123,6 +123,8 @@ export default function DailyStandupTable() {
     <div>
       <DynamicTable
         data={tableData}
+        action={true}
+        pagination={true}
         columns={tableSchema}
         onEdit={updateItem}
         onDelete={deleteItem}

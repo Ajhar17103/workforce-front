@@ -15,6 +15,7 @@ type Column<T> = {
 type Props<T> = {
   data: T[];
   columns: Column<T>[];
+  action?: true | false;
   onView?: (row: T) => void;
   onPermission?: (row: T) => void;
   onEdit?: (row: T) => void;
@@ -24,11 +25,13 @@ type Props<T> = {
   onMove?: (row: T) => void | Promise<void> | null;
   onDelete?: (row: T) => void;
   rowsPerPage?: number;
+  pagination?: true | false;
 };
 
 export default function DataTable<T extends { id: string }>({
   data,
   columns,
+  action,
   onView,
   onPermission,
   onEdit,
@@ -38,6 +41,7 @@ export default function DataTable<T extends { id: string }>({
   onMove,
   onDelete,
   rowsPerPage = 10,
+  pagination,
 }: Props<T>) {
   const [searchTerms, setSearchTerms] = useState<{ [key: string]: string }>({});
   const [currentPage, setCurrentPage] = useState(1);
@@ -124,7 +128,7 @@ export default function DataTable<T extends { id: string }>({
                 )}
               </th>
             ))}
-            <th>Action</th>
+            {action && <th>Action</th>}
           </tr>
           <tr>
             <td></td>
@@ -143,7 +147,7 @@ export default function DataTable<T extends { id: string }>({
                 )}
               </td>
             ))}
-            <td></td>
+            {action && <td></td>}
           </tr>
         </thead>
         <tbody>
@@ -165,103 +169,105 @@ export default function DataTable<T extends { id: string }>({
                     {row[col.accessor]}
                   </td>
                 ))}
-                <td>
-                  {onView && (
-                    <PermissionGuard action="view">
-                      <Button
-                        variant="outline-primary"
-                        className="btn btn-sm me-1"
-                        onClick={() => onView(row)}
-                        title="View"
-                      >
-                        <i className="bi bi-eye" />
-                      </Button>
-                    </PermissionGuard>
-                  )}
+                {action && (
+                  <td>
+                    {onView && (
+                      <PermissionGuard action="view">
+                        <Button
+                          variant="outline-primary"
+                          className="btn btn-sm me-1"
+                          onClick={() => onView(row)}
+                          title="View"
+                        >
+                          <i className="bi bi-eye" />
+                        </Button>
+                      </PermissionGuard>
+                    )}
 
-                  {onPermission && (
-                    <PermissionGuard action="add">
-                      <Button
-                        variant="outline-primary"
-                        className="btn btn-sm me-1"
-                        onClick={() => onPermission(row)}
-                        title="Permission"
-                      >
-                        <i className="bi bi-shield-check" />
-                      </Button>
-                    </PermissionGuard>
-                  )}
+                    {onPermission && (
+                      <PermissionGuard action="add">
+                        <Button
+                          variant="outline-primary"
+                          className="btn btn-sm me-1"
+                          onClick={() => onPermission(row)}
+                          title="Permission"
+                        >
+                          <i className="bi bi-shield-check" />
+                        </Button>
+                      </PermissionGuard>
+                    )}
 
-                  {onEdit && (
-                    <PermissionGuard action="update">
+                    {onEdit && (
+                      <PermissionGuard action="update">
+                        <Button
+                          variant="outline-success"
+                          className="btn btn-sm me-1"
+                          onClick={() => onEdit(row)}
+                          title="Edit"
+                        >
+                          <i className="bi bi-pencil" />
+                        </Button>
+                      </PermissionGuard>
+                    )}
+
+                    {onProgress && (
+                      <Button
+                        variant="outline-secondary"
+                        className="btn btn-sm me-1"
+                        onClick={() => onProgress(row)}
+                        title="Complete"
+                      >
+                        <i className="bi bi-arrow-repeat" />
+                      </Button>
+                    )}
+
+                    {onHold && (
+                      <Button
+                        variant="outline-info"
+                        className="btn btn-sm me-1"
+                        onClick={() => onHold(row)}
+                        title="Hold"
+                      >
+                        <i className="bi bi-pause-circle" />
+                      </Button>
+                    )}
+
+                    {onCompleted && (
                       <Button
                         variant="outline-success"
                         className="btn btn-sm me-1"
-                        onClick={() => onEdit(row)}
-                        title="Edit"
+                        onClick={() => onCompleted(row)}
+                        title="Complete"
                       >
-                        <i className="bi bi-pencil" />
+                        <i className="bi bi-check-circle" />
                       </Button>
-                    </PermissionGuard>
-                  )}
+                    )}
 
-                  {onProgress && (
-                    <Button
-                      variant="outline-secondary"
-                      className="btn btn-sm me-1"
-                      onClick={() => onProgress(row)}
-                      title="Complete"
-                    >
-                      <i className="bi bi-arrow-repeat" />
-                    </Button>
-                  )}
-
-                  {onHold && (
-                    <Button
-                      variant="outline-info"
-                      className="btn btn-sm me-1"
-                      onClick={() => onHold(row)}
-                      title="Hold"
-                    >
-                      <i className="bi bi-pause-circle" />
-                    </Button>
-                  )}
-
-                  {onCompleted && (
-                    <Button
-                      variant="outline-success"
-                      className="btn btn-sm me-1"
-                      onClick={() => onCompleted(row)}
-                      title="Complete"
-                    >
-                      <i className="bi bi-check-circle" />
-                    </Button>
-                  )}
-
-                  {onMove && (
-                    <Button
-                      variant="outline-info"
-                      className="btn btn-sm me-1"
-                      onClick={() => onMove(row)}
-                      title="Complete"
-                    >
-                      <i className="bi bi-arrows-move" />
-                    </Button>
-                  )}
-
-                  {onDelete && (
-                    <PermissionGuard action="delete">
+                    {onMove && (
                       <Button
-                        variant="outline-danger"
+                        variant="outline-info"
                         className="btn btn-sm me-1"
-                        onClick={() => onDelete(row)}
-                        title="Delete"
+                        onClick={() => onMove(row)}
+                        title="Complete"
                       >
-                        <i className="bi bi-trash" />
+                        <i className="bi bi-arrows-move" />
                       </Button>
-                    </PermissionGuard>
-                  )}
-                </td>
+                    )}
+
+                    {onDelete && (
+                      <PermissionGuard action="delete">
+                        <Button
+                          variant="outline-danger"
+                          className="btn btn-sm me-1"
+                          onClick={() => onDelete(row)}
+                          title="Delete"
+                        >
+                          <i className="bi bi-trash" />
+                        </Button>
+                      </PermissionGuard>
+                    )}
+                  </td>
+                )}
               </tr>
             ))
           ) : (
@@ -273,70 +279,78 @@ export default function DataTable<T extends { id: string }>({
       </table>
 
       {/* Pagination */}
-      <div className="d-flex justify-content-between align-items-center mt-3 px-1">
-        <div className="text-muted small">
-          Showing {(currentPage - 1) * rowsPerPage + 1} to{' '}
-          {Math.min(currentPage * rowsPerPage, sortedFilteredData.length)} of{' '}
-          {sortedFilteredData.length} results
-        </div>
-        <nav>
-          <ul className="pagination pagination-sm mb-0">
-            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-              <button className="page-link" onClick={() => setCurrentPage(1)}>
-                &laquo;
-              </button>
-            </li>
-            <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-              <button
-                className="page-link"
-                onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-              >
-                &lt;
-              </button>
-            </li>
-            {[...Array(totalPages)].map((_, i) => (
+      {pagination && (
+        <div className="d-flex justify-content-between align-items-center mt-3 px-1">
+          <div className="text-muted small">
+            Showing {(currentPage - 1) * rowsPerPage + 1} to{' '}
+            {Math.min(currentPage * rowsPerPage, sortedFilteredData.length)} of{' '}
+            {sortedFilteredData.length} results
+          </div>
+          <nav>
+            <ul className="pagination pagination-sm mb-0">
               <li
-                key={i}
-                className={`page-item ${currentPage === i + 1 ? 'active' : ''}`}
+                className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}
+              >
+                <button className="page-link" onClick={() => setCurrentPage(1)}>
+                  &laquo;
+                </button>
+              </li>
+              <li
+                className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}
               >
                 <button
                   className="page-link"
-                  onClick={() => setCurrentPage(i + 1)}
+                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
                 >
-                  {i + 1}
+                  &lt;
                 </button>
               </li>
-            ))}
+              {[...Array(totalPages)].map((_, i) => (
+                <li
+                  key={i}
+                  className={`page-item ${
+                    currentPage === i + 1 ? 'active' : ''
+                  }`}
+                >
+                  <button
+                    className="page-link"
+                    onClick={() => setCurrentPage(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                </li>
+              ))}
 
-            <li
-              className={`page-item ${
-                currentPage === totalPages ? 'disabled' : ''
-              }`}
-            >
-              <button
-                className="page-link"
-                onClick={() =>
-                  setCurrentPage((p) => Math.min(p + 1, totalPages))
-                }
+              <li
+                className={`page-item ${
+                  currentPage === totalPages ? 'disabled' : ''
+                }`}
               >
-                &gt;
-              </button>
-            </li>
-            <li
-              className={`page-item ${
-                currentPage === totalPages ? 'disabled' : ''
-              }`}
-            >
-              <button
-                className="page-link"
-                onClick={() => setCurrentPage(totalPages)}
+                <button
+                  className="page-link"
+                  onClick={() =>
+                    setCurrentPage((p) => Math.min(p + 1, totalPages))
+                  }
+                >
+                  &gt;
+                </button>
+              </li>
+              <li
+                className={`page-item ${
+                  currentPage === totalPages ? 'disabled' : ''
+                }`}
               >
-                &raquo;
-              </button>
-            </li>
-          </ul>
-        </nav>
-      </div>
+                <button
+                  className="page-link"
+                  onClick={() => setCurrentPage(totalPages)}
+                >
+                  &raquo;
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      )}
     </div>
   );
 }

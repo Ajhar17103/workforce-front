@@ -218,6 +218,8 @@ export default function UserTable() {
       <DynamicTable
         data={tableData}
         columns={tableColumn}
+        action={true}
+        pagination={true}
         onView={fulView}
         onEdit={updateItem}
         onDelete={deleteItem}
