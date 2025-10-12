@@ -415,7 +415,7 @@ body.dark-mode .text-muted {
 .metric-card {
   cursor: pointer;
   transition: all 0.3s ease;
-  color: #fff;
+  color: #ffffff;
   font-weight: 500;
   backdrop-filter: blur(6px);
   border-radius: 18px;
@@ -442,7 +442,7 @@ body.dark-mode .text-muted {
   backdrop-filter: blur(12px);
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.25);
-  color: #fff;
+  color: #000000;
   transition: all 0.3s ease;
 }
 
@@ -450,14 +450,14 @@ body.dark-mode .text-muted {
 .table-custom {
   width: 100%;
   background-color: transparent !important; /* Remove white background */
-  color: #f1f1f1;
+  color: #000000;
   border-collapse: separate;
   border-spacing: 0;
 }
 
 .table-custom thead {
   background: rgba(255, 255, 255, 0.1); /* Transparent header */
-  color: #fff;
+  color: #000000;
   font-weight: 600;
   backdrop-filter: blur(8px);
 }

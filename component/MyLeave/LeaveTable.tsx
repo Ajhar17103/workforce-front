@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { LeaveDto } from '@/types/my-leave/my-leave.type';
 import { getMasterApiUrl } from '@/utils/api';
 import { useEffect, useState } from 'react';
-import { allocateTableSchema } from './MyLeaveSchema';
+import { tableSchema } from './MyLeaveSchema';
 
 export default function LeaveTable() {
   const projectUrl = getMasterApiUrl('/projects');
@@ -19,14 +19,16 @@ export default function LeaveTable() {
     // const transformed: LeaveDto[] = tasks?.map((t) => ({}));
     // setTableData(transformed);
   }, [tasks]);
+    const updateItem = async (item: LeaveDto) => {};
 
   return (
     <div>
       <DynamicTable
         data={[]}
-        columns={allocateTableSchema}
-        action={false}
-        pagination={false}
+        columns={tableSchema}
+        action={true}
+        pagination={true}
+        onEdit={updateItem}
       />
     </div>
   );

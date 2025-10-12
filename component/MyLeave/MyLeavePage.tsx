@@ -44,7 +44,7 @@ export default function MyLeavePage() {
           <CommonModal
             show={modalShow}
             onHide={() => setModalShow(false)}
-            title="Create Task"
+            title="Apply for Leave"
             size="xl"
             footer={false}
             fullscreen="xl-down"

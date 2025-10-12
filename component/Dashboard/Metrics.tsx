@@ -58,10 +58,10 @@ export default function Metrics() {
     total === 0 ? 0 : Math.round((done / total) * 100);
 
   const gradients = {
-    blueGradient: 'linear-gradient(135deg, #1E3C72 0%, #2A5298 100%)',
-    tealGradient: 'linear-gradient(135deg, #033946ff 0%, #024055ff 100%)',
-    purpleGradient: 'linear-gradient(135deg, #53119bff 0%, #09409eff 100%)',
-    greenGradient: 'linear-gradient(135deg,  #04682aff 0%,   #058b80ff 100%)',
+    blueGradient: 'linear-gradient(135deg, #1e3b723d 0%, #2a52983b 100%)',
+    tealGradient: 'linear-gradient(135deg, #0339462d 0%, #0240553a 100%)',
+    purpleGradient: 'linear-gradient(135deg, #54119b2a 0%, #09409e44 100%)',
+    greenGradient: 'linear-gradient(135deg,  #04682a2a 0%,   #058b8038 100%)',
   };
 
   const metricCards = [
@@ -221,7 +221,7 @@ export default function Metrics() {
         {metricCards.map((item, idx) => (
           <Col key={idx} xs={12} md={6} lg={6}>
             <Card
-              className="metric-card border-0 shadow-lg text-white rounded-4 h-100"
+              className="metric-card border-0 shadow-lg text-dark rounded-4 h-100"
               style={{
                 background: item.gradient,
               }}
