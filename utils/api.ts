@@ -29,3 +29,9 @@ export const getAttendanceApiUrl = (endpoint: string): string => {
     endpoint.startsWith('/') ? endpoint : `/${endpoint}`
   }`;
 };
+
+export const getLeaveApiUrl = (endpoint: string): string => {
+  return `${BASE_URL}/leave-insight/${API_VERSION}${
+    endpoint.startsWith('/') ? endpoint : `/${endpoint}`
+  }`;
+};

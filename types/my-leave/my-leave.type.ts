@@ -1,6 +1,6 @@
 export interface AllocatedLeaveDto {
   id: string;
-  userId: string;
+  userId?: string;
   userName?: string;
   fiscalYear: string;
   totalSickLeave: string;
@@ -9,6 +9,11 @@ export interface AllocatedLeaveDto {
   takenCasualLeave: string;
   totalAnnualLeave: string;
   takenAnnualLeave: string;
+  paidLeave?: string;
+
+  sickLeave?: string;
+  casualLeave?: string;
+  annualLeave?: string;
 }
 
 export interface LeaveDto {
@@ -37,7 +42,7 @@ export interface LeaveParam {
 
 export interface LeaveUpdateProps {
   schema?: any;
-  itemUpdate?: LeaveParam;
+  itemUpdate?: AllocatedLeaveDto;
   closeModal: () => void;
   setActiveTab?: any;
 }

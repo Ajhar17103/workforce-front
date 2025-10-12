@@ -9,6 +9,7 @@ import roleReducer from './slices/roleSlice';
 import sprintReducer from './slices/sprintSlice';
 import taskReducer from './slices/taskSlice';
 import userReducer from './slices/userSlice';
+import leaveReducer from './slices/allocatedLeaveSlice';
 
 export const store = configureStore({
   reducer: {
@@ -22,6 +23,7 @@ export const store = configureStore({
     sprint: sprintReducer,
     task: taskReducer,
     attendance: attendanceReducer,
+    leave: leaveReducer,
   },
 });
 
