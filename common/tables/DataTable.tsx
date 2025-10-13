@@ -23,6 +23,7 @@ type Props<T> = {
   onHold?: (row: T) => void | Promise<void> | null;
   onCompleted?: (row: T) => void | Promise<void> | null;
   onMove?: (row: T) => void | Promise<void> | null;
+  onRecject?: (row: T) => void | Promise<void> | null;
   onDelete?: (row: T) => void;
   rowsPerPage?: number;
   pagination?: true | false;
@@ -39,6 +40,7 @@ export default function DataTable<T extends { id: string }>({
   onHold,
   onCompleted,
   onMove,
+  onRecject,
   onDelete,
   rowsPerPage = 10,
   pagination,
@@ -137,7 +139,7 @@ export default function DataTable<T extends { id: string }>({
                 {col.searchable && (
                   <input
                     type="text"
-                    className={`form-control form-control-sm text-${col.align} rounded-1`}
+                    className={`form-control form-control-sm text-${col.align} rounded-1 w-auto`}
                     placeholder="Search"
                     value={searchTerms[col.accessor as string] || ''}
                     onChange={(e) =>
@@ -183,7 +185,6 @@ export default function DataTable<T extends { id: string }>({
                         </Button>
                       </PermissionGuard>
                     )}
-
                     {onPermission && (
                       <PermissionGuard action="add">
                         <Button
@@ -196,7 +197,6 @@ export default function DataTable<T extends { id: string }>({
                         </Button>
                       </PermissionGuard>
                     )}
-
                     {onEdit && (
                       <PermissionGuard action="update">
                         <Button
@@ -209,7 +209,6 @@ export default function DataTable<T extends { id: string }>({
                         </Button>
                       </PermissionGuard>
                     )}
-
                     {onProgress && (
                       <Button
                         variant="outline-secondary"
@@ -220,7 +219,6 @@ export default function DataTable<T extends { id: string }>({
                         <i className="bi bi-arrow-repeat" />
                       </Button>
                     )}
-
                     {onHold && (
                       <Button
                         variant="outline-info"
@@ -231,7 +229,6 @@ export default function DataTable<T extends { id: string }>({
                         <i className="bi bi-pause-circle" />
                       </Button>
                     )}
-
                     {onCompleted && (
                       <Button
                         variant="outline-success"
@@ -242,15 +239,24 @@ export default function DataTable<T extends { id: string }>({
                         <i className="bi bi-check-circle" />
                       </Button>
                     )}
-
                     {onMove && (
                       <Button
                         variant="outline-info"
                         className="btn btn-sm me-1"
                         onClick={() => onMove(row)}
-                        title="Complete"
+                        title="Move"
                       >
                         <i className="bi bi-arrows-move" />
+                      </Button>
+                    )}
+                    {onRecject && (
+                      <Button
+                        variant="outline-danger"
+                        className="btn btn-sm me-1"
+                        onClick={() => onRecject(row)}
+                        title="Reject"
+                      >
+                        <i className="bi bi-x" />
                       </Button>
                     )}
 

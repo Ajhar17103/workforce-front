@@ -6,11 +6,9 @@ import axiosInstance from '@/lib/axiosInstance';
 import PermissionGuard from '@/lib/PermissionGuard';
 import { useAppDispatch } from '@/redux/hooks';
 import { fetchAllocatedLeaves } from '@/redux/slices/allocatedLeaveSlice';
-import { fetchTasks } from '@/redux/slices/taskSlice';
 import {
   AllocatedLeaveParam,
   AllocatedLeaveUpdateProps,
-  LeaveParam,
 } from '@/types/my-leave/my-leave.type';
 import { getLeaveApiUrl } from '@/utils/api';
 import { handleApiError } from '@/utils/errorHandler';

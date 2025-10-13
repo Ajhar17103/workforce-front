@@ -1,7 +1,10 @@
 'use client';
 
 import Form from '@/common/forms/Form';
-import { TaskParam, TaskUpdateProps } from '@/types/task-board/task.type';
+import {
+  LeaveRequestParam,
+  LeaveUpdateProps,
+} from '@/types/my-leave/my-leave.type';
 import { getDefaultValues } from '@/utils/getDefaultValues';
 import { useForm } from 'react-hook-form';
 
@@ -9,15 +12,15 @@ export default function LeaveRequestView({
   schema,
   itemUpdate,
   closeModal,
-}: TaskUpdateProps) {
+}: LeaveUpdateProps) {
   const {
     register,
     control,
     resetField,
     formState: { errors },
     reset,
-  } = useForm<TaskParam>({
-    defaultValues: getDefaultValues<TaskParam>(itemUpdate),
+  } = useForm<LeaveRequestParam>({
+    defaultValues: getDefaultValues<LeaveRequestParam>(itemUpdate),
   });
 
   return (

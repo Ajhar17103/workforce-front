@@ -37,7 +37,7 @@ export interface AllocatedLeaveUpdateProps {
   setActiveTab?: any;
 }
 
-export interface LeaveDto {
+export interface LeaveRequestDto {
   id: string;
   userId: string;
   userName?: string;
@@ -46,10 +46,14 @@ export interface LeaveDto {
   leaveFor: string;
   fromDate: string;
   toDate: string;
-  days?: string;
+  totalDay?: string;
+  reason?: string;
+  attchmentPath?: string;
+  leaveStatus?: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED' | null;
+  remarks?: string;
 }
 
-export interface LeaveParam {
+export interface LeaveRequestParam {
   id: string;
   userId: string;
   userName?: string;
@@ -58,12 +62,16 @@ export interface LeaveParam {
   leaveFor: string;
   fromDate: string;
   toDate: string;
-  days?: string;
+  totalDay?: string;
+  reason?: string;
+  attchmentPath?: string;
+  leaveStatus?: 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED' | null;
+  remarks?: string;
 }
 
 export interface LeaveUpdateProps {
   schema?: any;
-  itemUpdate?: LeaveParam;
+  itemUpdate?: LeaveRequestParam;
   closeModal: () => void;
   setActiveTab?: any;
 }

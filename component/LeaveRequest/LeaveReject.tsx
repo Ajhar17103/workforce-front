@@ -5,21 +5,24 @@ import { Toast } from '@/common/messages/toast';
 import axiosInstance from '@/lib/axiosInstance';
 import PermissionGuard from '@/lib/PermissionGuard';
 import { useAppDispatch } from '@/redux/hooks';
-import { fetchTaskByUserId } from '@/redux/slices/taskSlice';
-import { TaskParam, TaskUpdateProps } from '@/types/task-board/task.type';
-import { getTaskApiUrl } from '@/utils/api';
+import { fetchLeaveRequests } from '@/redux/slices/leaveRequestSlice';
+import {
+  LeaveRequestParam,
+  LeaveUpdateProps,
+} from '@/types/my-leave/my-leave.type';
+import { getLeaveApiUrl } from '@/utils/api';
 import { handleApiError } from '@/utils/errorHandler';
 import { getDefaultValues } from '@/utils/getDefaultValues';
 import { getSessionStorage } from '@/utils/storage';
 import { Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 
-export default function AprrovedLeave({
+export default function LeaveReject({
   schema,
   itemUpdate,
   closeModal,
   setActiveTab,
-}: TaskUpdateProps) {
+}: LeaveUpdateProps) {
   const {
     register,
     handleSubmit,
@@ -27,55 +30,51 @@ export default function AprrovedLeave({
     resetField,
     formState: { errors },
     reset,
-  } = useForm<TaskParam>({
-    defaultValues: getDefaultValues<TaskParam>(itemUpdate),
+  } = useForm<LeaveRequestParam>({
+    defaultValues: getDefaultValues<LeaveRequestParam>(itemUpdate),
   });
   const user_id = getSessionStorage('user_id');
-  const taskUrl = getTaskApiUrl('/tasks');
+  const leaveUrl = getLeaveApiUrl('/leave-requests');
   const dispatch = useAppDispatch();
 
-  const handleFormSubmit = (data: TaskParam) => {
+  const handleFormSubmit = (data: LeaveRequestParam) => {
     const postData = {
-      projectId: data?.projectId,
-      sprintId: data?.sprintId,
+      id: data?.id,
       userId: data?.userId,
-      name: data?.name,
-      description: data?.description,
-      taskTracker: data?.taskTracker,
-      priority: data?.priority,
-      taskType: data?.taskType,
-      startDate: data?.startDate,
-      estimatedTime: data?.estimatedTime,
-      taskStatus: 'COMPLETED',
-      // file: '',
-      challenges: data?.challenges,
+      userName: data?.userName,
+      fiscalYear: data?.fiscalYear,
+      leaveType: data?.leaveType,
+      leaveFor: data?.leaveFor,
+      fromDate: data?.fromDate,
+      toDate: data?.toDate,
+      totalDay: data?.totalDay,
+      reason: data?.reason,
+      attchmentPath: data?.attchmentPath,
+      leaveStatus: data?.leaveStatus,
       remarks: data?.remarks,
     };
 
     if (itemUpdate?.id) {
       axiosInstance
-        .put(`${taskUrl}/${itemUpdate.id}`, postData)
+        .put(`${leaveUrl}/${itemUpdate.id}`, postData)
         .then((response) => {
           Toast({
-            message: 'Task Completed Successful!',
+            message: 'Leave Completed Successful!',
             type: 'success',
             autoClose: 1500,
             theme: 'colored',
           });
-          if (user_id) {
-            dispatch(fetchTaskByUserId(user_id));
-          }
-          setActiveTab('COMPLETED');
+          dispatch(fetchLeaveRequests());
+          setActiveTab('REJECTED');
           closeModal();
           console.log(response);
         })
         .catch((error) => {
-          handleApiError(error, 'Failed to ceompleted task!');
+          handleApiError(error, 'Failed to ceompleted leave!');
           console.error(error);
         });
     }
   };
-  console.log('schema', schema);
   return (
     <form
       onSubmit={handleSubmit(handleFormSubmit)}
@@ -97,7 +96,7 @@ export default function AprrovedLeave({
         </Button>
         <PermissionGuard action="update">
           <Button variant="primary" type="submit">
-            <i className="bi bi-floppy2-fill" /> Complete
+            <i className="bi bi-floppy2-fill" /> Reject
           </Button>
         </PermissionGuard>
       </div>

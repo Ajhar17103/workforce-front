@@ -2,7 +2,10 @@ import { leaveFor } from '@/enums/leaveFor';
 import { leaveTypes } from '@/enums/leaveTypes';
 import { FormField } from '@/types/common/FormField';
 import { TableHead } from '@/types/common/TableHead';
-import { AllocatedLeaveDto, LeaveDto } from '@/types/my-leave/my-leave.type';
+import {
+  AllocatedLeaveDto,
+  LeaveRequestDto,
+} from '@/types/my-leave/my-leave.type';
 
 export const formSchema: FormField[] = [
   {
@@ -10,7 +13,7 @@ export const formSchema: FormField[] = [
     align: 'default',
     label: 'Subject',
     labelVisibility: 'visible',
-    fieldName: 'subject',
+    fieldName: 'reason',
     dataType: 'textarea',
     action: null,
     defaultValue: '',
@@ -42,7 +45,7 @@ export const formSchema: FormField[] = [
     align: 'default',
     label: 'Leave For',
     labelVisibility: 'visible',
-    fieldName: 'leavefor',
+    fieldName: 'leaveFor',
     dataType: 'dropdown',
     action: null,
     defaultValue: '',
@@ -58,7 +61,7 @@ export const formSchema: FormField[] = [
     align: 'default',
     label: 'From Date',
     labelVisibility: 'visible',
-    fieldName: 'FromDate',
+    fieldName: 'fromDate',
     dataType: 'date',
     action: null,
     defaultValue: '',
@@ -90,7 +93,7 @@ export const formSchema: FormField[] = [
     align: 'default',
     label: 'Attchment',
     labelVisibility: 'visible',
-    fieldName: 'attchment',
+    fieldName: 'attchmentPath',
     dataType: 'file',
     action: null,
     defaultValue: '',
@@ -105,50 +108,43 @@ export const formSchema: FormField[] = [
 
 export const allocateTableSchema: TableHead<AllocatedLeaveDto>[] = [
   {
-    label: 'User Name',
-    accessor: 'userName',
-    sortable: true,
-    searchable: true,
-    align: 'start',
-  },
-  {
     label: 'Fiscal Year',
     accessor: 'fiscalYear',
     sortable: true,
-    searchable: true,
+    searchable: false,
     align: 'start',
   },
   {
     label: 'Sick Leave',
     accessor: 'sickLeave',
     sortable: true,
-    searchable: true,
+    searchable: false,
     align: 'center',
   },
   {
     label: 'Casual Leave',
     accessor: 'casualLeave',
     sortable: true,
-    searchable: true,
+    searchable: false,
     align: 'center',
   },
   {
     label: 'Annual Leave',
     accessor: 'annualLeave',
     sortable: true,
-    searchable: true,
+    searchable: false,
     align: 'center',
   },
   {
     label: 'Paid Leave',
     accessor: 'paidLeave',
     sortable: true,
-    searchable: true,
+    searchable: false,
     align: 'center',
   },
 ];
 
-export const tableSchema: TableHead<LeaveDto>[] = [
+export const tableSchema: TableHead<LeaveRequestDto>[] = [
   {
     label: 'Leave Type',
     accessor: 'leaveType',
@@ -161,27 +157,34 @@ export const tableSchema: TableHead<LeaveDto>[] = [
     accessor: 'leaveFor',
     sortable: true,
     searchable: true,
-    align: 'center',
+    align: 'start',
   },
   {
     label: 'From Date',
     accessor: 'fromDate',
     sortable: true,
     searchable: true,
-    align: 'center',
+    align: 'start',
   },
   {
     label: 'To Date',
     accessor: 'toDate',
     sortable: true,
     searchable: true,
-    align: 'center',
+    align: 'start',
   },
   {
     label: 'Days',
-    accessor: 'days',
+    accessor: 'totalDay',
     sortable: true,
-    searchable: true,
+    searchable: false,
+    align: 'center',
+  },
+  {
+    label: 'Status',
+    accessor: 'leaveStatus',
+    sortable: true,
+    searchable: false,
     align: 'center',
   },
 ];

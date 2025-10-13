@@ -10,6 +10,7 @@ import sprintReducer from './slices/sprintSlice';
 import taskReducer from './slices/taskSlice';
 import userReducer from './slices/userSlice';
 import leaveReducer from './slices/allocatedLeaveSlice';
+import leaveRequestReducer from './slices/leaveRequestSlice';
 
 export const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ export const store = configureStore({
     task: taskReducer,
     attendance: attendanceReducer,
     leave: leaveReducer,
+    leaveRequest: leaveRequestReducer,
   },
 });
 
