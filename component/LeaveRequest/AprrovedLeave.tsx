@@ -5,24 +5,21 @@ import { Toast } from '@/common/messages/toast';
 import axiosInstance from '@/lib/axiosInstance';
 import PermissionGuard from '@/lib/PermissionGuard';
 import { useAppDispatch } from '@/redux/hooks';
-import { fetchAllocatedLeaves } from '@/redux/slices/allocatedLeaveSlice';
-import { fetchTasks } from '@/redux/slices/taskSlice';
-import {
-  AllocatedLeaveParam,
-  AllocatedLeaveUpdateProps,
-  LeaveParam,
-} from '@/types/my-leave/my-leave.type';
-import { getLeaveApiUrl } from '@/utils/api';
+import { fetchTaskByUserId } from '@/redux/slices/taskSlice';
+import { TaskParam, TaskUpdateProps } from '@/types/task-board/task.type';
+import { getTaskApiUrl } from '@/utils/api';
 import { handleApiError } from '@/utils/errorHandler';
 import { getDefaultValues } from '@/utils/getDefaultValues';
+import { getSessionStorage } from '@/utils/storage';
 import { Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 
-export default function AllLeaveUpdate({
+export default function AprrovedLeave({
   schema,
   itemUpdate,
   closeModal,
-}: AllocatedLeaveUpdateProps) {
+  setActiveTab,
+}: TaskUpdateProps) {
   const {
     register,
     handleSubmit,
@@ -30,33 +27,55 @@ export default function AllLeaveUpdate({
     resetField,
     formState: { errors },
     reset,
-  } = useForm<AllocatedLeaveParam>({
-    defaultValues: getDefaultValues<AllocatedLeaveParam>(itemUpdate),
+  } = useForm<TaskParam>({
+    defaultValues: getDefaultValues<TaskParam>(itemUpdate),
   });
-  const leaveUrl = getLeaveApiUrl('/allocated-leaves');
+  const user_id = getSessionStorage('user_id');
+  const taskUrl = getTaskApiUrl('/tasks');
   const dispatch = useAppDispatch();
 
-  const handleFormSubmit = (data: AllocatedLeaveParam) => {
+  const handleFormSubmit = (data: TaskParam) => {
+    const postData = {
+      projectId: data?.projectId,
+      sprintId: data?.sprintId,
+      userId: data?.userId,
+      name: data?.name,
+      description: data?.description,
+      taskTracker: data?.taskTracker,
+      priority: data?.priority,
+      taskType: data?.taskType,
+      startDate: data?.startDate,
+      estimatedTime: data?.estimatedTime,
+      taskStatus: 'COMPLETED',
+      // file: '',
+      challenges: data?.challenges,
+      remarks: data?.remarks,
+    };
+
     if (itemUpdate?.id) {
       axiosInstance
-        .put(`${leaveUrl}/${itemUpdate.id}`, data)
+        .put(`${taskUrl}/${itemUpdate.id}`, postData)
         .then((response) => {
           Toast({
-            message: 'Leave Updated Successful!',
+            message: 'Task Completed Successful!',
             type: 'success',
             autoClose: 1500,
             theme: 'colored',
           });
-          dispatch(fetchAllocatedLeaves());
+          if (user_id) {
+            dispatch(fetchTaskByUserId(user_id));
+          }
+          setActiveTab('COMPLETED');
           closeModal();
           console.log(response);
         })
         .catch((error) => {
-          handleApiError(error, 'Failed to update leave!');
+          handleApiError(error, 'Failed to ceompleted task!');
           console.error(error);
         });
     }
   };
+  console.log('schema', schema);
   return (
     <form
       onSubmit={handleSubmit(handleFormSubmit)}
@@ -78,7 +97,7 @@ export default function AllLeaveUpdate({
         </Button>
         <PermissionGuard action="update">
           <Button variant="primary" type="submit">
-            <i className="bi bi-floppy2-fill" /> Update
+            <i className="bi bi-floppy2-fill" /> Complete
           </Button>
         </PermissionGuard>
       </div>

@@ -5,21 +5,24 @@ import { Toast } from '@/common/messages/toast';
 import axiosInstance from '@/lib/axiosInstance';
 import PermissionGuard from '@/lib/PermissionGuard';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { fetchProjects } from '@/redux/slices/projectSlice';
-import { fetchSprints } from '@/redux/slices/sprintSlice';
-import { fetchTasks } from '@/redux/slices/taskSlice';
-import { FormField, onChangeField } from '@/types/common/FormField';
-import { LeaveParam, LeaveUpdateProps } from '@/types/my-leave/my-leave.type';
-import { getMasterApiUrl, getTaskApiUrl } from '@/utils/api';
+import { fetchAllocatedLeaves } from '@/redux/slices/allocatedLeaveSlice';
+import { fetchUsers } from '@/redux/slices/userSlice';
+import { FormField } from '@/types/common/FormField';
+import {
+  AllocatedLeaveParam,
+  AllocatedLeaveUpdateProps,
+} from '@/types/my-leave/my-leave.type';
+import { getLeaveApiUrl } from '@/utils/api';
 import { handleApiError } from '@/utils/errorHandler';
-import { getByEntityApi } from '@/utils/getByEntityApi';
 import { setSchemaEnum } from '@/utils/setSchemaEnum';
 import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { formSchema as baseSchema } from './AllLeaveSchema';
 
-export default function AllLeaveCreate({ closeModal }: LeaveUpdateProps) {
+export default function AllLeaveCreate({
+  closeModal,
+}: AllocatedLeaveUpdateProps) {
   const {
     register,
     control,
@@ -27,84 +30,48 @@ export default function AllLeaveCreate({ closeModal }: LeaveUpdateProps) {
     reset,
     handleSubmit,
     formState: { errors },
-  } = useForm<LeaveParam>();
-  const projectUrl = getMasterApiUrl('/projects');
-  const sprintUrl = getMasterApiUrl('/sprints');
-  const taskUrl = getTaskApiUrl('/tasks');
+  } = useForm<AllocatedLeaveParam>();
+  const leaveUrl = getLeaveApiUrl('/allocated-leaves');
   const dispatch = useAppDispatch();
-  const { projects } = useAppSelector((state) => state.project);
-  const { sprints } = useAppSelector((state) => state.sprint);
+  const { users } = useAppSelector((state) => state.user);
   const [schema, setSchema] = useState<FormField[]>(baseSchema);
-  const [onChangeType, setOnchangeType] = useState<onChangeField>({});
 
   useEffect(() => {
-    dispatch(fetchProjects());
-    dispatch(fetchSprints());
+    dispatch(fetchUsers());
   }, [dispatch]);
 
   useEffect(() => {
-    if (projects) {
-      const projectId = projects.map((user) => ({
+    if (users) {
+      const userId = users.map((user) => ({
         id: user.id,
         name: user.name,
       }));
 
       const enumMap = {
-        projectId: projectId,
+        userId: userId,
       };
 
       const finalSchema = setSchemaEnum(baseSchema, enumMap);
       setSchema(finalSchema);
     }
-  }, [projects, sprints]);
+  }, [users]);
 
-  useEffect(() => {
-    if (onChangeType?.type === 'handleProjectChange' && onChangeType?.id) {
-      handleProjectChange(onChangeType?.id);
-    }
-  }, [onChangeType]);
-
-  const handleProjectChange = async (id: any) => {
-    let users = await getByEntityApi(`${projectUrl}/assign-user`, id);
-    let sprints = await getByEntityApi(`${sprintUrl}/by-project`, id);
-
-    const usersId = users?.map((user: any) => ({
-      id: user.id,
-      name: `${user.name}, ${user.designationName}`,
-    }));
-
-    const sprintsId = sprints?.map((sprint: any) => ({
-      id: sprint.id,
-      name: sprint.name,
-    }));
-
-    const enumMap = {
-      userId: usersId,
-      sprintId: sprintsId,
-    };
-
-    setSchema((prevSchema) => setSchemaEnum(prevSchema, enumMap));
-  };
-
-  const handleFormSubmit = (data: LeaveParam) => {
-    console.log(data);
-    const postData = {};
-    console.log('postData', postData);
+  const handleFormSubmit = (data: AllocatedLeaveParam) => {
     axiosInstance
-      .post(taskUrl, postData)
+      .post(leaveUrl, data)
       .then((response) => {
         Toast({
-          message: 'Task Create Successful!',
+          message: 'Leave Create Successful!',
           type: 'success',
           autoClose: 1500,
           theme: 'colored',
         });
-        dispatch(fetchTasks());
+        dispatch(fetchAllocatedLeaves());
         reset();
         closeModal();
       })
       .catch((error) => {
-        handleApiError(error, 'Failed to create task!');
+        handleApiError(error, 'Failed to leave task!');
         console.error(error);
       });
   };
@@ -123,7 +90,6 @@ export default function AllLeaveCreate({ closeModal }: LeaveUpdateProps) {
           control={control}
           errors={errors}
           resetField={resetField}
-          setOnchangeType={setOnchangeType}
         />
       </div>
 

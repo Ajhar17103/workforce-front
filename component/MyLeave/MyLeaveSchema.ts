@@ -105,6 +105,13 @@ export const formSchema: FormField[] = [
 
 export const allocateTableSchema: TableHead<AllocatedLeaveDto>[] = [
   {
+    label: 'User Name',
+    accessor: 'userName',
+    sortable: true,
+    searchable: true,
+    align: 'start',
+  },
+  {
     label: 'Fiscal Year',
     accessor: 'fiscalYear',
     sortable: true,
@@ -113,22 +120,28 @@ export const allocateTableSchema: TableHead<AllocatedLeaveDto>[] = [
   },
   {
     label: 'Sick Leave',
-    accessor: 'totalSickLeave',
+    accessor: 'sickLeave',
+    sortable: true,
+    searchable: true,
+    align: 'center',
+  },
+  {
+    label: 'Casual Leave',
+    accessor: 'casualLeave',
     sortable: true,
     searchable: true,
     align: 'center',
   },
   {
     label: 'Annual Leave',
-    accessor: 'totalAnnualLeave',
+    accessor: 'annualLeave',
     sortable: true,
     searchable: true,
     align: 'center',
   },
-
   {
-    label: 'Casual Leave',
-    accessor: 'totalCasualLeave',
+    label: 'Paid Leave',
+    accessor: 'paidLeave',
     sortable: true,
     searchable: true,
     align: 'center',

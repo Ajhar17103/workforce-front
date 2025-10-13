@@ -1,11 +1,12 @@
 import axiosInstance from '@/lib/axiosInstance'; // You can rename your util for reuse
+import { AllocatedLeaveDto } from '@/types/my-leave/my-leave.type';
 import { getLeaveApiUrl } from '@/utils/api';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 // Define State Interface
 interface AllocatedLeaveState {
   allocatedLeaves: any[];
-  userAllocatedLeaves: any[] | null;
+  userAllocatedLeaves: AllocatedLeaveDto | null;
   loading: boolean;
   error: string | null;
 }
@@ -13,7 +14,7 @@ interface AllocatedLeaveState {
 // Initial State
 const initialState: AllocatedLeaveState = {
   allocatedLeaves: [],
-  userAllocatedLeaves: [],
+  userAllocatedLeaves: null,
   loading: false,
   error: null,
 };
@@ -23,7 +24,9 @@ export const fetchAllocatedLeaves = createAsyncThunk(
   'allocatedLeave/fetchAllocatedLeaves',
   async (_, { rejectWithValue }) => {
     try {
-      const res: any = await axiosInstance.get(getLeaveApiUrl('/allocated-leaves'));
+      const res: any = await axiosInstance.get(
+        getLeaveApiUrl('/allocated-leaves'),
+      );
       return res.data.payload;
     } catch (err: any) {
       return rejectWithValue(
@@ -61,7 +64,7 @@ const allocatedLeaveSlice = createSlice({
   reducers: {
     clearAllocatedLeaveState: (state) => {
       state.allocatedLeaves = [];
-      state.userAllocatedLeaves = [];
+      state.userAllocatedLeaves = null;
       state.loading = false;
       state.error = null;
     },
@@ -89,7 +92,7 @@ const allocatedLeaveSlice = createSlice({
       })
       .addCase(fetchAllocatedLeavesByUserId.fulfilled, (state, action) => {
         state.loading = false;
-        state.userAllocatedLeaves = action.payload;
+        state.userAllocatedLeaves = action.payload || null;
       })
       .addCase(fetchAllocatedLeavesByUserId.rejected, (state, action) => {
         state.loading = false;

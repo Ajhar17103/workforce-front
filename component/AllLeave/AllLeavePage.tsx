@@ -26,7 +26,7 @@ export default function AllLeavePage() {
               icon="bi bi-plus-lg"
               variant="outline-primary"
               onClick={() => setModalShow(true)}
-              tooltip="Apply for Leave"
+              tooltip="Add Leave"
             />
           </PermissionGuard>
         </div>
@@ -37,7 +37,7 @@ export default function AllLeavePage() {
           <CommonModal
             show={modalShow}
             onHide={() => setModalShow(false)}
-            title="Apply for Leave"
+            title="Create Leave"
             size="xl"
             footer={false}
             fullscreen="xl-down"

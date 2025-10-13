@@ -16,6 +16,27 @@ export interface AllocatedLeaveDto {
   annualLeave?: string;
 }
 
+export interface AllocatedLeaveParam {
+  id: string;
+  userId?: string;
+  userName?: string;
+  fiscalYear: string;
+  totalSickLeave: string;
+  takenSickLeave: string;
+  totalCasualLeave: string;
+  takenCasualLeave: string;
+  totalAnnualLeave: string;
+  takenAnnualLeave: string;
+  paidLeave?: string;
+}
+
+export interface AllocatedLeaveUpdateProps {
+  schema?: any;
+  itemUpdate?: AllocatedLeaveDto;
+  closeModal: () => void;
+  setActiveTab?: any;
+}
+
 export interface LeaveDto {
   id: string;
   userId: string;
@@ -42,7 +63,7 @@ export interface LeaveParam {
 
 export interface LeaveUpdateProps {
   schema?: any;
-  itemUpdate?: AllocatedLeaveDto;
+  itemUpdate?: LeaveParam;
   closeModal: () => void;
   setActiveTab?: any;
 }

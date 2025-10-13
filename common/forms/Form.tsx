@@ -111,11 +111,17 @@ export default function Form({
             {field.dataType === 'number' && (
               <input
                 type="number"
+                step="any"
                 defaultValue={field.defaultValue}
-                {...register(field.fieldName, { required: field.isRequired })}
+                {...register(field.fieldName, {
+                  required: field.isRequired,
+                  valueAsNumber: true,
+                })}
                 className="form-control"
-                onChange={(e: any) => handleOnChange(e, field)}
-                disabled={field?.disabled ? field?.disabled : false}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  handleOnChange(e, field)
+                }
+                disabled={field?.disabled ?? false}
               />
             )}
 
@@ -154,7 +160,7 @@ export default function Form({
                 {...register(field.fieldName, {
                   required: field.isRequired,
                   valueAsNumber: true, // react-hook-form will convert to number
-                  validate: (v:any) => !isNaN(v) || 'Invalid number',
+                  validate: (v: any) => !isNaN(v) || 'Invalid number',
                 })}
                 className="form-control"
                 onChange={(e: any) => handleOnChange(e, field)}
