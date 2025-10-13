@@ -185,7 +185,7 @@ export default function LeaveRequestPage() {
     <div className="card shadow-sm p-3 dark">
       <div className="d-flex justify-content-between align-items-centermb-3">
         {(activeTab === 'PENDING' && (
-          <h6 className="mb-3">Pending Requests</h6>
+          <h6 className="mb-3">Pending Leaves</h6>
         )) ||
           (activeTab === 'APPROVED' && (
             <h6 className="mb-3">Approved Leaves</h6>

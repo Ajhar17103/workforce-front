@@ -1,20 +1,27 @@
 'use client';
 
+import { Toast } from '@/common/messages/toast';
 import CommonModal from '@/common/modals/CommonModal';
 import DynamicTable from '@/common/tables/DataTable';
+import axiosInstance from '@/lib/axiosInstance';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { fetchLeaveRequestsByUserId } from '@/redux/slices/leaveRequestSlice';
 import {
   LeaveRequestDto,
   LeaveRequestParam,
 } from '@/types/my-leave/my-leave.type';
+import { getLeaveApiUrl } from '@/utils/api';
+import { handleApiError } from '@/utils/errorHandler';
 import { getSessionStorage } from '@/utils/storage';
 import { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 import Update from './LeaveUpdate';
 import { formSchema as baseSchema, tableSchema } from './MyLeaveSchema';
+import { fetchAllocatedLeavesByUserId } from '@/redux/slices/allocatedLeaveSlice';
 
 export default function LeaveTable() {
   const user_id = getSessionStorage('user_id');
+  const leaveUrl = getLeaveApiUrl('/leave-requests');
   const dispatch = useAppDispatch();
   const { userLeaveRequests } = useAppSelector((state) => state.leaveRequest);
   const [tableData, setTableData] = useState<LeaveRequestDto[]>([]);
@@ -61,36 +68,87 @@ export default function LeaveTable() {
   }, [userLeaveRequests]);
 
   const updateItem = async (item: LeaveRequestDto) => {
-    const updateData: LeaveRequestParam = {
-      id: item?.id,
-      userId: item?.userId,
-      userName: item?.userName,
-      fiscalYear: item?.fiscalYear,
-      leaveType: item?.leaveType,
-      leaveFor: item?.leaveFor,
-      fromDate: item?.fromDate,
-      toDate: item?.toDate,
-      totalDay: item?.totalDay,
-      reason: item?.reason,
-      attchmentPath: item?.attchmentPath,
-    };
-    setModalShow(true);
-    setItemUpdate(updateData);
+    if (item?.leaveStatus === 'PENDING') {
+      const updateData: LeaveRequestParam = {
+        id: item?.id,
+        userId: item?.userId,
+        userName: item?.userName,
+        fiscalYear: item?.fiscalYear,
+        leaveType: item?.leaveType,
+        leaveFor: item?.leaveFor,
+        fromDate: item?.fromDate,
+        toDate: item?.toDate,
+        totalDay: item?.totalDay,
+        reason: item?.reason,
+        attchmentPath: item?.attchmentPath,
+        leaveStatus: item?.leaveStatus,
+      };
+      setModalShow(true);
+      setItemUpdate(updateData);
+    } else {
+      Toast({
+        message: 'You can not change it',
+        type: 'warning',
+        autoClose: 1500,
+        theme: 'colored',
+      });
+    }
   };
+
   const cancelItem = async (item: LeaveRequestDto) => {
-    const updateData: LeaveRequestParam = {
-      id: item?.id,
-      userId: item?.userId,
-      userName: item?.userName,
-      fiscalYear: item?.fiscalYear,
-      leaveType: item?.leaveType,
-      leaveFor: item?.leaveFor,
-      fromDate: item?.fromDate,
-      toDate: item?.toDate,
-      totalDay: item?.totalDay,
-      reason: item?.reason,
-      attchmentPath: item?.attchmentPath,
-    };
+    if (user_id && item?.leaveStatus === 'PENDING') {
+      if (!item?.id) return;
+
+      const updateData: LeaveRequestParam = {
+        id: item?.id,
+        userId: item?.userId,
+        userName: item?.userName,
+        fiscalYear: item?.fiscalYear,
+        leaveType: item?.leaveType,
+        leaveFor: item?.leaveFor,
+        fromDate: item?.fromDate,
+        toDate: item?.toDate,
+        totalDay: item?.totalDay,
+        reason: item?.reason,
+        attchmentPath: item?.attchmentPath,
+        leaveStatus: 'CANCELLED',
+      };
+
+      const result = await Swal.fire({
+        title: 'Are you sure to cancel?',
+        text: 'Leave will be cancel',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, cancel it!',
+        cancelButtonText: 'No',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+      });
+
+      if (!result.isConfirmed) return;
+
+      try {
+        await axiosInstance.put(`${leaveUrl}/${item.id}`, updateData);
+        Toast({
+          message: 'Task  moved to In Progress!',
+          type: 'success',
+          autoClose: 1500,
+          theme: 'colored',
+        });
+        dispatch(fetchLeaveRequestsByUserId(user_id));
+        dispatch(fetchAllocatedLeavesByUserId(user_id));
+      } catch (error) {
+        console.error('Failed to update task:', error);
+        handleApiError(error, `Failed to approve!`);
+      }
+    } else {
+      Toast({
+        message: 'You can not cancel it',
+        type: 'warning',
+        autoClose: 1500,
+        theme: 'colored',
+      });
+    }
   };
 
   return (

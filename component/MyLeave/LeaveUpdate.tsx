@@ -38,7 +38,7 @@ export default function LeaveUpdate({
   const dispatch = useAppDispatch();
 
   const handleFormSubmit = (data: LeaveRequestParam) => {
-    if (user_id) {
+    if (user_id && itemUpdate?.leaveStatus === 'PENDING') {
       const postData = {
         userId: user_id,
         userName: data?.userName,
@@ -74,7 +74,6 @@ export default function LeaveUpdate({
       }
     }
   };
-  console.log('schema', schema);
   return (
     <form
       onSubmit={handleSubmit(handleFormSubmit)}
@@ -95,7 +94,11 @@ export default function LeaveUpdate({
           <i className="bi bi-x" /> Cancel
         </Button>
         <PermissionGuard action="update">
-          <Button variant="primary" type="submit">
+          <Button
+            variant="primary"
+            type="submit"
+            disabled={itemUpdate?.leaveStatus === 'PENDING' ? false : true}
+          >
             <i className="bi bi-floppy2-fill" /> Update
           </Button>
         </PermissionGuard>

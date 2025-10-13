@@ -283,8 +283,7 @@ export default function DataTable<T extends { id: string }>({
           )}
         </tbody>
       </table>
-
-      {/* Pagination */}
+      
       {pagination && (
         <div className="d-flex justify-content-between align-items-center mt-3 px-1">
           <div className="text-muted small">
