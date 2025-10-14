@@ -131,7 +131,7 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
           {sidebarOpen ? (
             <Image
               className="dark:hidden"
-              src="/images/logo/logo.svg"
+              src="/images/logo/logo.png"
               alt="Logo"
               width={150}
               height={40}
@@ -139,7 +139,7 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: SidebarProps) {
           ) : (
             <Image
               className="hidden dark:block"
-              src="/images/logo/logo-dark.svg"
+              src="/images/logo/logo.png"
               alt="Logo"
               width={150}
               height={40}
