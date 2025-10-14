@@ -1,20 +1,49 @@
 'use client';
 
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { fetchProjectReport } from '@/redux/slices/reportSlice';
+import { useEffect, useState } from 'react';
 import Metric from '../Reports/Component/Metric';
 import MetricBar from '../Reports/Component/MetricBar';
 
 export default function ProjectReport() {
-  const projectSummary = [
-    { id: 1, name: 'Customer 360', total: 12, completed: 8 },
-    { id: 2, name: 'Asset Workflow', total: 10, completed: 7 },
-    { id: 3, name: 'APAMS 3.0', total: 14, completed: 12 },
-    { id: 4, name: 'BNPPAMS', total: 102, completed: 18 },
-    { id: 5, name: 'BNPIMS', total: 100, completed: 70 },
-    { id: 6, name: 'WF', total: 150, completed: 12 },
-  ];
+  const dispatch = useAppDispatch();
+  const { projectReport, loading, error } = useAppSelector(
+    (state) => state.reports,
+  );
+  const [projectSummary, setProjectSummary] = useState<
+    {
+      id: string;
+      name: string;
+      totalTasks: number;
+      completedTasks: number;
+      inProgressTasks: number;
+      onHoldTasks: number;
+    }[]
+  >([]);
 
-  const calcPercent = (done: number, total: number) =>
-    total === 0 ? 0 : Math.round((done / total) * 100);
+  useEffect(() => {
+    dispatch(fetchProjectReport());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (projectReport?.length > 0) {
+      const projectData = projectReport.map((pr: any) => ({
+        id: pr?.id,
+        name: pr?.name,
+        totalTasks: pr?.totalTasks || 0,
+        completedTasks: pr?.completedTasks || 0,
+        inProgressTasks: pr?.inProgressTasks || 0,
+        onHoldTasks: pr?.onHoldTasks,
+      }));
+      setProjectSummary(projectData);
+    }
+  }, [projectReport]);
+
+  console.log('projectReport', projectReport);
+
+  if (loading) return <p>Loading project report...</p>;
+  if (error) return <p className="text-red-500">Error: {error}</p>;
 
   return (
     <Metric
@@ -24,8 +53,15 @@ export default function ProjectReport() {
       color="primary"
     >
       {projectSummary.map((proj, i) => {
-        const percent = calcPercent(proj.completed, proj.total);
-        return <MetricBar title={proj?.name} value={percent} />;
+        return (
+          <MetricBar
+            title={proj?.name}
+            total={proj.totalTasks}
+            progress={proj?.inProgressTasks}
+            hold={proj?.onHoldTasks}
+            completed={proj.completedTasks}
+          />
+        );
       })}
     </Metric>
   );

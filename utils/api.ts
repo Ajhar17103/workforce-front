@@ -41,3 +41,9 @@ export const getStandupiUrl = (endpoint: string): string => {
     endpoint.startsWith('/') ? endpoint : `/${endpoint}`
   }`;
 };
+
+export const getReportApiUrl = (endpoint: string): string => {
+  return `${BASE_URL}/report/${API_VERSION}${
+    endpoint.startsWith('/') ? endpoint : `/${endpoint}`
+  }`;
+};

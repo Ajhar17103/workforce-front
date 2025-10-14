@@ -7,11 +7,13 @@ import designationReducer from './slices/designationSlice';
 import leaveRequestReducer from './slices/leaveRequestSlice';
 import menuReducer from './slices/menuSlice';
 import projectReducer from './slices/projectSlice';
+import reportReducer from './slices/reportSlice';
 import roleMenuPermissionReducer from './slices/roleMenuPermissionSlice';
 import roleReducer from './slices/roleSlice';
 import sprintReducer from './slices/sprintSlice';
 import taskReducer from './slices/taskSlice';
 import userReducer from './slices/userSlice';
+
 export const store = configureStore({
   reducer: {
     menu: menuReducer,
@@ -27,6 +29,7 @@ export const store = configureStore({
     leave: leaveReducer,
     leaveRequest: leaveRequestReducer,
     dailyStandup: DailyStandupReducer,
+    reports: reportReducer,
   },
 });
 
