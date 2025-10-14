@@ -35,3 +35,9 @@ export const getLeaveApiUrl = (endpoint: string): string => {
     endpoint.startsWith('/') ? endpoint : `/${endpoint}`
   }`;
 };
+
+export const getStandupiUrl = (endpoint: string): string => {
+  return `${BASE_URL}/standup-insight/${API_VERSION}${
+    endpoint.startsWith('/') ? endpoint : `/${endpoint}`
+  }`;
+};

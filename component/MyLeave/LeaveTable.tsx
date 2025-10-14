@@ -116,7 +116,7 @@ export default function LeaveTable() {
 
       const result = await Swal.fire({
         title: 'Are you sure to cancel?',
-        text: 'Leave will be cancel',
+        text: 'This action cannot be undone!',
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Yes, cancel it!',
@@ -130,7 +130,7 @@ export default function LeaveTable() {
       try {
         await axiosInstance.put(`${leaveUrl}/${item.id}`, updateData);
         Toast({
-          message: 'Task  moved to In Progress!',
+          message: 'Leave Cancelled',
           type: 'success',
           autoClose: 1500,
           theme: 'colored',

@@ -1,7 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
+import leaveReducer from './slices/allocatedLeaveSlice';
 import attendanceReducer from './slices/attendanceSlice';
+import DailyStandupReducer from './slices/dailyStandupSlice';
 import deparmentReducer from './slices/departmentSlice';
 import designationReducer from './slices/designationSlice';
+import leaveRequestReducer from './slices/leaveRequestSlice';
 import menuReducer from './slices/menuSlice';
 import projectReducer from './slices/projectSlice';
 import roleMenuPermissionReducer from './slices/roleMenuPermissionSlice';
@@ -9,9 +12,6 @@ import roleReducer from './slices/roleSlice';
 import sprintReducer from './slices/sprintSlice';
 import taskReducer from './slices/taskSlice';
 import userReducer from './slices/userSlice';
-import leaveReducer from './slices/allocatedLeaveSlice';
-import leaveRequestReducer from './slices/leaveRequestSlice';
-
 export const store = configureStore({
   reducer: {
     menu: menuReducer,
@@ -26,6 +26,7 @@ export const store = configureStore({
     attendance: attendanceReducer,
     leave: leaveReducer,
     leaveRequest: leaveRequestReducer,
+    dailyStandup: DailyStandupReducer,
   },
 });
 

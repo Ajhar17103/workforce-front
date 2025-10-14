@@ -4,10 +4,10 @@ import CustomButton from '@/common/Buttons/Button';
 import CommonModal from '@/common/modals/CommonModal';
 import PermissionGuard from '@/lib/PermissionGuard';
 import { useState } from 'react';
-import Create from './DailyStandupCreate';
-import Table from './DailyStandupTable';
+import Create from './DailyScrumCreate';
+import Table from './DailyScrumTable';
 
-export default function DailyStandupPage() {
+export default function DailyScrumPage() {
   const [modalShow, setModalShow] = useState<boolean>(false);
 
   const closeModal = () => {
@@ -17,7 +17,7 @@ export default function DailyStandupPage() {
   return (
     <div className="card shadow-sm p-3 dark">
       <div className="d-flex justify-content-between align-items-center">
-        <h6 className="mb-0 fw-semibold text-blue">Daily Standup Lists</h6>
+        <h6 className="mb-0 fw-semibold text-blue">Daily Scrum Lists</h6>
         <PermissionGuard action="add">
           <CustomButton
             size="xs"
@@ -25,7 +25,7 @@ export default function DailyStandupPage() {
             icon="bi bi-plus-lg"
             variant="outline-primary"
             onClick={() => setModalShow(true)}
-            tooltip="Add New Daily Standup"
+            tooltip="Add New Daily Scrum"
           />
         </PermissionGuard>
       </div>
@@ -35,7 +35,7 @@ export default function DailyStandupPage() {
         <CommonModal
           show={modalShow}
           onHide={() => setModalShow(false)}
-          title="Create Daily Standup"
+          title="Create Daily Scrum"
           size="lg"
           footer={false}
           fullscreen="xl-down"

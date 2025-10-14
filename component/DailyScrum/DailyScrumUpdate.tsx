@@ -5,22 +5,23 @@ import { Toast } from '@/common/messages/toast';
 import axiosInstance from '@/lib/axiosInstance';
 import PermissionGuard from '@/lib/PermissionGuard';
 import { useAppDispatch } from '@/redux/hooks';
-import { fetchSprints } from '@/redux/slices/sprintSlice';
+import { fetchDailyStandupsByUserId } from '@/redux/slices/dailyStandupSlice';
 import {
-  SprintParam,
-  SprintUpdateProps,
-} from '@/types/master-data/sprint.type';
-import { getMasterApiUrl } from '@/utils/api';
+  DailyScrumParam,
+  DailyScrumUpdateProps,
+} from '@/types/daily-scrum/daily-scrum.type';
+import { getStandupiUrl } from '@/utils/api';
 import { handleApiError } from '@/utils/errorHandler';
 import { getDefaultValues } from '@/utils/getDefaultValues';
+import { getSessionStorage } from '@/utils/storage';
 import { Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 
-export default function SprintUpdate({
+export default function DailyScrumUpdate({
   schema,
   itemUpdate,
   closeModal,
-}: SprintUpdateProps) {
+}: DailyScrumUpdateProps) {
   const {
     register,
     handleSubmit,
@@ -28,41 +29,41 @@ export default function SprintUpdate({
     resetField,
     formState: { errors },
     reset,
-  } = useForm<SprintParam>({
-    defaultValues: getDefaultValues<SprintParam>(itemUpdate),
+  } = useForm<DailyScrumParam>({
+    defaultValues: getDefaultValues<DailyScrumParam>(itemUpdate),
   });
 
-  const sprintUrl = getMasterApiUrl('/sprints');
+  const user_id = getSessionStorage('user_id');
+  const standUpUrl = getStandupiUrl('/daily-standups');
   const dispatch = useAppDispatch();
 
-  const handleFormSubmit = (data: SprintParam) => {
+  const handleFormSubmit = (data: DailyScrumParam) => {
     const postData = {
-      projectId: data?.projectId,
-      name: data?.name,
-      startDate: data?.startDate,
-      endDate: data?.endDate,
-      workingDays: Number(data?.workingDays),
-      dailyWorkingHrs: Number(data?.dailyWorkingHrs),
-      totalSprintHrs: Number(data?.workingDays) * Number(data?.dailyWorkingHrs),
-      sprintType: data?.sprintType,
+      id: data?.id,
+      userId: data?.userId,
+      date: itemUpdate?.date,
+      description: data?.description,
+      challenge: data?.challenge,
     };
 
     if (itemUpdate?.id) {
       axiosInstance
-        .put(`${sprintUrl}/${itemUpdate.id}`, postData)
+        .put(`${standUpUrl}/${itemUpdate.id}`, postData)
         .then((response) => {
           Toast({
-            message: 'Sprint Updated Successful!',
+            message: 'Standup Updated Successful!',
             type: 'success',
             autoClose: 1500,
             theme: 'colored',
           });
-          dispatch(fetchSprints());
+          if (user_id) {
+            dispatch(fetchDailyStandupsByUserId(user_id));
+          }
           closeModal();
           console.log(response);
         })
         .catch((error) => {
-          handleApiError(error, 'Failed to update sprint!');
+          handleApiError(error, 'Failed to update standup!');
           console.error(error);
         });
     }

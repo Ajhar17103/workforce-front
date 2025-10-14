@@ -243,7 +243,7 @@ export const tableSchema: TableHead<TaskDto>[] = [
     align: 'start',
   },
   {
-    label: 'Project Name',
+    label: 'Project',
     accessor: 'projectName',
     sortable: true,
     searchable: true,

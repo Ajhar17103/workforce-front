@@ -127,7 +127,7 @@ export const tableSchema: TableHead<SprintDto>[] = [
     align: 'start',
   },
   {
-    label: 'Project Name',
+    label: 'Project',
     accessor: 'projectName',
     sortable: true,
     searchable: true,
@@ -151,14 +151,14 @@ export const tableSchema: TableHead<SprintDto>[] = [
     label: 'Sprint Hours',
     accessor: 'totalSprintHrs',
     sortable: true,
-    searchable: true,
+    searchable: false,
     align: 'center',
   },
   {
     label: 'Status',
     accessor: 'sprintType',
     sortable: true,
-    searchable: true,
+    searchable: false,
     align: 'center',
   },
 ];
