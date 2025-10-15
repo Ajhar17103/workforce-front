@@ -73,7 +73,7 @@ export default function ScrumBoardTable() {
           <CustomButton
             size="xs"
             loading={false}
-            icon="bi bi-check-circle"
+            icon="bi bi-grid"
             variant={activeTab === 'ALL' ? 'success' : 'outline-success'}
             tooltip="All"
             className={activeTab === 'ALL' ? 'text-light' : 'text-success'}

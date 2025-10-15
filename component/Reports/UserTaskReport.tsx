@@ -4,24 +4,26 @@ import CustomButton from '@/common/Buttons/Button';
 import CommonModal from '@/common/modals/CommonModal';
 import DynamicTable from '@/common/tables/DataTable';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import {
-  fetchDailyStandupReport,
-  fetchDailyStandupsByDateReport,
-} from '@/redux/slices/reportSlice';
+import { fetchUserTaskReport } from '@/redux/slices/reportSlice';
 import { TableHead } from '@/types/common/TableHead';
 import { useEffect, useState } from 'react';
 import Metric from './Component/Metric';
 
-interface UserScrumSummary {
+interface UserTaskSummary {
   id: string;
-  userId?: string;
+  userId: string;
   userName: string;
-  date: string;
-  description: string;
-  challenge: string;
+  designationId: string;
+  designationName: string;
+  totalTasks: number;
+  completedTasks: number;
+  inProgressTasks: number;
+  pendingTasks: number;
+  allocatedTime: string;
+  spentTime: string;
 }
 
-const tableColumns: TableHead<UserScrumSummary>[] = [
+const tableColumns: TableHead<UserTaskSummary>[] = [
   {
     label: 'Name',
     accessor: 'userName',
@@ -30,80 +32,90 @@ const tableColumns: TableHead<UserScrumSummary>[] = [
     align: 'start',
   },
   {
-    label: 'Date',
-    accessor: 'date',
+    label: 'Designation',
+    accessor: 'designationName',
     sortable: false,
     searchable: false,
     align: 'start',
   },
   {
-    label: 'Description',
-    accessor: 'description',
+    label: 'Total Tasks',
+    accessor: 'totalTasks',
     sortable: false,
     searchable: false,
-    align: 'start',
+    align: 'center',
   },
   {
-    label: 'Challenge',
-    accessor: 'challenge',
+    label: 'Completed',
+    accessor: 'completedTasks',
     sortable: false,
     searchable: false,
-    align: 'start',
+    align: 'center',
+  },
+  {
+    label: 'In Progress',
+    accessor: 'inProgressTasks',
+    sortable: false,
+    searchable: false,
+    align: 'center',
+  },
+  {
+    label: 'Pending',
+    accessor: 'pendingTasks',
+    sortable: false,
+    searchable: false,
+    align: 'center',
+  },
+  {
+    label: 'Allocated Time',
+    accessor: 'allocatedTime',
+    sortable: false,
+    searchable: false,
+    align: 'center',
+  },
+  {
+    label: 'Spent Time',
+    accessor: 'spentTime',
+    sortable: false,
+    searchable: false,
+    align: 'center',
   },
 ];
 
-export default function ScrumReport() {
+export default function UserTaskReport() {
   const dispatch = useAppDispatch();
-  const { dailyStandupReport, dateWiseStandupReport, loading, error } =
-    useAppSelector((state) => state.reports);
-  const [userScrumSummary, setUserScrumSummary] = useState<UserScrumSummary[]>(
-    [],
+  const { userTaskReport, loading, error } = useAppSelector(
+    (state) => state.reports,
   );
+  const [userTaskSummary, setUserTaskSummary] = useState<UserTaskSummary[]>([]);
   const [activeTab, setActiveTab] = useState<'TO_DAY' | 'ALL'>('TO_DAY');
   const [modalShow, setModalShow] = useState<boolean>(false);
-  const [itemUpdate, setItemUpdate] = useState<UserScrumSummary>();
-
-  const today = new Date();
+  const [itemUpdate, setItemUpdate] = useState<UserTaskSummary>();
 
   useEffect(() => {
-    if (activeTab === 'TO_DAY') {
-      dispatch(
-        fetchDailyStandupsByDateReport(today.toLocaleDateString('en-CA')),
-      );
-    } else {
-      dispatch(fetchDailyStandupReport());
-    }
-  }, [dispatch, activeTab]);
+    dispatch(fetchUserTaskReport());
+  }, [dispatch]);
 
   useEffect(() => {
-    if (activeTab === 'TO_DAY') {
-      const transformed: UserScrumSummary[] = (dateWiseStandupReport ?? []).map(
-        (ds) => ({
-          id: ds?.id,
-          userId: ds?.userId,
-          userName: ds?.userName,
-          date: ds?.date,
-          description: ds?.description,
-          challenge: ds?.challenge,
-        }),
-      );
-      setUserScrumSummary(transformed);
-    } else {
-      const transformed: UserScrumSummary[] = (dailyStandupReport ?? []).map(
-        (ds) => ({
-          id: ds?.id,
-          userId: ds?.userId,
-          userName: ds?.userName,
-          date: ds?.date,
-          description: ds?.description,
-          challenge: ds?.challenge,
-        }),
-      );
-      setUserScrumSummary(transformed);
+    if (userTaskReport?.length > 0) {
+      const userTakData: any[] = userTaskReport.map((utr: any) => ({
+        id: utr?.id,
+        userId: utr?.userId,
+        userName: utr?.userName,
+        designationId: utr?.designationId,
+        designationName: utr?.designationName,
+        totalTasks: utr?.totalTasks,
+        completedTasks: utr?.completedTasks,
+        inProgressTasks: utr?.inProgressTasks,
+        pendingTasks: utr?.pendingTasks,
+        allocatedTime: utr?.allocatedTime,
+        spentTime: utr?.spentTime,
+      }));
+      setUserTaskSummary(userTakData);
     }
-  }, [dailyStandupReport, dateWiseStandupReport, activeTab]);
+  }, [userTaskReport]);
 
-  const viewItem = (item: UserScrumSummary) => {
+  const viewItem = (item: UserTaskSummary) => {
     setModalShow(true);
     setItemUpdate(item);
   };
@@ -114,9 +126,9 @@ export default function ScrumReport() {
 
   return (
     <Metric
-      title="Daily Scrum"
-      value={userScrumSummary?.length}
-      icon="bi-people-fill"
+      title="Users"
+      value={userTaskSummary?.length}
+      icon="bi bi-list-task"
       color="warning"
     >
       <div className="d-flex justify-content-between align-items-centermb-3">
@@ -145,7 +157,7 @@ export default function ScrumReport() {
         </div>
       </div>
       <DynamicTable
-        data={userScrumSummary}
+        data={userTaskSummary}
         columns={tableColumns}
         action={true}
         pagination={true}
@@ -155,7 +167,7 @@ export default function ScrumReport() {
         <CommonModal
           show={modalShow}
           onHide={closeModal}
-          title="User Scrum Details"
+          title="User Task Details"
           size="xl"
           footer={false}
           fullscreen="xl-down"

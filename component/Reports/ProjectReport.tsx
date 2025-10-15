@@ -40,11 +40,6 @@ export default function ProjectReport() {
     }
   }, [projectReport]);
 
-  console.log('projectReport', projectReport);
-
-  if (loading) return <p>Loading project report...</p>;
-  if (error) return <p className="text-red-500">Error: {error}</p>;
-
   return (
     <Metric
       title="Projects"

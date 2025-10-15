@@ -95,7 +95,7 @@ export default function MyTaskTable() {
       taskTracker: item.taskTracker,
       priority: item.priority,
       taskType: item.taskType,
-      startDate: formatDate(new Date(), 'yyyy-MM-dd'),
+      startDate: formatDate(new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
       estimatedTime: item.estimatedTime,
       taskStatus: 'IN_PROGRESS',
     };

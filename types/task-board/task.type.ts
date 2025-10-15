@@ -13,6 +13,7 @@ export interface TaskDto {
   taskType: string;
   sprintType: string;
   startDate?: string | null;
+  endDate?: string | null;
   estimatedTime: string;
   taskStatus: string;
   fileName?: string;
@@ -31,6 +32,7 @@ export interface TaskParam {
   priority: string;
   taskType: string;
   startDate?: string | null;
+  endDate?: string | null;
   estimatedTime: string;
   taskStatus: string;
   file?: string;

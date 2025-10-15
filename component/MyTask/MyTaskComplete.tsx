@@ -9,6 +9,7 @@ import { fetchTaskByUserId } from '@/redux/slices/taskSlice';
 import { TaskParam, TaskUpdateProps } from '@/types/task-board/task.type';
 import { getTaskApiUrl } from '@/utils/api';
 import { handleApiError } from '@/utils/errorHandler';
+import { formatDate } from '@/utils/formatDate';
 import { getDefaultValues } from '@/utils/getDefaultValues';
 import { getSessionStorage } from '@/utils/storage';
 import { Button } from 'react-bootstrap';
@@ -45,6 +46,7 @@ export default function MyTaskComplete({
       priority: data?.priority,
       taskType: data?.taskType,
       startDate: data?.startDate,
+      endDate:formatDate(new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
       estimatedTime: data?.estimatedTime,
       taskStatus: 'COMPLETED',
       // file: '',
