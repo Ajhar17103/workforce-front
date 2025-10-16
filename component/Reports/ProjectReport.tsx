@@ -50,6 +50,7 @@ export default function ProjectReport() {
       {projectSummary.map((proj, i) => {
         return (
           <MetricBar
+            key={proj?.id}
             title={proj?.name}
             total={proj.totalTasks}
             progress={proj?.inProgressTasks}

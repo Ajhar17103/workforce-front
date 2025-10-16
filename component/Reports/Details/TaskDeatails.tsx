@@ -54,10 +54,10 @@ export default function TaskDetails({ userId }: any) {
   }, [userTasks]);
 
   const sections = [
-    { title: "Todo's", data: todoData },
-    { title: 'On Progress', data: onprogressData },
-    { title: 'On Hold', data: holdData },
-    { title: 'Completed', data: completedData },
+    { id: 16, title: "Todo's", data: todoData },
+    { id: 22, title: 'On Progress', data: onprogressData },
+    { id: 36, title: 'On Hold', data: holdData },
+    { id: 49, title: 'Completed', data: completedData },
   ];
 
   const hasData = sections.some((section) => section.data?.length > 0);
@@ -68,7 +68,7 @@ export default function TaskDetails({ userId }: any) {
         sections.map(
           (section) =>
             section.data?.length > 0 && (
-              <div key={section.title} className="card shadow-sm p-2 dark mb-2">
+              <div key={section.id} className="card shadow-sm p-2 dark mb-2">
                 <div className="d-flex justify-content-between align-items-center">
                   <h6 className="mb-0 fw-semibold text-blue">
                     {section.title}
