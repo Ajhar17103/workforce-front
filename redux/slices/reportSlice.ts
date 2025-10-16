@@ -6,24 +6,27 @@ type ApiPayload<T> = T[];
 
 interface ReportState {
   projectReport: any[];
+  dailyUserTaskReport: any[];
   userTaskReport: any[];
   dailyStandupReport: any[];
   dateWiseStandupReport: any[];
   dailyAttendanceReport: any[];
+  sprintReport: any[];
   loading: boolean;
   error: string | null;
 }
 
 const initialState: ReportState = {
   projectReport: [],
+  dailyUserTaskReport: [],
   userTaskReport: [],
   dailyStandupReport: [],
   dateWiseStandupReport: [],
   dailyAttendanceReport: [],
+  sprintReport: [],
   loading: false,
   error: null,
 };
-
 
 const fetchReport = async (url: string, rejectWithValue: any) => {
   try {
@@ -43,6 +46,12 @@ export const fetchProjectReport = createAsyncThunk<ApiPayload<any>, void>(
   'report/fetchProjectReport',
   async (_, { rejectWithValue }) =>
     fetchReport('/project-reports', rejectWithValue),
+);
+
+export const fetchDailyUserTaskReport = createAsyncThunk<ApiPayload<any>, void>(
+  'report/fetchTodayUserTaskReport',
+  async (_, { rejectWithValue }) =>
+    fetchReport('/daily-user-task-reports', rejectWithValue),
 );
 
 export const fetchUserTaskReport = createAsyncThunk<ApiPayload<any>, void>(
@@ -71,6 +80,12 @@ export const fetchDailyAttendanceReport = createAsyncThunk<
   void
 >('report/fetchDailyAttendanceReport', async (_, { rejectWithValue }) =>
   fetchReport('/daily-attendance-reports', rejectWithValue),
+);
+
+export const fetchSprintReport = createAsyncThunk<ApiPayload<any>, void>(
+  'report/fetchSprintReport',
+  async (_, { rejectWithValue }) =>
+    fetchReport('/sprints-reports', rejectWithValue),
 );
 
 // Slice
@@ -104,6 +119,14 @@ const reportSlice = createSlice({
       })
       .addCase(fetchProjectReport.rejected, setRejected)
 
+      // daily User Task
+      .addCase(fetchDailyUserTaskReport.pending, setPending)
+      .addCase(fetchDailyUserTaskReport.fulfilled, (state, action) => {
+        state.loading = false;
+        state.dailyUserTaskReport = action.payload;
+      })
+      .addCase(fetchDailyUserTaskReport.rejected, setRejected)
+
       // User Task
       .addCase(fetchUserTaskReport.pending, setPending)
       .addCase(fetchUserTaskReport.fulfilled, (state, action) => {
@@ -134,7 +157,15 @@ const reportSlice = createSlice({
         state.loading = false;
         state.dailyAttendanceReport = action.payload;
       })
-      .addCase(fetchDailyAttendanceReport.rejected, setRejected);
+      .addCase(fetchDailyAttendanceReport.rejected, setRejected)
+
+      // Daily Attendance
+      .addCase(fetchSprintReport.pending, setPending)
+      .addCase(fetchSprintReport.fulfilled, (state, action) => {
+        state.loading = false;
+        state.sprintReport = action.payload;
+      })
+      .addCase(fetchSprintReport.rejected, setRejected);
   },
 });
 

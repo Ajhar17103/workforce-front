@@ -150,6 +150,7 @@ export default function ScrumReport() {
         columns={tableColumns}
         action={true}
         pagination={true}
+        rowsPerPage={5}
         onView={viewItem}
       />
       {modalShow && (

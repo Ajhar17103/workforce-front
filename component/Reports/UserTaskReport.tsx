@@ -4,11 +4,15 @@ import CustomButton from '@/common/Buttons/Button';
 import CommonModal from '@/common/modals/CommonModal';
 import DynamicTable from '@/common/tables/DataTable';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
-import { fetchUserTaskReport } from '@/redux/slices/reportSlice';
+import {
+  fetchDailyUserTaskReport,
+  fetchUserTaskReport,
+} from '@/redux/slices/reportSlice';
 import { TableHead } from '@/types/common/TableHead';
 import { convertHoursToHrsMin } from '@/utils/convertHoursToHrsMin';
 import { useEffect, useState } from 'react';
 import Metric from './Component/Metric';
+import TaskDeatails from './Details/TaskDeatails';
 
 interface UserTaskSummary {
   id: string;
@@ -85,7 +89,7 @@ const tableColumns: TableHead<UserTaskSummary>[] = [
 
 export default function UserTaskReport() {
   const dispatch = useAppDispatch();
-  const { userTaskReport, loading, error } = useAppSelector(
+  const { userTaskReport, dailyUserTaskReport } = useAppSelector(
     (state) => state.reports,
   );
   const [userTaskSummary, setUserTaskSummary] = useState<UserTaskSummary[]>([]);
@@ -94,11 +98,30 @@ export default function UserTaskReport() {
   const [itemUpdate, setItemUpdate] = useState<UserTaskSummary>();
 
   useEffect(() => {
-    dispatch(fetchUserTaskReport());
-  }, [dispatch]);
+    if (activeTab === 'TO_DAY') {
+      dispatch(fetchDailyUserTaskReport());
+    } else {
+      dispatch(fetchUserTaskReport());
+    }
+  }, [dispatch, activeTab]);
 
   useEffect(() => {
-    if (userTaskReport?.length > 0) {
+    if (activeTab === 'TO_DAY' && dailyUserTaskReport?.length > 0) {
+      const userTakData: any[] = dailyUserTaskReport.map((utr: any) => ({
+        id: utr?.id,
+        userId: utr?.userId,
+        userName: utr?.userName,
+        designationId: utr?.designationId,
+        designationName: utr?.designationName,
+        totalTasks: utr?.totalTasks,
+        completedTasks: utr?.completedTasks,
+        inProgressTasks: utr?.inProgressTasks,
+        pendingTasks: utr?.pendingTasks,
+        allocatedTime: convertHoursToHrsMin(utr?.allocatedTime),
+        spentTime: convertHoursToHrsMin(utr?.spentTime),
+      }));
+      setUserTaskSummary(userTakData);
+    } else if (activeTab === 'ALL' && userTaskReport?.length > 0) {
       const userTakData: any[] = userTaskReport.map((utr: any) => ({
         id: utr?.id,
         userId: utr?.userId,
@@ -114,7 +137,7 @@ export default function UserTaskReport() {
       }));
       setUserTaskSummary(userTakData);
     }
-  }, [userTaskReport]);
+  }, [userTaskReport, dailyUserTaskReport, activeTab]);
 
   const viewItem = (item: UserTaskSummary) => {
     setModalShow(true);
@@ -127,7 +150,7 @@ export default function UserTaskReport() {
 
   return (
     <Metric
-      title="Users"
+      title="Tasks"
       value={userTaskSummary?.length}
       icon="bi bi-list-task"
       color="warning"
@@ -162,6 +185,7 @@ export default function UserTaskReport() {
         columns={tableColumns}
         action={true}
         pagination={true}
+        rowsPerPage={5}
         onView={viewItem}
       />
       {modalShow && (
@@ -173,7 +197,7 @@ export default function UserTaskReport() {
           footer={false}
           fullscreen="xl-down"
         >
-          <h1>Hello</h1>
+          <TaskDeatails userId={itemUpdate?.userId} />
         </CommonModal>
       )}
     </Metric>

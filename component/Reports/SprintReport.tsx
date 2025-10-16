@@ -1,34 +1,55 @@
 'use client';
 
 import DynamicTable from '@/common/tables/DataTable';
+import { useAppDispatch, useAppSelector } from '@/redux/hooks';
+import { fetchSprintReport } from '@/redux/slices/reportSlice';
 import { TableHead } from '@/types/common/TableHead';
+import { useEffect, useState } from 'react';
 import Metric from '../Reports/Component/Metric';
 
-const column: TableHead<any>[] = [
+interface UserTaskSummary {
+  id: string;
+  projectId: string;
+  projectName: string;
+  sprintType: string;
+  startDate: string;
+  endDate: string;
+  totalSprintHrs: string;
+  workingDays: string;
+}
+
+const tableColumns: TableHead<UserTaskSummary>[] = [
   {
     label: 'Project',
-    accessor: 'project',
+    accessor: 'projectName',
     sortable: true,
     searchable: true,
     align: 'start',
   },
   {
-    label: 'Active',
-    accessor: 'active',
+    label: 'Start Date',
+    accessor: 'startDate',
     sortable: false,
     searchable: false,
     align: 'center',
   },
   {
-    label: 'Completed',
-    accessor: 'completed',
+    label: 'End Date',
+    accessor: 'endDate',
     sortable: false,
     searchable: false,
     align: 'center',
   },
   {
-    label: 'Progress',
-    accessor: 'progress',
+    label: 'Status',
+    accessor: 'sprintType',
+    sortable: false,
+    searchable: false,
+    align: 'center',
+  },
+  {
+    label: 'Total Sprint(Hrs)',
+    accessor: 'totalSprintHrs',
     sortable: false,
     searchable: false,
     align: 'center',
@@ -36,11 +57,36 @@ const column: TableHead<any>[] = [
 ];
 
 export default function SprintReport() {
-  const sprintSummary: any[] = [
-    { id: 1, project: 'BNPPAMS', active: 2, completed: 4, progress: 70 },
-    { id: 2, project: 'Asset Workflow', active: 1, completed: 2, progress: 60 },
-    { id: 3, project: 'APAMS 3.0', active: 3, completed: 3, progress: 80 },
-  ];
+  const dispatch = useAppDispatch();
+  const { sprintReport, loading, error } = useAppSelector(
+    (state) => state.reports,
+  );
+  const [sprintSummary, setSprintSummary] = useState<UserTaskSummary[]>([]);
+
+  useEffect(() => {
+    dispatch(fetchSprintReport());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if ((sprintReport?.length ?? 0) > 0) {
+      const sprintData: UserTaskSummary[] = sprintReport!.map(
+        (sr: UserTaskSummary) => {
+          return {
+            id: sr?.id,
+            projectId: sr?.projectId,
+            projectName: sr?.projectName,
+            sprintType: sr?.sprintType,
+            startDate: sr?.startDate,
+            endDate: sr?.endDate,
+            totalSprintHrs: sr?.totalSprintHrs,
+            workingDays: sr?.workingDays,
+          };
+        },
+      );
+
+      setSprintSummary(sprintData);
+    }
+  }, [sprintReport]);
 
   return (
     <Metric
@@ -51,9 +97,10 @@ export default function SprintReport() {
     >
       <DynamicTable
         data={sprintSummary}
-        columns={column}
+        columns={tableColumns}
         action={false}
         pagination={true}
+        rowsPerPage={2}
       />
     </Metric>
   );
