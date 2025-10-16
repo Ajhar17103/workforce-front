@@ -156,7 +156,7 @@ export default function DataTable<T extends { id: string }>({
           {paginatedData.length > 0 ? (
             paginatedData.map((row: any, i) => (
               <tr
-                key={row.id}
+                key={i+1*3}
                 className={i % 2 === 0 ? '' : 'table-active'}
                 style={
                   i % 2 !== 0 ? { backgroundColor: '#465fff1f' } : undefined
@@ -283,7 +283,7 @@ export default function DataTable<T extends { id: string }>({
           )}
         </tbody>
       </table>
-      
+
       {pagination && (
         <div className="d-flex justify-content-between align-items-center mt-3 px-1">
           <div className="text-muted small">
