@@ -1,12 +1,15 @@
 import axiosInstance from '@/lib/axiosInstance';
 import { getReportApiUrl } from '@/utils/api';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+type ApiPayload<T> = T[];
 
 interface ReportState {
   projectReport: any[];
   userTaskReport: any[];
   dailyStandupReport: any[];
-  dateWiseStandupReport: any[] | null;
+  dateWiseStandupReport: any[];
+  dailyAttendanceReport: any[];
   loading: boolean;
   error: string | null;
 }
@@ -16,154 +19,124 @@ const initialState: ReportState = {
   userTaskReport: [],
   dailyStandupReport: [],
   dateWiseStandupReport: [],
+  dailyAttendanceReport: [],
   loading: false,
   error: null,
 };
 
-export const fetchProjectReport = createAsyncThunk(
+
+const fetchReport = async (url: string, rejectWithValue: any) => {
+  try {
+    const res = await axiosInstance.get(getReportApiUrl(url));
+    return res.data.payload;
+  } catch (err: any) {
+    return rejectWithValue(
+      err?.response?.data?.message ||
+        err?.message ||
+        `Failed to fetch report from ${url}`,
+    );
+  }
+};
+
+// Thunks
+export const fetchProjectReport = createAsyncThunk<ApiPayload<any>, void>(
   'report/fetchProjectReport',
-  async (_, { rejectWithValue }) => {
-    try {
-      const res: any = await axiosInstance.get(
-        getReportApiUrl('/project-reports'),
-      );
-      return res.data.payload;
-    } catch (err: any) {
-      return rejectWithValue(
-        err?.response?.data?.message ||
-          err?.message ||
-          'Failed to fetch project report',
-      );
-    }
-  },
+  async (_, { rejectWithValue }) =>
+    fetchReport('/project-reports', rejectWithValue),
 );
 
-export const fetchUserTaskReport = createAsyncThunk(
+export const fetchUserTaskReport = createAsyncThunk<ApiPayload<any>, void>(
   'report/fetchUserTaskReport',
-  async (_, { rejectWithValue }) => {
-    try {
-      const res: any = await axiosInstance.get(
-        getReportApiUrl('/user-task-reports'),
-      );
-      return res.data.payload;
-    } catch (err: any) {
-      return rejectWithValue(
-        err?.response?.data?.message ||
-          err?.message ||
-          'Failed to fetch user task report',
-      );
-    }
-  },
+  async (_, { rejectWithValue }) =>
+    fetchReport('/user-task-reports', rejectWithValue),
 );
 
-export const fetchDailyStandupReport = createAsyncThunk(
+export const fetchDailyStandupReport = createAsyncThunk<ApiPayload<any>, void>(
   'report/fetchDailyStandupReport',
-  async (_, { rejectWithValue }) => {
-    try {
-      const res: any = await axiosInstance.get(
-        getReportApiUrl('/standup-reports'),
-      );
-      return res.data.payload;
-    } catch (err: any) {
-      return rejectWithValue(
-        err?.response?.data?.message ||
-          err?.message ||
-          'Failed to fetch daily standup report',
-      );
-    }
-  },
+  async (_, { rejectWithValue }) =>
+    fetchReport('/standup-reports', rejectWithValue),
 );
 
-export const fetchDailyStandupsByDateReport = createAsyncThunk(
+export const fetchDailyStandupsByDateReport = createAsyncThunk<
+  ApiPayload<any>,
+  string
+>(
   'report/fetchDailyStandupsByDateReport',
-  async (toDate: string, { rejectWithValue }) => {
-    try {
-      const res: any = await axiosInstance.get(
-        getReportApiUrl(`/standup-reports-by-date/${toDate}`),
-      );
-      return res.data.payload;
-    } catch (err: any) {
-      return rejectWithValue(
-        err?.response?.data?.message ||
-          err?.message ||
-          'Failed to fetch daily standup report by date',
-      );
-    }
-  },
+  async (toDate, { rejectWithValue }) =>
+    fetchReport(`/standup-reports-by-date/${toDate}`, rejectWithValue),
 );
 
+export const fetchDailyAttendanceReport = createAsyncThunk<
+  ApiPayload<any>,
+  void
+>('report/fetchDailyAttendanceReport', async (_, { rejectWithValue }) =>
+  fetchReport('/daily-attendance-reports', rejectWithValue),
+);
+
+// Slice
 const reportSlice = createSlice({
-  name: 'projectReport',
+  name: 'report',
   initialState,
   reducers: {
-    clearProjectReportState: (state) => {
-      state.projectReport = [];
-      state.userTaskReport = [];
-      state.loading = false;
-      state.error = null;
+    clearReportState: (state) => {
+      Object.assign(state, initialState);
     },
   },
   extraReducers: (builder) => {
-    builder
+    const setPending = (state: ReportState) => {
+      state.loading = true;
+      state.error = null;
+    };
+    const setRejected = (
+      state: ReportState,
+      action: PayloadAction<unknown>,
+    ) => {
+      state.loading = false;
+      state.error = action.payload as string;
+    };
 
-      // project report
-      .addCase(fetchProjectReport.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
+    builder
+      // Project
+      .addCase(fetchProjectReport.pending, setPending)
       .addCase(fetchProjectReport.fulfilled, (state, action) => {
         state.loading = false;
         state.projectReport = action.payload;
       })
-      .addCase(fetchProjectReport.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      })
+      .addCase(fetchProjectReport.rejected, setRejected)
 
-      // user task report
-      .addCase(fetchUserTaskReport.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
+      // User Task
+      .addCase(fetchUserTaskReport.pending, setPending)
       .addCase(fetchUserTaskReport.fulfilled, (state, action) => {
         state.loading = false;
         state.userTaskReport = action.payload;
       })
-      .addCase(fetchUserTaskReport.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      })
+      .addCase(fetchUserTaskReport.rejected, setRejected)
 
-      // daily standup report
-      .addCase(fetchDailyStandupReport.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
+      // Daily Standup
+      .addCase(fetchDailyStandupReport.pending, setPending)
       .addCase(fetchDailyStandupReport.fulfilled, (state, action) => {
         state.loading = false;
         state.dailyStandupReport = action.payload;
       })
-      .addCase(fetchDailyStandupReport.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
-      })
+      .addCase(fetchDailyStandupReport.rejected, setRejected)
 
-      // daily standup report
-      .addCase(fetchDailyStandupsByDateReport.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
+      // Date-wise Standup
+      .addCase(fetchDailyStandupsByDateReport.pending, setPending)
       .addCase(fetchDailyStandupsByDateReport.fulfilled, (state, action) => {
         state.loading = false;
         state.dateWiseStandupReport = action.payload;
       })
-      .addCase(fetchDailyStandupsByDateReport.rejected, (state, action) => {
+      .addCase(fetchDailyStandupsByDateReport.rejected, setRejected)
+
+      // Daily Attendance
+      .addCase(fetchDailyAttendanceReport.pending, setPending)
+      .addCase(fetchDailyAttendanceReport.fulfilled, (state, action) => {
         state.loading = false;
-        state.error = action.payload as string;
-      });
-    
-    
+        state.dailyAttendanceReport = action.payload;
+      })
+      .addCase(fetchDailyAttendanceReport.rejected, setRejected);
   },
 });
 
+export const { clearReportState } = reportSlice.actions;
 export default reportSlice.reducer;
