@@ -6,6 +6,7 @@ import DynamicTable from '@/common/tables/DataTable';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { fetchUserTaskReport } from '@/redux/slices/reportSlice';
 import { TableHead } from '@/types/common/TableHead';
+import { convertHoursToHrsMin } from '@/utils/convertHoursToHrsMin';
 import { useEffect, useState } from 'react';
 import Metric from './Component/Metric';
 
@@ -108,8 +109,8 @@ export default function UserTaskReport() {
         completedTasks: utr?.completedTasks,
         inProgressTasks: utr?.inProgressTasks,
         pendingTasks: utr?.pendingTasks,
-        allocatedTime: utr?.allocatedTime,
-        spentTime: utr?.spentTime,
+        allocatedTime: convertHoursToHrsMin(utr?.allocatedTime),
+        spentTime: convertHoursToHrsMin(utr?.spentTime),
       }));
       setUserTaskSummary(userTakData);
     }

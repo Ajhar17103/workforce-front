@@ -87,7 +87,6 @@ export default function TaskCreate({ closeModal }: TaskUpdateProps) {
   };
 
   const handleFormSubmit = (data: TaskParam) => {
-    console.log(data);
     const postData = {
       projectId: data?.projectId,
       sprintId: data?.sprintId,
@@ -102,7 +101,6 @@ export default function TaskCreate({ closeModal }: TaskUpdateProps) {
       taskStatus: 'TO_DO',
       // file:data?.file[0]
     };
-    console.log('postData', postData);
     axiosInstance
       .post(taskUrl, postData)
       .then((response) => {

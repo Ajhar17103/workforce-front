@@ -19,6 +19,7 @@ import { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { formSchema as baseSchema } from './MyTaskSchema';
+import { formatDate } from '@/utils/formatDate';
 
 export default function TaskCreate({ closeModal }: TaskUpdateProps) {
   const {
@@ -91,7 +92,7 @@ export default function TaskCreate({ closeModal }: TaskUpdateProps) {
       taskTracker: data?.taskTracker,
       priority: data?.priority,
       taskType: 'UNPLANNED',
-      startDate: data?.startDate,
+      startDate: formatDate(new Date(), "yyyy-MM-dd'T'HH:mm:ss"),
       estimatedTime: data?.estimatedTime,
       taskStatus: 'TO_DO',
       // file:data?.file[0]

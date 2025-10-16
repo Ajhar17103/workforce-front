@@ -9,6 +9,7 @@ import {
   fetchDailyStandupsByDateReport,
 } from '@/redux/slices/reportSlice';
 import { TableHead } from '@/types/common/TableHead';
+import { truncateWords } from '@/utils/truncateWords';
 import { useEffect, useState } from 'react';
 import Metric from './Component/Metric';
 
@@ -83,8 +84,8 @@ export default function ScrumReport() {
           userId: ds?.userId,
           userName: ds?.userName,
           date: ds?.date,
-          description: ds?.description,
-          challenge: ds?.challenge,
+          description: truncateWords(ds?.description, 1),
+          challenge: truncateWords(ds?.challenge, 1),
         }),
       );
       setUserScrumSummary(transformed);
@@ -95,8 +96,8 @@ export default function ScrumReport() {
           userId: ds?.userId,
           userName: ds?.userName,
           date: ds?.date,
-          description: ds?.description,
-          challenge: ds?.challenge,
+          description: truncateWords(ds?.description, 1),
+          challenge: truncateWords(ds?.challenge, 1),
         }),
       );
       setUserScrumSummary(transformed);

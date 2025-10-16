@@ -20,11 +20,7 @@ export default function Metrics() {
       col: 6,
       component: <SprintReport />,
     },
-    {
-      id: 5,
-      col: 12,
-      component: <UserTaskReport />,
-    },
+
     {
       id: 3,
       col: 6,
@@ -34,6 +30,11 @@ export default function Metrics() {
       id: 4,
       col: 6,
       component: <AttendanceReport />,
+    },
+        {
+      id: 5,
+      col: 12,
+      component: <UserTaskReport />,
     },
   ];
 
