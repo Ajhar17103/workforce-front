@@ -102,7 +102,7 @@ export default function AttendanceReport() {
       case 'ABSENT':
         return <Badge bg="danger">Absent</Badge>;
       default:
-        return <Badge bg="secondary">Unknown</Badge>;
+        return <Badge bg="secondary">No Yet</Badge>;
     }
   };
 
