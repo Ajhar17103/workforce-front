@@ -3,3 +3,9 @@ export const sprintTypes = [
   { id: 'ACTIVE', name: 'Active' },
   { id: 'COMPLETED', name: 'Completed' },
 ];
+
+export const sprintTypeMap: Record<string, string> = {
+  PLANNED: 'Planned',
+  ACTIVE: 'Active',
+  COMPLETED: 'Completed',
+};

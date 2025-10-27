@@ -13,6 +13,7 @@ interface ReportState {
   dailyAttendanceReport: any[];
   sprintReport: any[];
   projectOverviewReport: any[];
+  projectRoadmapReport: any[];
   loading: boolean;
   error: string | null;
 }
@@ -25,7 +26,8 @@ const initialState: ReportState = {
   dateWiseStandupReport: [],
   dailyAttendanceReport: [],
   sprintReport: [],
-  projectOverviewReport:[],
+  projectOverviewReport: [],
+  projectRoadmapReport:[],
   loading: false,
   error: null,
 };
@@ -90,10 +92,24 @@ export const fetchSprintReport = createAsyncThunk<ApiPayload<any>, void>(
     fetchReport('/sprints-reports', rejectWithValue),
 );
 
-export const fetchProjectOverviewReport = createAsyncThunk<ApiPayload<any>, void>(
-  'report/fetchProjectOverviewReport',
-  async (projectId, { rejectWithValue }) =>
-    fetchReport(`/project-overview-reports?projectId=${projectId}`, rejectWithValue),
+export const fetchProjectOverviewReport = createAsyncThunk<
+  ApiPayload<any>,
+  void
+>('report/fetchProjectOverviewReport', async (projectId, { rejectWithValue }) =>
+  fetchReport(
+    `/project-overview-reports?projectId=${projectId}`,
+    rejectWithValue,
+  ),
+);
+
+export const fetchProjectRoadmapReport = createAsyncThunk<
+  ApiPayload<any>,
+  void
+>('report/fetchProjectRoadmapReport', async (projectId, { rejectWithValue }) =>
+  fetchReport(
+    `/project-roadmap-reports?projectId=${projectId}`,
+    rejectWithValue,
+  ),
 );
 
 // Slice
@@ -174,14 +190,22 @@ const reportSlice = createSlice({
         state.sprintReport = action.payload;
       })
       .addCase(fetchSprintReport.rejected, setRejected)
-      
-    // project overview
-    .addCase(fetchProjectOverviewReport.pending, setPending)
+
+      // project overview
+      .addCase(fetchProjectOverviewReport.pending, setPending)
       .addCase(fetchProjectOverviewReport.fulfilled, (state, action) => {
         state.loading = false;
         state.projectOverviewReport = action.payload;
       })
-      .addCase(fetchProjectOverviewReport.rejected, setRejected);
+      .addCase(fetchProjectOverviewReport.rejected, setRejected)
+
+      // project roadmap
+      .addCase(fetchProjectRoadmapReport.pending, setPending)
+      .addCase(fetchProjectRoadmapReport.fulfilled, (state, action) => {
+        state.loading = false;
+        state.projectRoadmapReport = action.payload;
+      })
+      .addCase(fetchProjectRoadmapReport.rejected, setRejected);
   },
 });
 

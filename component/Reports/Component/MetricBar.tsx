@@ -72,7 +72,7 @@ export default function MetricBar({
           footer={false}
           fullscreen={true}
         >
-          <ProjectOverview closeModal={closeModal} itemUpdate={itemUpdate} />
+          <ProjectOverview itemUpdate={itemUpdate} />
         </CommonModal>
       )}
     </div>

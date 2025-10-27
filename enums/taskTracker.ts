@@ -13,7 +13,7 @@ export const taskTracker = [
 ];
 
 export const taskTrackerMap: Record<string, string> = {
-   BUG:'Bug',
+  BUG:'Bug',
   SPRINT:'Sprint',
   BACKLOG:'Backlog',
   BUG_FIX:'Bug Fix',
