@@ -1,4 +1,5 @@
 export interface MetricType {
+  item?: any;
   title?: string;
   value?: string | number;
   icon?: string;

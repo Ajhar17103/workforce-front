@@ -1,7 +1,11 @@
+import CommonModal from '@/common/modals/CommonModal';
 import { MetricType } from '@/types/report/metric.type';
+import { useState } from 'react';
 import { ProgressBar } from 'react-bootstrap';
+import ProjectOverview from '../Details/ProjectOverview';
 
 export default function MetricBar({
+  item,
   title,
   value,
   total,
@@ -11,10 +15,27 @@ export default function MetricBar({
 }: MetricType) {
   const calcPercent = (done: number, total: number) =>
     total === 0 ? 0 : Math.round((done / total) * 100);
+  const [modalShow, setModalShow] = useState<boolean>(false);
+  const [itemUpdate, setItemUpdate] = useState();
+  const openModal = (item: any) => {
+    if (item?.id) {
+      setModalShow(true);
+      setItemUpdate(item);
+    }
+  };
+
+  const closeModal = () => {
+    setModalShow(false);
+  };
   return (
     <div className="mb-3">
       <div className="d-flex justify-content-between small text-muted">
-        <span>{title}</span>
+        <span
+          onClick={() => openModal(item)}
+          className="cursor-pointer mb-1 fw-bold"
+        >
+          {title}
+        </span>
         <span>{calcPercent(Number(completed), Number(total))}%</span>
       </div>
       <ProgressBar
@@ -41,6 +62,19 @@ export default function MetricBar({
         variant="info"
         className="mb-2"
       />
+
+      {modalShow && (
+        <CommonModal
+          show={modalShow}
+          onHide={closeModal}
+          title="Project Overview"
+          size="xl"
+          footer={false}
+          fullscreen={true}
+        >
+          <ProjectOverview closeModal={closeModal} itemUpdate={itemUpdate} />
+        </CommonModal>
+      )}
     </div>
   );
 }

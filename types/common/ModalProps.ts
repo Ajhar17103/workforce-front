@@ -5,5 +5,5 @@ export type ModalProps = {
   footer: boolean;
   onHide: () => void;
   children: React.ReactNode;
-  fullscreen: true| 'sm-down'| 'md-down'| 'lg-down'| 'xl-down'| 'xxl-down'| 'xl-up';
+  fullscreen: true | 'sm-down'| 'md-down'| 'lg-down'| 'xl-down'| 'xxl-down'| 'xl-up';
 };

@@ -12,6 +12,7 @@ interface ReportState {
   dateWiseStandupReport: any[];
   dailyAttendanceReport: any[];
   sprintReport: any[];
+  projectOverviewReport: any[];
   loading: boolean;
   error: string | null;
 }
@@ -24,6 +25,7 @@ const initialState: ReportState = {
   dateWiseStandupReport: [],
   dailyAttendanceReport: [],
   sprintReport: [],
+  projectOverviewReport:[],
   loading: false,
   error: null,
 };
@@ -86,6 +88,12 @@ export const fetchSprintReport = createAsyncThunk<ApiPayload<any>, void>(
   'report/fetchSprintReport',
   async (_, { rejectWithValue }) =>
     fetchReport('/sprints-reports', rejectWithValue),
+);
+
+export const fetchProjectOverviewReport = createAsyncThunk<ApiPayload<any>, void>(
+  'report/fetchProjectOverviewReport',
+  async (projectId, { rejectWithValue }) =>
+    fetchReport(`/project-overview-reports?projectId=${projectId}`, rejectWithValue),
 );
 
 // Slice
@@ -159,13 +167,21 @@ const reportSlice = createSlice({
       })
       .addCase(fetchDailyAttendanceReport.rejected, setRejected)
 
-      // Daily Attendance
+      // sprint
       .addCase(fetchSprintReport.pending, setPending)
       .addCase(fetchSprintReport.fulfilled, (state, action) => {
         state.loading = false;
         state.sprintReport = action.payload;
       })
-      .addCase(fetchSprintReport.rejected, setRejected);
+      .addCase(fetchSprintReport.rejected, setRejected)
+      
+    // project overview
+    .addCase(fetchProjectOverviewReport.pending, setPending)
+      .addCase(fetchProjectOverviewReport.fulfilled, (state, action) => {
+        state.loading = false;
+        state.projectOverviewReport = action.payload;
+      })
+      .addCase(fetchProjectOverviewReport.rejected, setRejected);
   },
 });
 

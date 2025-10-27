@@ -11,3 +11,17 @@ export const taskTracker = [
   { id: 'REQUIREMENT_ANALYSIS', name: 'Requirement Analysis' },
   { id: 'TESTING_BUG_REPORTING', name: 'Testing & Bug Reporting' },
 ];
+
+export const taskTrackerMap: Record<string, string> = {
+   BUG:'Bug',
+  SPRINT:'Sprint',
+  BACKLOG:'Backlog',
+  BUG_FIX:'Bug Fix',
+  CLIENT_MEETING:'Client Meeting',
+  DOCUMENTATION:'Documentation',
+  PROJECT_PLANNING:'Project Planning',
+  PROJECT_MEETING:'Project Meeting',
+  NEW_DEVELOPMENT:'New Development',
+  REQUIREMENT_ANALYSIS:'Requirement Analysis',
+  TESTING_BUG_REPORTING:'Testing & Bug Reporting',
+};

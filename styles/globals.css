@@ -404,7 +404,6 @@ body.dark-mode .text-muted {
   background-color: rgba(70, 95, 255, 0.12) !important;
 }
 
-
 /* Icon Circle */
 .icon-wrapper {
   width: 60px;
@@ -414,4 +413,6 @@ body.dark-mode .text-muted {
   border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
-
+.cursor-pointer {
+  cursor: pointer;
+}
