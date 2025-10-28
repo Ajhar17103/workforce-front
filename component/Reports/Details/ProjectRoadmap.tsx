@@ -205,10 +205,12 @@ export default function ProjectRoadmap({ itemUpdate }: any) {
                                 task.taskStatus === 'COMPLETED'
                                   ? 'success'
                                   : task.taskStatus === 'IN_PROGRESS'
+                                  ? 'info'
+                                  : task.taskStatus === 'HOLD'
                                   ? 'warning'
                                   : 'secondary'
                               }
-                              className="px-3 py-2 text-uppercase"
+                              className="px-3 py-2"
                             >
                               {taskStatuseMap[task.taskStatus]}
                             </Badge>

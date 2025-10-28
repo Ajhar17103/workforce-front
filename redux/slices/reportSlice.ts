@@ -14,6 +14,7 @@ interface ReportState {
   sprintReport: any[];
   projectOverviewReport: any[];
   projectRoadmapReport: any[];
+  projectTimeSpentReport: any[];
   loading: boolean;
   error: string | null;
 }
@@ -27,7 +28,8 @@ const initialState: ReportState = {
   dailyAttendanceReport: [],
   sprintReport: [],
   projectOverviewReport: [],
-  projectRoadmapReport:[],
+  projectRoadmapReport: [],
+  projectTimeSpentReport:[],
   loading: false,
   error: null,
 };
@@ -70,19 +72,13 @@ export const fetchDailyStandupReport = createAsyncThunk<ApiPayload<any>, void>(
     fetchReport('/standup-reports', rejectWithValue),
 );
 
-export const fetchDailyStandupsByDateReport = createAsyncThunk<
-  ApiPayload<any>,
-  string
->(
+export const fetchDailyStandupsByDateReport = createAsyncThunk<ApiPayload<any>,string>(
   'report/fetchDailyStandupsByDateReport',
   async (toDate, { rejectWithValue }) =>
     fetchReport(`/standup-reports-by-date/${toDate}`, rejectWithValue),
 );
 
-export const fetchDailyAttendanceReport = createAsyncThunk<
-  ApiPayload<any>,
-  void
->('report/fetchDailyAttendanceReport', async (_, { rejectWithValue }) =>
+export const fetchDailyAttendanceReport = createAsyncThunk<ApiPayload<any>,void>('report/fetchDailyAttendanceReport', async (_, { rejectWithValue }) =>
   fetchReport('/daily-attendance-reports', rejectWithValue),
 );
 
@@ -92,24 +88,27 @@ export const fetchSprintReport = createAsyncThunk<ApiPayload<any>, void>(
     fetchReport('/sprints-reports', rejectWithValue),
 );
 
-export const fetchProjectOverviewReport = createAsyncThunk<
-  ApiPayload<any>,
-  void
->('report/fetchProjectOverviewReport', async (projectId, { rejectWithValue }) =>
+export const fetchProjectOverviewReport = createAsyncThunk<ApiPayload<any>,void>('report/fetchProjectOverviewReport', async (projectId, { rejectWithValue }) =>
   fetchReport(
     `/project-overview-reports?projectId=${projectId}`,
     rejectWithValue,
   ),
 );
 
-export const fetchProjectRoadmapReport = createAsyncThunk<
-  ApiPayload<any>,
-  void
->('report/fetchProjectRoadmapReport', async (projectId, { rejectWithValue }) =>
+export const fetchProjectRoadmapReport = createAsyncThunk<ApiPayload<any>,void>('report/fetchProjectRoadmapReport', async (projectId, { rejectWithValue }) =>
   fetchReport(
     `/project-roadmap-reports?projectId=${projectId}`,
     rejectWithValue,
   ),
+);
+
+export const fetchProjectTimeSpentReport = createAsyncThunk<ApiPayload<any>, void>(
+  'report/fetchProjectTimeSpentReport',
+  async (projectId, { rejectWithValue }) =>
+    fetchReport(
+      `/project-time-spent-reports?projectId=${projectId}`,
+      rejectWithValue,
+    ),
 );
 
 // Slice
@@ -205,7 +204,15 @@ const reportSlice = createSlice({
         state.loading = false;
         state.projectRoadmapReport = action.payload;
       })
-      .addCase(fetchProjectRoadmapReport.rejected, setRejected);
+      .addCase(fetchProjectRoadmapReport.rejected, setRejected)
+
+      // project time spent
+      .addCase(fetchProjectTimeSpentReport.pending, setPending)
+      .addCase(fetchProjectTimeSpentReport.fulfilled, (state, action) => {
+        state.loading = false;
+        state.projectTimeSpentReport = action.payload;
+      })
+      .addCase(fetchProjectTimeSpentReport.rejected, setRejected);
   },
 });
 

@@ -37,3 +37,35 @@ export const tableOverviewSchema: TableHead<any>[] = [
     align: 'center',
   },
 ];
+
+interface ProjectUserSpentTimeReportDto {
+  id: string;
+  userName: string;
+  allocatedTime: number;
+  spentTime: number;
+}
+
+
+export const tableTimeSpentSchema: TableHead<ProjectUserSpentTimeReportDto>[] = [
+  {
+    label: 'User',
+    accessor: 'userName',
+    sortable: false,
+    searchable: false,
+    align: 'start',
+  },
+  {
+    label: 'Allocated Time (h)',
+    accessor: 'allocatedTime',
+    sortable: false,
+    searchable: false,
+    align: 'start',
+  },
+  {
+    label: 'Spent Time (h)',
+    accessor: 'spentTime',
+    sortable: false,
+    searchable: false,
+    align: 'start',
+  },
+];

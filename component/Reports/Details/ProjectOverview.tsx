@@ -9,10 +9,11 @@ import { useEffect, useState } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
 import { tableOverviewSchema } from './ProjectOverviewSchema';
 import ProjectRoadmap from './ProjectRoadmap';
+import ProjectTimeSpent from './ProjectTimeSpent';
 
 export default function ProjectOverview({ closeModal, itemUpdate }: any) {
   const [activeTab, setActiveTab] = useState<
-    'OVERVIEW' | 'ROADMAP' | 'ISSUE' | 'SPENT-TIME'
+    'OVERVIEW' | 'ROADMAP' | 'SPENT-TIME'
   >('OVERVIEW');
   const dispatch = useAppDispatch();
   const { projectOverviewReport } = useAppSelector((state) => state.reports);
@@ -43,8 +44,7 @@ export default function ProjectOverview({ closeModal, itemUpdate }: any) {
       icon: 'bi-grid-fill',
       color: 'secondary',
     },
-    { key: 'ROADMAP', label: 'Roadmap', icon: 'bi-map-fill', color: 'warning' },
-    { key: 'ISSUE', label: 'Issues', icon: 'bi-bug-fill', color: 'info' },
+    { key: 'ROADMAP', label: 'Roadmap', icon: 'bi-bug-fill', color: 'info' },
     {
       key: 'SPENT-TIME',
       label: 'Spent Time',
@@ -82,25 +82,18 @@ export default function ProjectOverview({ closeModal, itemUpdate }: any) {
       {/* Content */}
       <Card className="shadow-sm border-0 rounded-4 p-2 bg-body-tertiary">
         {activeTab === 'OVERVIEW' && (
+          <div>
             <DynamicTable
               columns={tableOverviewSchema}
               data={tableData}
               action={false}
               pagination={true}
             />
+          </div>
         )}
         {activeTab === 'ROADMAP' && <ProjectRoadmap itemUpdate={itemUpdate} />}
-        {activeTab === 'ISSUE' && (
-          <div className="text-center py-4 text-muted">
-            <i className="bi bi-exclamation-triangle-fill text-warning fs-3 mb-2"></i>
-            <p>No issues found for this project.</p>
-          </div>
-        )}
         {activeTab === 'SPENT-TIME' && (
-          <div className="text-center py-4 text-muted">
-            <i className="bi bi-clock-history text-success fs-3 mb-2"></i>
-            <p>Time tracking data will appear here.</p>
-          </div>
+          <ProjectTimeSpent itemUpdate={itemUpdate} />
         )}
       </Card>
     </div>
